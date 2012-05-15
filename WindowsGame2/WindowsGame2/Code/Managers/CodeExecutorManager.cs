@@ -38,100 +38,91 @@ namespace buildBlock {
 	static class blockBuild{
 	
 		public static void setBlockName(string name){
-			returnBlock.setBlockName(name);
+			returnBlock.SetBlockName(name);
 		}
 		
 		public static void setBlockColor(int r, int g, int b, int a = 255){
-			returnBlock.setBlockColorRGBA(r, g, b, a);
+			returnBlock.SetBlockColorRGBA(r, g, b, a);
 		}
 
         public static void setBlockColor(Color c){
-            returnBlock.setBlockColor(c);
+            returnBlock.SetBlockColor(c);
         }
 
         public static void setBlockOnTouched(Action<int, int, int, EntityMoveable> onBlockTouched){
-            returnBlock.setBlockOnTouched(onBlockTouched);
+            returnBlock.SetBlockOnTouched(onBlockTouched);
         }
 
         public static void setGetBlockBB(Func<int, int, Rectangle> getBB){
-            returnBlock.setBlockGetBB(getBB);
+            returnBlock.SetBlockGetBB(getBB);
         }
 		
 		public static void setBlockLightLevel(int lightLevel){
-			returnBlock.setBlockLightLevel(lightLevel);
+			returnBlock.SetBlockLightLevel(lightLevel);
 		}
 		
 		public static void setBlockOnPlaced(Action<int, int, bool> onBlockPlaced)
         {
-            returnBlock.setBlockOnPlaced(onBlockPlaced);
+            returnBlock.SetBlockOnPlaced(onBlockPlaced);
         }
 
         public static void setBlockOnUpdated(Func<int, int, int> onBlockUpdated){
-            returnBlock.setBlockOnUpdated(onBlockUpdated);
+            returnBlock.SetBlockOnUpdated(onBlockUpdated);
         }
 
         public static void setBlockOnRemoved(Action<int, int> onBlockRemoved)
         {
-            returnBlock.setBlockOnRemoved(onBlockRemoved);
+            returnBlock.SetBlockOnRemoved(onBlockRemoved);
         }
 
         public static void setBlockOnUsed(Action<int, int> onBlockUsed)
         {
-            returnBlock.setBlockOnUsed(onBlockUsed);
+            returnBlock.SetBlockOnUsed(onBlockUsed);
         }
 
         public static void setBlockGetRender(Func<int, int, SpriteBatch, Texture2D> toRender)
         {
-            returnBlock.setBlockGetRender(toRender);
-        }
-
-        public static void setBlockOnConnected(Action<int, int, int, int> act){
-            returnBlock.setBlockOnConnected(act);
+            returnBlock.SetBlockGetRender(toRender);
         }
 
         public static void setBlockGetDrop(Func<int, int, byte> onBlockGetDrop)
         {
-            returnBlock.setBlockGetDrop(onBlockGetDrop);
+            returnBlock.SetBlockGetDrop(onBlockGetDrop);
         }
 
         public static void setBlockGetDropNum(Func<int, int, int> onBlockGetDropNum)
         {
-            returnBlock.setBlockGetDropNum(onBlockGetDropNum);
-        }
-
-        public static void setBlockNumConnectionsAllowed(int a)
-        {
-            returnBlock.setBlockNumConnectionsAllowed(a);
+            returnBlock.SetBlockGetDropNum(onBlockGetDropNum);
         }
 
         public static void setBlockHide(bool hide)
         {
-            returnBlock.setBlockHide(hide);
+            returnBlock.SetBlockHide(hide);
         }
 
         public static void setBlockOpaque(bool opaque)
         {
-            returnBlock.setBlockOpaque(opaque);
+            returnBlock.SetBlockOpaque(opaque);
         }
 
         public static void setBlockHardness(int hardness)
         {
-            returnBlock.setBlockHardness(hardness);
+            returnBlock.SetBlockHardness(hardness);
             
         }
 
         public static void setBlockRenderSpecial(bool special)
         {
-            returnBlock.setBlockRenderSpecial(special);
+            returnBlock.SetBlockRenderSpecial(special);
         }
 
         public static void setBlockWalkThrough(bool b)
         {
-            returnBlock.setBlockWalkThrough(b);
+            returnBlock.SetBlockWalkThrough(b);
         }
         
         public static void setBlockID(byte id){
-            returnBlock.setBlockID(id);
+            returnBlock.SetBlockID(id);
         }    
 		
 		private static Block returnBlock = new Block();

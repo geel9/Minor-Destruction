@@ -8,9 +8,9 @@ namespace MiningGame.Code.Items
     public class ItemRock : Item
     {
         public ItemRock() : base(){
-            setName("Rock").setDescription("UGH BLUGH.").setID(2).setValue(2).setBlockID(3).setAsset("itemRock");
+            SetName("Rock").SetDescription("UGH BLUGH.").SetID(2).SetValue(2).SetBlockID(3).SetAsset("itemRock");
         }
-        public override void onItemUsed(int x, int y)
+        public override void OnItemUsed(int x, int y)
         {
             //throw new NotImplementedException();
         }

@@ -139,8 +139,10 @@
     <Compile Include="Code\Entities\AnimationControlPointUI.cs" />
     <Compile Include="Code\Entities\EntityDroppedItem.cs" />
     <Compile Include="Code\Entities\EntityMoveable.cs" />
+    <Compile Include="Code\Entities\EntityProjectile.cs" />
     <Compile Include="Code\Entities\EntitySlime.cs" />
     <Compile Include="Code\Entities\PlayerEntity.cs" />
+    <Compile Include="Code\Entities\ProjectileArrow.cs" />
     <Compile Include="Code\GameWorld.cs" />
     <Compile Include="Code\Interfaces\ChatInterface.cs" />
     <Compile Include="Code\Interfaces\AnimationEditorInterface.cs" />
@@ -163,11 +165,13 @@
     <Compile Include="Code\Packets\Packet0SCPlayerConnect.cs" />
     <Compile Include="Code\Packets\Packet1CSGameEvent.cs" />
     <Compile Include="Code\Packets\Packet255SCConnectionConfirm.cs" />
+    <Compile Include="Code\Packets\Packet2SCCreateProjectile.cs" />
+    <Compile Include="Code\Packets\Packet3SCRemoveProjectile.cs" />
     <Compile Include="Code\Server\NetworkPlayer.cs" />
     <Compile Include="Code\PlayerController.cs" />
     <Compile Include="Code\Server\GameServer.cs" />
     <Compile Include="Code\Structs\AnimationControlPoint.cs" />
-    <Compile Include="Code\Structs\AxisAlignedBoundBox.cs" />
+    <Compile Include="Code\Structs\AABB.cs" />
     <Compile Include="Code\Structs\BlockConnection.cs" />
     <Compile Include="Code\Structs\ItemRecipe.cs" />
     <Compile Include="Code\Interfaces\Interface.cs" />

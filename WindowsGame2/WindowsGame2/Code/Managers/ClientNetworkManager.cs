@@ -85,19 +85,34 @@ namespace MiningGame.Code.Managers
         {
             boundPackets.Add(new BoundPacket((Packet p) =>
             {
-                int x = p.readInt();
-                int y = p.readInt();
-
-                byte blockID = p.readByte();
-                byte meta = p.readByte();
-                GameWorld.setBlock(x, y, blockID, false, meta);
-            }, 3));
-
-            boundPackets.Add(new BoundPacket((Packet p) =>
-            {
                 //A game event
                 GameWorld.HandleGameEvent(p.readByte(), p);
             }, 1));
+
+            boundPackets.Add(new BoundPacket((Packet p) =>
+            {
+                byte type = p.readByte();
+                byte ID = p.readByte();
+                short X = p.readShort();
+                short Y = p.readShort();
+                float angle = p.readFloat();
+                GameWorld.GameProjectiles.Add(new ProjectileArrow(new Vector2(X, Y), angle) {ProjectileID = ID});
+            }, 2));
+
+            boundPackets.Add(new BoundPacket((Packet p) =>
+                                                 {
+                                                     byte toRemove = p.readByte();
+                                                     EntityProjectile proj = null;
+                                                     foreach(EntityProjectile projectile in GameWorld.GameProjectiles)
+                                                     {
+                                                         if(projectile.ProjectileID == toRemove)
+                                                         {
+                                                             proj = projectile;
+                                                             break;
+                                                         }
+                                                     }
+                                                     if (proj != null) GameWorld.GameProjectiles.Remove(proj);
+                                                 }, 3));
 
             boundPackets.Add(new BoundPacket((Packet p) =>
             {
@@ -105,15 +120,15 @@ namespace MiningGame.Code.Managers
                 byte id = p.readByte();
                 int posX = p.readInt();
                 int posY = p.readInt();
-                if (GameWorld.otherPlayers.Where(pl => pl.PlayerID == id).Count() > 0) return;
-                if (GameWorld.thePlayer.playerEntity.PlayerID != id)
+                if (GameWorld.OtherPlayers.Where(pl => pl.PlayerID == id).Count() > 0) return;
+                if (GameWorld.ThePlayer.PlayerEntity.PlayerID != id)
                 {
                     ConsoleManager.Log("New player: " + pName + " id: " + id + " x: " + posX + " y: " + posY);
-                    GameWorld.otherPlayers.Add(new PlayerEntity(new Vector2(posX, posY), id, pName));
+                    GameWorld.OtherPlayers.Add(new PlayerEntity(new Vector2(posX, posY), id, pName));
                 }
                 else
                 {
-                    GameWorld.thePlayer.playerEntity.entityPosition = new Vector2(posX, posY);
+                    GameWorld.ThePlayer.PlayerEntity.EntityPosition = new Vector2(posX, posY);
                 }
             }, 0));
 
@@ -121,7 +136,7 @@ namespace MiningGame.Code.Managers
             {
                 byte id = p.readByte();
                 ConsoleManager.Log("My id is " + id);
-                GameWorld.thePlayer.playerEntity = new PlayerEntity(new Microsoft.Xna.Framework.Vector2(0, 0), id, ConsoleManager.getVariableValue("player_name"));
+                GameWorld.ThePlayer.PlayerEntity = new PlayerEntity(new Microsoft.Xna.Framework.Vector2(0, 0), id, ConsoleManager.getVariableValue("player_name"));
             }, 255));
         }
 

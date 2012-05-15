@@ -10,9 +10,9 @@ namespace MiningGame.Code.Items
     public class ItemDirt : Item
     {
         public ItemDirt() : base(){
-            setName("Dirt").setDescription("Dirty boy!").setID(1).setValue(1).setAsset("dirt");
+            SetName("Dirt").SetDescription("Dirty boy!").SetID(1).SetValue(1).SetAsset("dirt");
         }
-        public override void onItemUsed(int x, int y)
+        public override void OnItemUsed(int x, int y)
         {
             byte blockID = GameServer.GetBlockIDAt(x, y);
             byte blockUpID = GameServer.GetBlockIDAt(x, y - 1);

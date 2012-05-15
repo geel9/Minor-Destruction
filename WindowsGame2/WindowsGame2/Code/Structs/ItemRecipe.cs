@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using MiningGame.Code.Items;
 
 namespace MiningGame.Code.Structs
 {

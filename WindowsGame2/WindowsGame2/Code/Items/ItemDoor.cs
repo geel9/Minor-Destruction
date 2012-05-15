@@ -11,9 +11,9 @@ namespace MiningGame.Code.Items
     {
         public ItemDoor(): base()
         {
-            setName("Door").setDescription("Doorange you glad I didn't say banana?").setID(5).setValue(1).setAsset("door_open");
+            SetName("Door").SetDescription("Doorange you glad I didn't say banana?").SetID(5).SetValue(1).SetAsset("door_open");
         }
-        public override void onItemUsed(int x, int y)
+        public override void OnItemUsed(int x, int y)
         {
             byte blockID = GameServer.GetBlockIDAt(x, y);
             byte blockUpID = GameServer.GetBlockIDAt(x, y - 1);

@@ -9,43 +9,35 @@ namespace MiningGame.Code.Entities
 {
     public class Entity : Animateable, UpdatableAndDrawable
     {
-        protected bool paused
+        protected bool Paused
         {
             get
             {
                 return Main.PauseManager.Paused;
             }
         }
-        public Vector2 entityPosition = new Vector2();
+        public Vector2 EntityPosition = new Vector2();
         public byte alpha;
-        public float rotation;
+        public virtual float Rotation { get; set; }
         public Texture2D SpriteTexture;
-        public float scale;
+        public float scale = 1;
         public int layer;
         public int entityID;
 
         public static int entIndex = 0;
 
-        public virtual Rectangle BoundBox
+        public virtual AABB BoundBox
         {
             get
             {
                 if (SpriteTexture != null)
-                    return new Rectangle(
-                        (int)entityPosition.X - (int)(SpriteTexture.Width * scale) / 2,
-                        (int)entityPosition.Y - (int)(SpriteTexture.Width * scale) / 2,
+                    return new AABB(
+                        (int)EntityPosition.X - (SpriteTexture.Width / 2),
+                        (int)EntityPosition.Y - (SpriteTexture.Height / 2),
                         (int)(SpriteTexture.Width * scale),
-                        (int)(SpriteTexture.Height * scale));
-                else
-                    return new Rectangle(1, 1, 1, 1);
-            }
-        }
+                        (int)(SpriteTexture.Height * scale), Rotation);
 
-        public AxisAlignedBoundBox AABoundBox
-        {
-            get
-            {
-                return new AxisAlignedBoundBox(BoundBox);
+                    return new AABB(1, 1, 1, 1, Rotation);
             }
         }
 
@@ -54,15 +46,13 @@ namespace MiningGame.Code.Entities
 
         }
 
-        public bool hitTest(Entity e)
+        public bool HitTest(Entity e)
         {
             if (this.BoundBox.Intersects(e.BoundBox))
                 return true;
             if (this.BoundBox.Contains(e.BoundBox))
                 return true;
-            if (e.BoundBox.Contains(this.BoundBox))
-                return true;
-            return false;
+            return e.BoundBox.Contains(this.BoundBox);
         }
 
         public void addToList()
@@ -89,20 +79,20 @@ namespace MiningGame.Code.Entities
 
         public void RotateToPoint(Vector2 point)
         {
-            Vector2 dist = entityPosition - point;
+            Vector2 dist = EntityPosition - point;
             float rotation = (float)Math.Atan2(dist.Y, dist.X);
-            this.rotation = rotation;
+            this.Rotation = rotation;
         }
 
         public void RotateToPoint(Vector2 point, int maxDegrees)
         {
             maxDegrees = Math.Abs(maxDegrees);
-            Vector2 dist = entityPosition - point;
+            Vector2 dist = EntityPosition - point;
             //   dist = point - point;
             float rotation = (float)Math.Atan2(dist.Y, dist.X);
             float rotDeg = (float)ConversionManager.RadianToDegrees(rotation);
             rotDeg = (float)ConversionManager.circleTo360((double)rotDeg);
-            float curRotDeg = (float)ConversionManager.circleTo360(ConversionManager.RadianToDegrees((double)this.rotation));
+            float curRotDeg = (float)ConversionManager.circleTo360(ConversionManager.RadianToDegrees((double)this.Rotation));
             float rotDiff = curRotDeg - rotDeg;
             ConsoleManager.setVariableValue("window_title", "Rot: " + rotDeg);
             //if (rotDeg)
@@ -112,7 +102,7 @@ namespace MiningGame.Code.Entities
             float maxRadians = (float)ConversionManager.DegreeToRadians(maxDegrees);
             rotDiff = MathHelper.Clamp(rotDiff, -maxRadians, maxRadians);
             //     this.rotation += rotDiff;
-            this.rotation = (float)ConversionManager.DegreeToRadians(40);
+            this.Rotation = (float)ConversionManager.DegreeToRadians(40);
         }
 
         public void MoveTowardsPoint(Point point, float speed)
@@ -123,25 +113,24 @@ namespace MiningGame.Code.Entities
 
         public void MoveTowardsPoint(Vector2 point, float speed)
         {
-            Vector2 dist = point - entityPosition;
+            Vector2 dist = point - EntityPosition;
             float Radians = (float)Math.Atan2(dist.Y, dist.X);
             float X = speed * (float)Math.Cos(Radians);
             float Y = speed * (float)Math.Sin(Radians);
-            entityPosition += new Vector2(X, Y);
+            EntityPosition += new Vector2(X, Y);
         }
 
         public virtual void Draw(SpriteBatch sb)
         {
-
             Color white = Color.White;
             white.A = alpha;
             if (ConsoleManager.getVariableBool("draw_hitboxes"))
             {
-                DrawManager.Draw_Outline(entityPosition - (CameraManager.cameraPosition), BoundBox.Width, BoundBox.Height, Color.Yellow, sb);
+                DrawManager.Draw_Outline(EntityPosition - (CameraManager.cameraPosition), BoundBox.Width, BoundBox.Height, Color.Yellow, sb);
             }
            // sb.DrawString(AssetManager.GetFont("Console"), entityID.ToString(), entityPosition - new Vector2(0, 10) - CameraManager.cameraPosition, Color.White);
             if (SpriteTexture != null)
-                sb.Draw(SpriteTexture, entityPosition - (CameraManager.cameraPosition), new Rectangle(0, 0, SpriteTexture.Width, SpriteTexture.Height), white, rotation, new Vector2(SpriteTexture.Width / 2, SpriteTexture.Height / 2), scale * CameraManager.cameraZoom, SpriteEffects.None, layer);
+                sb.Draw(SpriteTexture, EntityPosition - (CameraManager.cameraPosition), new Rectangle(0, 0, SpriteTexture.Width, SpriteTexture.Height), white, Rotation, new Vector2(SpriteTexture.Width / 2, SpriteTexture.Height / 2), scale * CameraManager.cameraZoom, SpriteEffects.None, layer);
         }
 
         public void addToUpdateList()
@@ -170,7 +159,7 @@ namespace MiningGame.Code.Entities
 
         public bool inCamera()
         {
-            return CameraManager.inCamera(entityPosition, BoundBox);
+            return CameraManager.inCamera(EntityPosition, BoundBox);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MiningGame.Code.CInterfaces;
+using MiningGame.Code.Items;
 using MiningGame.Code.Managers;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
@@ -15,22 +16,21 @@ namespace MiningGame.Code
 {
     public class PlayerController : UpdatableAndDrawable
     {
-        public int playerInventorySelected = -1;
-        public List<ItemStack> playerInventory = new List<ItemStack>();
+        public int PlayerInventorySelected = -1;
+        public List<ItemStack> PlayerInventory = new List<ItemStack>();
 
-        public PlayerEntity playerEntity;
-        private const int playerSpeedX = 2;
-        public int digPct = 0;
-        public int jumpTimer = 0;
-        public int digTimer = 0;
-        public int digStrength = 100;
-        public Vector2 curMining;
+        public PlayerEntity PlayerEntity;
+        private const int PlayerSpeedX = 2;
+        public int DigPct = 0;
+        public int JumpTimer = 0;
+        public int DigTimer = 0;
+        public int DigStrength = 100;
+        public Vector2 CurMining;
 
-        public static Point curBlockConnecting = new Point(-1, -1);
 
         public PlayerController()
         {
-            playerEntity = new PlayerEntity(new Vector2(-100, -100), 0);
+            PlayerEntity = new PlayerEntity(new Vector2(-100, -100), 0);
         }
 
         public void Start()
@@ -38,37 +38,37 @@ namespace MiningGame.Code
             InputManager.BindKey(() =>
             {
                 if (InterfaceManager.blocking) return;
-                Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_KeyPress, 'a', (bool)true);
+                Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_KeyPress, 'a', true);
                 Main.clientNetworkManager.SendPacket(pack);
-                playerEntity.FacingLeft = true;
-                playerEntity.TorsoAnimateable.startLooping("player_run_start", "player_run_end");
-                playerEntity.LegsAnimateable.startLooping("player_run_start", "player_run_end");
+                PlayerEntity.FacingLeft = true;
+                PlayerEntity.TorsoAnimateable.startLooping("player_run_start", "player_run_end");
+                PlayerEntity.LegsAnimateable.startLooping("player_run_start", "player_run_end");
             }, Keys.A, true);
 
             InputManager.BindKey(() =>
             {
                 if (InterfaceManager.blocking) return;
-                Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_KeyPress, 'd', (bool)true);
+                Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_KeyPress, 'd', true);
                 Main.clientNetworkManager.SendPacket(pack);
-                playerEntity.TorsoAnimateable.startLooping("player_run_start", "player_run_end");
-                playerEntity.LegsAnimateable.startLooping("player_run_start", "player_run_end");
-                playerEntity.FacingLeft = false;
+                PlayerEntity.TorsoAnimateable.startLooping("player_run_start", "player_run_end");
+                PlayerEntity.LegsAnimateable.startLooping("player_run_start", "player_run_end");
+                PlayerEntity.FacingLeft = false;
             }, Keys.D, true);
 
             InputManager.BindKey(() =>
             {
                 Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_KeyPress, 'a', (bool)false);
                 Main.clientNetworkManager.SendPacket(pack);
-                playerEntity.TorsoAnimateable.startLooping("player_idle", "player_idle");
-                playerEntity.LegsAnimateable.startLooping("player_idle", "player_idle");
+                PlayerEntity.TorsoAnimateable.startLooping("player_idle", "player_idle");
+                PlayerEntity.LegsAnimateable.startLooping("player_idle", "player_idle");
             }, Keys.A, true, false);
 
             InputManager.BindKey(() =>
             {
                 Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_KeyPress, 'd', (bool)false);
                 Main.clientNetworkManager.SendPacket(pack);
-                playerEntity.TorsoAnimateable.startLooping("player_idle", "player_idle");
-                playerEntity.LegsAnimateable.startLooping("player_idle", "player_idle");
+                PlayerEntity.TorsoAnimateable.startLooping("player_idle", "player_idle");
+                PlayerEntity.LegsAnimateable.startLooping("player_idle", "player_idle");
             }, Keys.D, true, false);
 
             InputManager.BindKey(() =>
@@ -88,7 +88,7 @@ namespace MiningGame.Code
             InputManager.BindKey(() =>
             {
                 if (InterfaceManager.blocking) return;
-                byte blockID = GameWorld.GetBlockIDAt(playerEntity.getEntityTile().X, playerEntity.getEntityTile().Y);
+                byte blockID = GameWorld.GetBlockIDAt(PlayerEntity.GetEntityTile().X, PlayerEntity.GetEntityTile().Y);
                 if (blockID == 6)
                 {
                     Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_KeyPress, 's', (bool)true);
@@ -105,7 +105,9 @@ namespace MiningGame.Code
             InputManager.BindMouse(() =>
             {
                 if (InterfaceManager.blocking) return;
-            }, MouseButton.Left, true, true);
+                Packet1CSGameEvent packet = new Packet1CSGameEvent(GameServer.GameEvents.Player_Attack, (float)PlayerEntity.GetAimingAngle());
+                Main.clientNetworkManager.SendPacket(packet);
+            }, MouseButton.Left, true, false);
 
             InputManager.BindMouse(() =>
             {
@@ -114,9 +116,9 @@ namespace MiningGame.Code
             InputManager.BindMouse(() =>
             {
                 if (InterfaceManager.blocking) return;
-                Item i = getPlayerItemInHand();
+                Item i = GetPlayerItemInHand();
                 if (i == null) return;
-                Vector2 aim = playerEntity.GetBlockAimingAt();
+                Vector2 aim = PlayerEntity.GetBlockAimingAt();
                 Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_Use_Item, (int)aim.X, (int)aim.Y);
                 Main.clientNetworkManager.SendPacket(pack);
             }, MouseButton.Right);
@@ -124,7 +126,7 @@ namespace MiningGame.Code
             InputManager.BindKey(() =>
             {
                 if (InterfaceManager.blocking) return;
-                Vector2 aim = playerEntity.GetBlockAimingAt();
+                Vector2 aim = PlayerEntity.GetBlockAimingAt();
                 byte id = GameWorld.GetBlockIDAt(aim.X, aim.Y);
                 if (id != 0)
                 {
@@ -137,95 +139,81 @@ namespace MiningGame.Code
             {
                 if (InterfaceManager.blocking) return;
                 return;
-                /*if (curBlockConnecting == new Point(-1, -1))
-                {
-                    curBlockConnecting = ConversionManager.VToP(GameWorld.AbsoluteToTile(InputManager.GetMousePosV(true)));
-                }
-                else
-                {
-                    Vector2 curBlock = ConversionManager.PToV(curBlockConnecting);
-                    Vector2 newBlock = GameWorld.AbsoluteToTile(InputManager.GetMousePosV(true));
-                    if (curBlock != newBlock)
-                    {
-                        //GameServer.connectBlocks(curBlock, newBlock);
-                    }
-                    curBlockConnecting = new Point(-1, -1);
-                }*/
             }, MouseButton.Middle);
         }
 
         public bool HasItem(byte id)
         {
-            return getPlayerItemStackFromInventory(id).itemID == id;
+            return GetPlayerItemStackFromInventory(id).itemID == id;
         }
 
-        public ItemStack getPlayerItemStackFromInventory(byte id)
+        public ItemStack GetPlayerItemStackFromInventory(byte id)
         {
-            return playerInventory.Where(x => x.itemID == id).FirstOrDefault();
+            return PlayerInventory.Where(x => x.itemID == id).FirstOrDefault();
         }
 
-        public int getNumItemInInventory(byte id)
+        public int GetNumItemInInventory(byte id)
         {
-            return playerInventory.Where(x => x.itemID == id).FirstOrDefault().numberItems;
+            return PlayerInventory.Where(x => x.itemID == id).FirstOrDefault().numberItems;
         }
 
-        public void removeItems(byte itemID, int numToRemove)
+        public void RemoveItems(byte itemID, int numToRemove)
         {
-            if (getNumItemInInventory(itemID) < numToRemove) return;
-            ItemStack i = getPlayerItemStackFromInventory(itemID);
-            int index = playerInventory.IndexOf(i);
+            if (GetNumItemInInventory(itemID) < numToRemove) return;
+            ItemStack i = GetPlayerItemStackFromInventory(itemID);
+            int index = PlayerInventory.IndexOf(i);
             i.numberItems -= numToRemove;
             if (i.numberItems == 0)
             {
-                if (index < playerInventorySelected) playerInventorySelected++;
-                playerInventory.RemoveAt(index);
+                if (index < PlayerInventorySelected) PlayerInventorySelected++;
+                PlayerInventory.RemoveAt(index);
             }
             else
             {
-                playerInventory[index] = i;
+                PlayerInventory[index] = i;
             }
         }
 
-        public Item getPlayerItemInHand()
+        public Item GetPlayerItemInHand()
         {
-            if (playerInventorySelected >= playerInventory.Count) playerInventorySelected = -1;
-            if (playerInventorySelected == -1) return null;
-            return Item.getItem(playerInventory[playerInventorySelected].itemID);
+            if (PlayerInventorySelected >= PlayerInventory.Count) PlayerInventorySelected = -1;
+            if (PlayerInventorySelected == -1) return null;
+            return Item.GetItem(PlayerInventory[PlayerInventorySelected].itemID);
         }
 
         public void PickupItem(ItemStack item)
         {
-            for (int i = 0; i < playerInventory.Count; i++)
+            for (int i = 0; i < PlayerInventory.Count; i++)
             {
-                ItemStack it = playerInventory[i];
+                ItemStack it = PlayerInventory[i];
                 if (it.itemID == item.itemID)
                 {
-                    playerInventory[i] = new ItemStack(it.numberItems + item.numberItems, it.itemID);
+                    PlayerInventory[i] = new ItemStack(it.numberItems + item.numberItems, it.itemID);
                     //playerInventory.Clear();
                     return;
                 }
             }
-            playerInventory.Add(item);
+            PlayerInventory.Add(item);
         }
 
-        public int timeSinceLastServerUpdate = 0;
+        public int TimeSinceLastServerUpdate = 0;
 
         public void Update(GameTime time)
         {
-            if (jumpTimer > 0) jumpTimer--;
-            if (digTimer > 0) digTimer--;
-            if (--timeSinceLastServerUpdate <= 0)
+            if (JumpTimer > 0) JumpTimer--;
+            if (DigTimer > 0) DigTimer--;
+            if (--TimeSinceLastServerUpdate <= 0)
             {
-                timeSinceLastServerUpdate = 2;
+                TimeSinceLastServerUpdate = 2;
             }
-            if (playerEntity.PlayerID != -1)
-                playerEntity.Update(time);
+            if (PlayerEntity.PlayerID != -1)
+                PlayerEntity.Update(time);
         }
 
         public void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch sb)
         {
-            if (playerEntity.PlayerID != -1)
-                playerEntity.Draw(sb);
+            if (PlayerEntity.PlayerID != -1)
+                PlayerEntity.Draw(sb);
         }
 
 

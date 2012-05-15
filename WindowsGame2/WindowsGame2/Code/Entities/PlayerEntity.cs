@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using MiningGame.Code.Managers;
 using MiningGame.Code.Server;
 using Microsoft.Xna.Framework.Graphics;
@@ -37,17 +38,17 @@ namespace MiningGame.Code.Entities
 
         private Vector2 _oldPlayerPos = new Vector2();
 
-        public override Rectangle BoundBox
+        public override AABB BoundBox
         {
             get
             {
-                return new Rectangle((int)entityPosition.X - PlayerWidth / 2, (int)entityPosition.Y - PlayerHeight / 2, PlayerWidth, PlayerHeight);
+                return new AABB((int)EntityPosition.X - PlayerWidth / 2, (int)EntityPosition.Y - PlayerHeight / 2, PlayerWidth, PlayerHeight);
             }
         }
 
         public PlayerEntity(Vector2 position, byte playerID, string name = "Player")
         {
-            entityPosition = position;
+            EntityPosition = position;
             PlayerID = playerID;
             PlayerName = name;
             TorsoAnimateable = new Animateable();
@@ -66,7 +67,7 @@ namespace MiningGame.Code.Entities
             Texture2D hat = AssetManager.GetTexture("hat");
             Texture2D torso = TorsoAnimateable.getCurrentFrame();
             Texture2D legs = LegsAnimateable.getCurrentFrame();
-            Vector2 drawPos = (entityPosition - new Vector2(BoundBox.Width / 2, 2)) - CameraManager.cameraPosition;
+            Vector2 drawPos = (EntityPosition - new Vector2(BoundBox.Width / 2, 2)) - CameraManager.cameraPosition;
             sb.Draw(torso, drawPos , null, Color.White, 0f, new Vector2(PlayerWidth / 2, PlayerHeight / 2), 1f, !FacingLeft ? SpriteEffects.None :SpriteEffects.FlipHorizontally, 0f);
             sb.Draw(legs, drawPos, null, Color.White, 0f, new Vector2(PlayerWidth / 2, PlayerHeight / 2), 1f, !FacingLeft ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
             sb.Draw(hat, (drawPos - new Vector2(PlayerWidth / 2, PlayerHeight/2)) + new Vector2(torso.Width/2, torso.Height/2) + hatPos, null, Color.White, 0f, new Vector2(hat.Width/2, hat.Height/2), 1f, !FacingLeft ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
@@ -81,8 +82,15 @@ namespace MiningGame.Code.Entities
             Rectangle drawBB = new Rectangle((int)aimingAt.X * GameWorld.BlockWidth, (int)aimingAt.Y * GameWorld.BlockHeight, GameWorld.BlockWidth, GameWorld.BlockHeight);
             DrawManager.Draw_Outline(ConversionManager.PToV(drawBB.Center) - CameraManager.cameraPosition, drawBB.Width, drawBB.Height, Color.White, sb);
 
-            sb.DrawString(AssetManager.GetFont("Console"), PlayerName, entityPosition - new Vector2(30, 30) - CameraManager.cameraPosition, Color.White);
+            sb.DrawString(AssetManager.GetFont("Console"), PlayerName, EntityPosition - new Vector2(30, 30) - CameraManager.cameraPosition, Color.White);
             base.Draw(sb);
+        }
+
+        public float GetAimingAngle()
+        {
+            Vector2 aim = InputManager.GetMousePosV() + CameraManager.cameraPosition;
+            aim -= EntityPosition;
+            return (float) Math.Atan2(aim.Y, aim.X);
         }
 
         public Vector2 GetBlockAimingAt()
@@ -96,8 +104,8 @@ namespace MiningGame.Code.Entities
         public void Update(GameTime time, bool server = false)
         {
             if (server)
-                entityMovement();
-            _oldPlayerPos = entityPosition;
+                EntityMovement();
+            _oldPlayerPos = EntityPosition;
             base.Update(time);
         }
 

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MiningGame.Code.Blocks;
+using MiningGame.Code.Entities;
+using MiningGame.Code.Items;
 using MiningGame.Code.Packets;
 using MiningGame.Code.CInterfaces;
 using Microsoft.Xna.Framework;
@@ -10,6 +12,8 @@ using MiningGame.Code.Structs;
 using Lidgren.Network;
 using MiningGame.Code.Managers;
 using System.IO;
+using YogUILibrary.Managers;
+
 namespace MiningGame.Code.Server
 {
     public class GameServer : Updatable
@@ -17,6 +21,7 @@ namespace MiningGame.Code.Server
         public static Random Random = new Random();
 
         public static List<NetworkPlayer> NetworkPlayers = new List<NetworkPlayer>();
+        public static EntityProjectile[] GameProjectiles = new EntityProjectile[256];
 
         public const int WorldSizeX = 50, WorldSizeY = 50;
         public static byte[,] WorldBlocks = new byte[WorldSizeX, WorldSizeY];
@@ -168,10 +173,10 @@ namespace MiningGame.Code.Server
         {
             if (x < WorldSizeX && y < WorldSizeY && blockID >= 0)
             {
-                if (blockID != GetBlockIDAt(x, y) && GetBlockIDAt(x, y) != 0) Block.getBlock(GetBlockIDAt(x, y)).getBlockRemoved(x, y)(x, y);
+                if (blockID != GetBlockIDAt(x, y) && GetBlockIDAt(x, y) != 0) Block.GetBlock(GetBlockIDAt(x, y)).OnBlockRemoved(x, y);
                 WorldBlocksMetaData[x, y] = metaData;
                 WorldBlocks[x, y] = blockID;
-                if (blockID != 0) Block.getBlock(blockID).getBlockPlaced(x, y, notify)(x, y, notify);
+                if (blockID != 0) Block.GetBlock(blockID).OnBlockPlaced(x, y, notify);
                 Packet1SCGameEvent pack = new Packet1SCGameEvent((byte)GameEvents.Block_Set, x, y, blockID, metaData);
                 Main.serverNetworkManager.SendPacket(pack);
             }
@@ -303,12 +308,12 @@ namespace MiningGame.Code.Server
 
         public static Block GetBlockAt(int x, int y)
         {
-            return Block.getBlock(GetBlockIDAt(x, y));
+            return Block.GetBlock(GetBlockIDAt(x, y));
         }
 
         public static Block GetBlockAt(float x, float y)
         {
-            return Block.getBlock(GetBlockIDAt(x, y));
+            return Block.GetBlock(GetBlockIDAt(x, y));
         }
 
         public static byte GetBlockMDAt(int x, int y)
@@ -325,7 +330,7 @@ namespace MiningGame.Code.Server
 
         public static bool CanWalkThrough(byte id)
         {
-            return Block.getBlock(id).getBlockWalkThrough();
+            return Block.GetBlock(id).GetBlockWalkThrough();
         }
 
         public static void ScheduleUpdate(int x, int y, int frames = 5)
@@ -373,7 +378,7 @@ namespace MiningGame.Code.Server
                     ScheduledUpdates[i] = update;
                     continue;
                 }
-                int nextUpdate = GetBlockAt(update.X, update.Y).getBlockOnUpdate()((int)update.X, (int)update.Y);
+                int nextUpdate = GetBlockAt(update.X, update.Y).OnBlockUpdate((int)update.X, (int)update.Y);
                 if (nextUpdate == -1)
                 {
                     toUnschedule.Add(update);
@@ -388,9 +393,22 @@ namespace MiningGame.Code.Server
             {
                 UnscheduleUpdate((int)r.X, (int)r.Y);
             }
-            for (int i = 0; i < NetworkPlayers.Count; i++)
+            foreach (NetworkPlayer t in NetworkPlayers)
             {
-                NetworkPlayers[i].Update(time);
+                t.Update(time);
+            }
+
+            for(int i = 0; i < GameProjectiles.Length; i++)
+            {
+                EntityProjectile p = GameProjectiles[i];
+                if (p == null) continue;
+                p.Update(time);
+                if (p.ShouldDestroy)
+                {
+                    Packet3SCRemoveProjectile remove = new Packet3SCRemoveProjectile(p.ProjectileID);
+                    Main.serverNetworkManager.SendPacket(remove);
+                    GameProjectiles[i] = null;
+                }
             }
         }
 
@@ -416,7 +434,37 @@ namespace MiningGame.Code.Server
                     Packet1CSGameEvent pack = new Packet1CSGameEvent(GameEvents.Player_Chat, (byte)player.PlayerEntity.PlayerID, (bool)teamChat, chatText);
                     Main.serverNetworkManager.SendPacket(pack);
                     break;
+
+                case GameEvents.Player_Attack:
+                    float angle = p.readFloat();
+
+                    int nextslot = GetFreeProjectileSlot();
+                    if (nextslot == -1) break;
+
+                    var packet = new Packet2SCCreateProjectile((byte)nextslot, 1,
+                                                               (short)player.PlayerEntity.EntityPosition.X,
+                                                                (short)((short)player.PlayerEntity.EntityPosition.Y - 10), angle);
+                    Main.serverNetworkManager.SendPacket(packet);
+
+                    GameProjectiles[nextslot] = new ProjectileArrow(new Vector2(player.PlayerEntity.EntityPosition.X,
+                                                                player.PlayerEntity.EntityPosition.Y - 10), angle){ProjectileID = (byte)nextslot};
+                    break;
             }
+        }
+
+        public static int GetFreeProjectileSlot()
+        {
+            for(int i = 0; i < GameProjectiles.Length; i++)
+            {
+                if (GameProjectiles[i] == null) return i;
+            }
+            return -1;
+        }
+
+        public static void SendMessageToAll(string message)
+        {
+            Packet1CSGameEvent pack = new Packet1CSGameEvent(GameEvents.Player_Chat, (byte)0, false, message);
+            Main.serverNetworkManager.SendPacket(pack);
         }
 
         public void addToUpdateList()
@@ -445,7 +493,8 @@ namespace MiningGame.Code.Server
             Player_Use_Block,
             Player_Aim_And_Position,
             Player_Direction,
-            Player_Animation
+            Player_Animation,
+            Player_Attack
         }
     }
 }

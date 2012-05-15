@@ -9,9 +9,9 @@ namespace MiningGame.Code.Items
     public class ItemIron : Item
     {
         public ItemIron() : base(){
-            setName("Iron").setDescription("I am iron man").setValue(7).setAsset("iron").setID(4);
+            SetName("Iron").SetDescription("I am iron man").SetValue(7).SetAsset("iron").SetID(4);
         }
-        public override void onItemUsed(int x, int y)
+        public override void OnItemUsed(int x, int y)
         {
             GameServer.SetBlock(x, y, 200);
             //throw new NotImplementedException();

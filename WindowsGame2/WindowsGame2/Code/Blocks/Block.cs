@@ -25,17 +25,6 @@ namespace MiningGame.Code.Blocks
         private bool _hideBlock;
         private static Random _random = new Random();
 
-        private Func<int, int, SpriteBatch, Texture2D> _renderBlock;
-        private Func<int, int, int> _onBlockUpdated;
-        private Action<int, int> _onBlockUsed;
-        private Action<int, int, bool> _onBlockPlaced;
-        private Action<int, int> _onBlockRemoved;
-        private Action<int, int, int, Entities.EntityMoveable> _onBlockTouched;
-        private Action<int, int, int, int> _onBlockConnected;
-        private Func<int, int, byte> _getBlockDrop;
-        private Func<int, int, int> _getBlockDropNum;
-        private Func<int, int, Rectangle> _getBlockBB;
-
         public Block()
         {
             _blockName = "block";
@@ -49,20 +38,19 @@ namespace MiningGame.Code.Blocks
             _numConnectionsAllowed = 0;
 
             _hideBlock = false;
-            _renderBlock = (x, y, sb) => { return null; };
+            /*_renderBlock = (x, y, sb) => { return null; };
             _onBlockUpdated = (x, y) => { return -1; };
             _onBlockUsed = (x, y) => { };
             _onBlockPlaced = (x, y, notify) => { };
             _onBlockRemoved = (x, y) => { };
             _onBlockTouched = (x, y, side, entity) => { };
-            _onBlockConnected = (x1, y1, x2, y2) => { };
             _getBlockDrop = (int x, int y) => { return (byte)0; };
             _getBlockDropNum = (x, y) => { return 0; };
             _getBlockBB = (x, y) => { Vector2 pos = new Vector2(x * GameWorld.BlockWidth, y * GameWorld.BlockHeight); return new Rectangle((int)pos.X, (int)pos.Y, GameWorld.BlockWidth, GameWorld.BlockHeight); };
-
+*/
         }
 
-        public Block finalizeBlock()
+        public Block FinalizeBlock()
         {
             if (!AllBlocks.Contains(this))
             {
@@ -71,261 +59,189 @@ namespace MiningGame.Code.Blocks
             }
             else
             {
-                Managers.ConsoleManager.Log("Block " + getBlockName() + " (" + getBlockID() + ") is already in list", Color.Red);
+                Managers.ConsoleManager.Log("Block " + GetBlockName() + " (" + GetBlockID() + ") is already in list", Color.Red);
                 return this;
             }
         }
 
     
 
-        public static Block getBlock(byte blockID)
+        public static Block GetBlock(byte blockID)
         {
             IEnumerable<Block> query = AllBlocks.Where(x => x._blockID == blockID);
             return (query.Count() > 0) ? query.First() : new Block();
         }
 
-        private void blockPlaced(int x, int y, bool notify = true)
+        private void BlockPlaced(int x, int y, bool notify = true)
         {
-            if (getBlockLightLevel() >= 1)
+            /*if (GetBlockLightLevel() >= 1)
             {
-                GameWorld.lightUpAroundRadius(x, y, getBlockLightLevel(), 0);
-            }
+                GameWorld.lightUpAroundRadius(x, y, GetBlockLightLevel(), 0);
+            }*/
         }
 
-        private void blockRemoved(int x, int y)
+        private void BlockRemoved(int x, int y)
         {
             GameServer.UnscheduleUpdate(x, y);
-            if (getBlockLightLevel() >= 1)
+            /*if (GetBlockLightLevel() >= 1)
             {
-                GameWorld.lightUpAroundRadius(x, y, getBlockLightLevel(), 0, -1);
-            }
+                GameWorld.lightUpAroundRadius(x, y, GetBlockLightLevel(), 0, -1);
+            }*/
         }
 
-        public Block setBlockOnPlaced(Action<int, int, bool> onBlockPlaced)
-        {
-            this._onBlockPlaced = onBlockPlaced;
-            return this;
-        }
 
-        public Block setBlockOnRemoved(Action<int, int> onBlockRemoved)
-        {
-            this._onBlockRemoved = onBlockRemoved;
-            return this;
-        }
-
-        public Block setBlockOnTouched(Action<int, int, int, Entities.EntityMoveable> onBlockTouched)
-        {
-            this._onBlockTouched = onBlockTouched;
-            return this;
-        }
-
-        public Block setBlockOnUsed(Action<int, int> onBlockUsed)
-        {
-            this._onBlockUsed = onBlockUsed;
-            return this;
-        }
-
-        public Block setBlockGetBB(Func<int, int, Rectangle> getBB)
-        {
-            this._getBlockBB = getBB;
-            return this;
-        }
-
-        public Block setBlockGetRender(Func<int, int, SpriteBatch, Texture2D> onBlockRender)
-        {
-            this._renderBlock = onBlockRender;
-            return this;
-        }
-
-        public Block setBlockGetDrop(Func<int, int, byte> onBlockGetDrop)
-        {
-            this._getBlockDrop = onBlockGetDrop;
-            return this;
-        }
-
-        public Block setBlockOnUpdated(Func<int, int, int> onBlockUpdated)
-        {
-            this._onBlockUpdated = onBlockUpdated;
-            return this;
-        }
-
-        public Block setBlockGetDropNum(Func<int, int, int> onBlockGetDropNum)
-        {
-            this._getBlockDropNum = onBlockGetDropNum;
-            return this;
-        }
-
-        public Block setBlockOnConnected(Action<int, int, int, int> act)
-        {
-            _onBlockConnected = act;
-            return this;
-        }
-
-        public Block setBlockID(byte id)
+        public Block SetBlockID(byte id)
         {
             this._blockID = id;
             return this;
         }
 
-        public Block setBlockNumConnectionsAllowed(int a)
-        {
-            _numConnectionsAllowed = a;
-            return this;
-        }
-
-        public Block setBlockHide(bool hide)
+        public Block SetBlockHide(bool hide)
         {
             this._hideBlock = hide;
             return this;
         }
 
-        public Block setBlockOpaque(bool opaque)
+        public Block SetBlockOpaque(bool opaque)
         {
             _blockOpaque = opaque;
             return this;
         }
 
-        public Block setBlockLightLevel(int l)
+        public Block SetBlockLightLevel(int l)
         {
             this._lightLevel = l;
             return this;
         }
 
-        public Block setBlockName(string name)
+        public Block SetBlockName(string name)
         {
-            this._blockName = name;
+            _blockName = name;
             return this;
         }
 
-        public Block setBlockHardness(int hardness)
+        public Block SetBlockHardness(int hardness)
         {
             this._blockHardness = hardness;
             return this;
         }
 
-        public Block setBlockRenderSpecial(bool special)
+        public Block SetBlockRenderSpecial(bool special)
         {
             _blockRenderSpecial = special;
             return this;
         }
 
-        public Block setBlockColor(Color c)
+        public Block SetBlockColor(Color c)
         {
-            setBlockRenderSpecial(false);
+            SetBlockRenderSpecial(false);
             _blockColor = c;
             return this;
         }
 
-        public Block setBlockColorRGBA(int r, int g, int b, int a = 255)
+        public Block SetBlockColorRGBA(int r, int g, int b, int a = 255)
         {
-            setBlockRenderSpecial(false);
+            SetBlockRenderSpecial(false);
             _blockColor = new Color(r, g, b, a);
             return this;
         }
 
-        public Block setBlockWalkThrough(bool b)
+        public Block SetBlockWalkThrough(bool b)
         {
             _blockWalkThrough = b;
             return this;
         }
 
-        public Func<int, int, Rectangle> getBlockBoundBox()
+        public virtual Rectangle GetBlockBoundBox(int X, int Y)
         {
-            return _getBlockBB;
+            return new Rectangle(X * GameWorld.BlockWidth, Y * GameWorld.BlockHeight, GameWorld.BlockWidth, GameWorld.BlockHeight);
         }
 
-        public Action<int, int, int, Entities.EntityMoveable> getBlockOnTouched()
+        public virtual void OnBlockTouched(int X, int Y, int side, Entities.EntityMoveable toucher)
         {
-            return _onBlockTouched;
+            
         }
 
-        public Func<int, int, SpriteBatch, Texture2D> getRenderBlock()
+        public virtual Texture2D RenderBlock(int x, int y, SpriteBatch sb)
         {
-            return _renderBlock;
+            return null;
         }
 
-        public Action<int, int, bool> getBlockPlaced(int x, int y, bool notify)
+        public virtual void OnBlockPlaced(int x, int y, bool notify)
         {
-            blockPlaced(x, y, notify);
-            return _onBlockPlaced;
         }
 
-        public Action<int, int> getBlockRemoved(int x, int y)
+        public virtual void OnBlockRemoved(int x, int y)
         {
-            blockRemoved(x, y);
-            return _onBlockRemoved;
+            
         }
 
-        public Action<int, int> getBlockUsed()
+        public virtual void OnBlockUsed(int x, int y)
         {
-            return _onBlockUsed;
+            
         }
-
-        public Action<int, int, int, int> getBlockOnConnected(){
-            return _onBlockConnected;
-        }
-
-        public Func<int, int, int> getBlockOnUpdate()
+        
+        public int OnBlockUpdate(int x, int y)
         {
-            return _onBlockUpdated;
+            return -1;
         }
 
-        public Func<int, int, byte> getItemDrop()
+        public byte GetItemDrop(int x, int y)
         {
-            return _getBlockDrop;
+            return 0;
         }
 
-        public Func<int, int, int> getItemDropNum()
+        public int GetItemDropNum(int x, int y)
         {
-            return _getBlockDropNum;
+            return 0;
         }
 
-        public bool getBlockWalkThrough()
+        public bool GetBlockWalkThrough()
         {
             return _blockWalkThrough;
         }
 
-        public bool getBlockHide()
+        public bool GetBlockHide()
         {
             return _hideBlock;
         }
 
-        public int getBlockNumConnectionsAllowed()
+        public int GetBlockNumConnectionsAllowed()
         {
             return _numConnectionsAllowed;
         }
 
-        public byte getBlockID()
+        public byte GetBlockID()
         {
             return _blockID;
         }
 
-        public int getBlockLightLevel()
+        public int GetBlockLightLevel()
         {
             return _lightLevel;
         }
 
-        public string getBlockName()
+        public string GetBlockName()
         {
             return _blockName;
         }
 
-        public bool getBlockOpaque()
+        public bool GetBlockOpaque()
         {
             return _blockOpaque;
         }
 
-        public int getBlockHardness()
+        public int GetBlockHardness()
         {
             return _blockHardness;
         }
 
-        public bool getBlockRenderSpecial()
+        public bool GetBlockRenderSpecial()
         {
             return _blockRenderSpecial;
         }
 
-        public Color getBlockRenderColor()
+        public Color GetBlockRenderColor()
         {
             return _blockColor;
         }

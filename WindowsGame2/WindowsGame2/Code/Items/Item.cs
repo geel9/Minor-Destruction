@@ -1,111 +1,108 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using MiningGame.Code.Items;
 
-namespace MiningGame.Code
+namespace MiningGame.Code.Items
 {
     public abstract class Item
     {
-        public static List<Item> items = new List<Item>();
+        public static List<Item> Items = new List<Item>();
 
-        public static void makeItems()
+        public static void MakeItems()
         {
-            items.Clear();
-            Item dirt = new ItemDirt();
-            Item rock = new ItemRock();
-            Item coal = new ItemCoal();
-            Item iron = new ItemIron();
-            Item door = new ItemDoor();
-            Item plank = new ItemPlank();
-            Item dino = new ItemDino();
+            Items.Clear();
+            new ItemDirt();
+            new ItemRock();
+            new ItemCoal();
+            new ItemIron();
+            new ItemDoor();
+            new ItemPlank();
+            new ItemDino();
         }
 
-        public Item()
+        protected Item()
         {
-            items.Add(this);
+            Items.Add(this);
         }
 
-        public Item setValue(int value)
+        public Item SetValue(int value)
         {
-            this.itemWorth = value;
+            _itemWorth = value;
             return this;
         }
         
-        public Item setName(string name)
+        public Item SetName(string name)
         {
-            itemName = name;
+            _itemName = name;
             return this;
         }
        
-        public Item setAsset(string asset)
+        public Item SetAsset(string asset)
         {
-            assetName = asset;
+            _assetName = asset;
             return this;
         }
 
-        public Item setID(byte id)
+        public Item SetID(byte id)
         {
-            this.itemID = id;
+            this._itemID = id;
             return this;
         }
 
-        public Item setDescription(string description)
+        public Item SetDescription(string description)
         {
-            this.itemDescription = description;
+            this._itemDescription = description;
             return this;
         }
 
-        public Item setBlockID(byte id)
+        public Item SetBlockID(byte id)
         {
-            blockID = id;
+            _blockID = id;
             return this;
         }
 
-        public static Item getItem(byte id)
+        public static Item GetItem(byte id)
         {
-            return items.Where(x => x.itemID == id).FirstOrDefault();
+            return Items.Where(x => x._itemID == id).FirstOrDefault();
         }
 
-        public int getValue()
+        public int GetValue()
         {
-            return itemWorth;
+            return _itemWorth;
         }
 
-        public string getName()
+        public string GetName()
         {
-            return itemName;
+            return _itemName;
         }
 
-        public string getAsset()
+        public string GetAsset()
         {
-            return assetName;
+            return _assetName;
         }
 
-        public string getDescription()
+        public string GetDescription()
         {
-            return itemDescription;
+            return _itemDescription;
         }
 
-        public byte getItemID()
+        public byte GetItemID()
         {
-            return itemID;
+            return _itemID;
         }
 
-        public abstract void onItemUsed(int x, int y);
+        public abstract void OnItemUsed(int x, int y);
 
-        public byte getBlockID()
+        public byte GetBlockID()
         {
-            return blockID;
+            return _blockID;
         }
 
-        private string itemName;
-        private int itemWorth;
-        private string assetName;
-        private string itemDescription;
-        private byte itemID;
-        private byte blockID = 0;
+        private string _itemName;
+        private int _itemWorth;
+        private string _assetName;
+        private string _itemDescription;
+        private byte _itemID;
+        private byte _blockID = 0;
     }
 
     public struct ItemStack

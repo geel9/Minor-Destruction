@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using MiningGame.Code.Items;
 using MiningGame.Code.Managers;
 using MiningGame.Code.Structs;
 using Microsoft.Xna.Framework;
@@ -53,12 +54,12 @@ namespace MiningGame.Code.Interfaces
                 //buttons[i].setLabel("");
             }
 
-            for (int i = offset; i < GameWorld.thePlayer.playerInventory.Count; i++)
+            for (int i = offset; i < GameWorld.ThePlayer.PlayerInventory.Count; i++)
             {
-                ItemStack itemStack = GameWorld.thePlayer.playerInventory[i];
-                Item item = Item.getItem(itemStack.itemID);
+                ItemStack itemStack = GameWorld.ThePlayer.PlayerInventory[i];
+                Item item = Item.GetItem(itemStack.itemID);
                 //buttons[i - offset].setLabel(itemStack.numberItems + " " + item.getName());
-                Texture2D tex = AssetManager.GetTexture(item.getAsset());
+                Texture2D tex = AssetManager.GetTexture(item.GetAsset());
                 float width = 25 - tex.Width;
                 float height = 25 - tex.Height;
                 //buttons[i - offset].setImage(tex, width, height);

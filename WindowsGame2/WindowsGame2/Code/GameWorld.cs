@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MiningGame.Code.CInterfaces;
+using MiningGame.Code.Items;
 using MiningGame.Code.Managers;
 using Microsoft.Xna.Framework;
 using MiningGame.Code.Blocks;
@@ -21,39 +22,28 @@ namespace MiningGame.Code
     {
         public const int WorldSizeX = GameServer.WorldSizeX, WorldSizeY = GameServer.WorldSizeY;
         public const int BlockWidth = 16, BlockHeight = 16, PlayerVision = 4;
-        public static Random random = new Random();
+        public static Random Random = new Random();
 
-        public static List<PlayerEntity> otherPlayers = new List<PlayerEntity>();
-        public static PlayerController thePlayer = new PlayerController();
+        public static List<PlayerEntity> OtherPlayers = new List<PlayerEntity>();
+        public static PlayerController ThePlayer = new PlayerController();
 
-        public static byte[,] worldBlocks = new byte[WorldSizeX, WorldSizeY];
-        public static byte[,] worldBlocksMetaData = new byte[WorldSizeX, WorldSizeY];
+        public static List<EntityProjectile> GameProjectiles = new List<EntityProjectile>();
 
-        public static int[, ,] worldBlocksSeen = new int[WorldSizeX, WorldSizeY, 2];
+        public static byte[,] WorldBlocks = new byte[WorldSizeX, WorldSizeY];
+        public static byte[,] WorldBlocksMetaData = new byte[WorldSizeX, WorldSizeY];
+
+        public static int[, ,] WorldBlocksSeen = new int[WorldSizeX, WorldSizeY, 2];
 
         public static void LoadBlocks()
         {
             Block.AllBlocks.Clear();
-            string path = DirectoryManager.BLOCKS;
-            List<string> codes = new List<string>();
-            string[] files = Directory.GetFiles(path).Where(name => name.Contains(".bl")).ToArray();
-            foreach (string i in files)
-            {
-                string contents = FileReaderManager.ReadFileContents(i);
-                codes.Add(contents);
-            }
-            List<Block> blocks = CodeExecutorManager.BuildBlock(codes.ToArray(), files.Select(s => s.Replace(Directory.GetCurrentDirectory(), "").Replace("\\", "")).ToArray());
 
-            foreach (Block b in blocks)
-            {
-                if (b != null) b.finalizeBlock();
-            }
         }
 
         public GameWorld()
         {
             addToList();
-            thePlayer.Start();
+            ThePlayer.Start();
         }
 
         public static List<Vector2> LineIntersections(Vector2 p1, Vector2 p2)
@@ -97,27 +87,27 @@ namespace MiningGame.Code
             return ret;
         }
 
-        public static bool isBlockLit(int x, int y)
+        public static bool IsBlockLit(int x, int y)
         {
-            return worldBlocksSeen[x, y, 0] > 0 || worldBlocksSeen[x, y, 1] > 0;
+            return WorldBlocksSeen[x, y, 0] > 0 || WorldBlocksSeen[x, y, 1] > 0;
         }
 
-        public static int getBlockLitLevel(int x, int y)
+        public static int GetBlockLitLevel(int x, int y)
         {
-            if (isBlockFullyLit(x, y)) return 2;
-            if (worldBlocksSeen[x, y, 1] > 0) return 1;
+            if (IsBlockFullyLit(x, y)) return 2;
+            if (WorldBlocksSeen[x, y, 1] > 0) return 1;
             return 0;
         }
 
-        public static bool isBlockFullyLit(int x, int y)
+        public static bool IsBlockFullyLit(int x, int y)
         {
-            Vector2 playerTile = AbsoluteToTile(thePlayer.playerEntity.entityPosition);
+            Vector2 playerTile = AbsoluteToTile(ThePlayer.PlayerEntity.EntityPosition);
             float xDist = Math.Abs(playerTile.X - x);
             float yDist = Math.Abs(playerTile.Y - y);
-            return worldBlocksSeen[x, y, 0] > 0 || (xDist < PlayerVision && yDist < PlayerVision);
+            return WorldBlocksSeen[x, y, 0] > 0 || (xDist < PlayerVision && yDist < PlayerVision);
         }
 
-        public static int shouldRenderBlock(int x, int y)
+        public static int ShouldRenderBlock(int x, int y)
         {
             return 2;
             //return getBlockLitLevel(x, y);
@@ -125,65 +115,67 @@ namespace MiningGame.Code
 
         public static byte GetBlockIDAt(int x, int y)
         {
-            return (x >= 0 && y >= 0 && x < WorldSizeX && y < WorldSizeY) ? worldBlocks[x, y] : (byte)0;
+            return (x >= 0 && y >= 0 && x < WorldSizeX && y < WorldSizeY) ? WorldBlocks[x, y] : (byte)0;
         }
 
         public static byte GetBlockIDAt(float x, float y)
         {
-            return (x >= 0 && y >= 0 && x < WorldSizeX && y < WorldSizeY) ? worldBlocks[(int)x, (int)y] : (byte)0;
+            return (x >= 0 && y >= 0 && x < WorldSizeX && y < WorldSizeY) ? WorldBlocks[(int)x, (int)y] : (byte)0;
         }
 
         public static Block GetBlockAt(int x, int y)
         {
-            return Block.getBlock(GetBlockIDAt(x, y));
+            return Block.GetBlock(GetBlockIDAt(x, y));
         }
 
         public static Block GetBlockAt(float x, float y)
         {
-            return Block.getBlock(GetBlockIDAt(x, y));
+            return Block.GetBlock(GetBlockIDAt(x, y));
         }
 
         public static byte GetBlockMDAt(int x, int y)
         {
-            return (x >= 0 && y >= 0 && x < WorldSizeX && y < WorldSizeY) ? worldBlocksMetaData[x, y] : (byte)0;
+            return (x >= 0 && y >= 0 && x < WorldSizeX && y < WorldSizeY) ? WorldBlocksMetaData[x, y] : (byte)0;
         }
 
         public static byte GetBlockMDAt(float x, float y)
         {
-            return (x >= 0 && y >= 0 && x < WorldSizeX && y < WorldSizeY) ? worldBlocksMetaData[(int)x, (int)y] : (byte)0;
+            return (x >= 0 && y >= 0 && x < WorldSizeX && y < WorldSizeY) ? WorldBlocksMetaData[(int)x, (int)y] : (byte)0;
         }
 
         public static bool CanWalkThrough(byte id)
         {
-            return Block.getBlock(id).getBlockWalkThrough();
+            return Block.GetBlock(id).GetBlockWalkThrough();
         }
 
-        public void Update(Microsoft.Xna.Framework.GameTime time)
+        public void Update(GameTime time)
         {
             //ConsoleManager.setVariableValue("window_title", "Blocking: " + InterfaceManager.blocking);
-            thePlayer.Update(time);
-            if (thePlayer.playerEntity != null)
-                CameraManager.setCameraPositionCenterMin(thePlayer.playerEntity.entityPosition, Vector2.Zero);
+            ThePlayer.Update(time);
+            if (ThePlayer.PlayerEntity != null)
+                CameraManager.setCameraPositionCenterMin(ThePlayer.PlayerEntity.EntityPosition, Vector2.Zero);
+            foreach (EntityProjectile p in GameProjectiles)
+                p.Update(time);
         }
 
-        public void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch sb)
+        public void Draw(SpriteBatch sb)
         {
-            if (thePlayer.playerEntity == null) return;
-            Vector2 playerTile = AbsoluteToTile(thePlayer.playerEntity.entityPosition);
+            if (ThePlayer.PlayerEntity == null) return;
+            Vector2 playerTile = AbsoluteToTile(ThePlayer.PlayerEntity.EntityPosition);
             Rectangle cameraBounds = CameraManager.cameraBoundBox;
             int blockStartX = (int)MathHelper.Clamp(cameraBounds.Left / BlockWidth, 0, WorldSizeX - 1);
             int blockStartY = (int)MathHelper.Clamp(cameraBounds.Top / BlockHeight, 0, WorldSizeY - 1);
-            int blockEndX = (int)MathHelper.Clamp((cameraBounds.Right / BlockWidth) + 1, 0, WorldSizeX - 1);
-            int blockEndY = (int)MathHelper.Clamp((cameraBounds.Bottom / BlockHeight) + 1, 0, WorldSizeY - 1);
+            int blockEndX = (int)MathHelper.Clamp((cameraBounds.Right / BlockWidth) + 1, 0, WorldSizeX);
+            int blockEndY = (int)MathHelper.Clamp((cameraBounds.Bottom / BlockHeight) + 1, 0, WorldSizeY);
 
             Vector2 mousePos = InputManager.GetMousePosV();
             Vector2 blockMouseOver = AbsoluteToTile(mousePos);
             blockMouseOver.X = MathHelper.Clamp(blockMouseOver.X, 0, WorldSizeX - 1);
             blockMouseOver.Y = MathHelper.Clamp(blockMouseOver.Y, 0, WorldSizeY - 1);
-            byte mouseOverID = worldBlocks[(int)blockMouseOver.X, (int)blockMouseOver.Y];
+            byte mouseOverID = WorldBlocks[(int)blockMouseOver.X, (int)blockMouseOver.Y];
 
-            Vector2 curDig = thePlayer.curMining;
-            float digMult = MathHelper.Clamp(1f - (float)((float)thePlayer.digPct / 100f), 0, 1);
+            Vector2 curDig = ThePlayer.CurMining;
+            float digMult = MathHelper.Clamp(1f - (float)((float)ThePlayer.DigPct / 100f), 0, 1);
             for (int x = blockStartX; x < blockEndX; x++)
             {
                 for (int y = blockStartY; y < blockEndY; y++)
@@ -196,8 +188,8 @@ namespace MiningGame.Code
                     }
                     Vector2 drawPos = new Vector2(x * BlockWidth + (BlockWidth / 2), y * BlockHeight + (BlockHeight / 2));
                     drawPos -= CameraManager.cameraPosition;
-                    byte blockID = worldBlocks[x, y];
-                    int render = shouldRenderBlock(x, y);
+                    byte blockID = WorldBlocks[x, y];
+                    int render = ShouldRenderBlock(x, y);
                     if (render > 0)
                     {
                         if (y < 10)
@@ -209,19 +201,19 @@ namespace MiningGame.Code
 
                         if (blockID != 0)
                         {
-                            Block block = Block.getBlock(blockID);
+                            Block block = Block.GetBlock(blockID);
                             bool flag = (x == curDig.X && y == curDig.Y);
-                            bool flagHide = block.getBlockHide() && render == 1;
+                            bool flagHide = block.GetBlockHide() && render == 1;
 
-                            if (block.getBlockRenderSpecial() || y < 10)
+                            if (block.GetBlockRenderSpecial() || y < 10)
                             {
-                                Texture2D blockTexture = block.getRenderBlock()(x, y, sb);
+                                Texture2D blockTexture = block.RenderBlock(x, y, sb);
                                 if (blockTexture != null)
                                     sb.Draw(blockTexture, drawPos, null, Color.White, 0f, new Vector2(BlockWidth / 2, BlockHeight / 2), (flag ? digMult : 1), SpriteEffects.None, 0);
                             }
                             else
                             {
-                                Color color = block.getBlockRenderColor();
+                                Color color = block.GetBlockRenderColor();
                                 //DrawManager.Draw_Box(drawPos, blockWidth * (flag ? digMult : 1), blockHeight * (flag ? digMult : 1), color, sb, 0f);
                             }
                         }
@@ -235,47 +227,32 @@ namespace MiningGame.Code
             }
             string inventory = "\nInventory: \n";
 
-            Item inI = thePlayer.getPlayerItemInHand();
+            Item inI = ThePlayer.GetPlayerItemInHand();
             if (inI != null)
             {
-                inventory = "\n\nItem in hand: " + inI.getName() + "\n" + inventory;
+                inventory = "\n\nItem in hand: " + inI.GetName() + "\n" + inventory;
             }
             else
             {
                 inventory = "\n\nItem in hand: nothing\n" + inventory;
             }
-            foreach (ItemStack i in thePlayer.playerInventory)
+            foreach (ItemStack i in ThePlayer.PlayerInventory)
             {
-                Item item = Item.getItem(i.itemID);
-                inventory += item.getName() + ": " + i.numberItems + "\n";
+                Item item = Item.GetItem(i.itemID);
+                inventory += item.GetName() + ": " + i.numberItems + "\n";
             }
-            if (thePlayer.playerInventory.Count == 0) inventory += "Nothing!\n";
-            thePlayer.Draw(sb);
-            /*
-            if (curBlockConnecting != new Point(-1, -1))
-            {
-                Vector2 pos = ConversionManager.PToV(curBlockConnecting);
-                pos += new Vector2(0.5f, 0.5f);
-                pos *= new Vector2(blockWidth, blockHeight);
-                pos -= CameraManager.cameraPosition;
-                DrawManager.Draw_Line(pos, InputManager.GetMousePosV(), Color.White, sb);
+            if (ThePlayer.PlayerInventory.Count == 0)
+                inventory += "Nothing!\n";
 
-            }*/
-            foreach (BlockConnection bc in GameServer.BlockConnections)
-            {
-                Vector2 point1 = bc.blockConnection1.blockPosition;
-                Vector2 point2 = bc.blockConnection2.blockPosition;
-                point1 += new Vector2(0.5f, 0.5f);
-                point1 *= new Vector2(BlockWidth, BlockHeight);
-                point1 -= CameraManager.cameraPosition;
-                point2 += new Vector2(0.5f, 0.5f);
-                point2 *= new Vector2(BlockWidth, BlockHeight);
-                point2 -= CameraManager.cameraPosition;
-                DrawManager.Draw_Line(point1, point2, Color.Red, sb);
-            }
-            foreach (PlayerEntity oth in otherPlayers)
+            ThePlayer.Draw(sb);
+            foreach (PlayerEntity oth in OtherPlayers)
             {
                 oth.Draw(sb);
+            }
+
+            foreach(EntityProjectile projectile in GameProjectiles)
+            {
+                projectile.Draw(sb);
             }
         }
 
@@ -284,20 +261,20 @@ namespace MiningGame.Code
             return new Vector2((int)(tile.X / BlockWidth), (int)(tile.Y / BlockHeight));
         }
 
-        public static void setBlock(int x, int y, byte blockID, bool notify = true, byte metaData = 0)
+        public static void SetBlock(int x, int y, byte blockID, bool notify = true, byte metaData = 0)
         {
             if (x < WorldSizeX && y < WorldSizeY && blockID >= 0)
             {
-                if (blockID != GetBlockIDAt(x, y) && GetBlockIDAt(x, y) != 0) Block.getBlock(GetBlockIDAt(x, y)).getBlockRemoved(x, y)(x, y);
-                worldBlocksMetaData[x, y] = metaData;
-                worldBlocks[x, y] = blockID;
-                if (blockID != 0) Block.getBlock(blockID).getBlockPlaced(x, y, notify)(x, y, notify);
+                if (blockID != GetBlockIDAt(x, y) && GetBlockIDAt(x, y) != 0) Block.GetBlock(GetBlockIDAt(x, y)).OnBlockRemoved(x, y);
+                WorldBlocksMetaData[x, y] = metaData;
+                WorldBlocks[x, y] = blockID;
+                if (blockID != 0) Block.GetBlock(blockID).OnBlockPlaced(x, y, notify);
             }
         }
 
-        public static void setBlockMetaData(int x, int y, byte metadata)
+        public static void SetBlockMetaData(int x, int y, byte metadata)
         {
-            worldBlocksMetaData[x, y] = metadata;
+            WorldBlocksMetaData[x, y] = metadata;
         }
 
         public static void HandleGameEvent(byte eventID, Packet p)
@@ -305,20 +282,20 @@ namespace MiningGame.Code
             switch ((GameServer.GameEvents)eventID)
             {
                 case GameServer.GameEvents.Block_Set:
-                    setBlock(p.readInt(), p.readInt(), p.readByte(), false, p.readByte());
+                    SetBlock(p.readInt(), p.readInt(), p.readByte(), false, p.readByte());
                     break;
 
                 case GameServer.GameEvents.Player_Chat:
                     byte playerID = p.readByte();
                     bool teamChat = p.readBool();
                     string chatText = p.readString();
-                    if (playerID == thePlayer.playerEntity.PlayerID)
+                    if (playerID == ThePlayer.PlayerEntity.PlayerID)
                     {
-                        ChatInterface.chatEntries.Add(new ChatEntry(thePlayer.playerEntity.PlayerName, chatText, Color.White, teamChat));
+                        ChatInterface.chatEntries.Add(new ChatEntry(ThePlayer.PlayerEntity.PlayerName, chatText, Color.White, teamChat));
                     }
                     else if (playerID != 0)
                     {
-                        foreach (PlayerEntity pe in otherPlayers)
+                        foreach (PlayerEntity pe in OtherPlayers)
                         {
                             if (pe.PlayerID == playerID)
                             {
@@ -336,17 +313,17 @@ namespace MiningGame.Code
                     playerID = p.readByte();
                     int x = p.readInt();
                     int y = p.readInt();
-                    if (playerID == thePlayer.playerEntity.PlayerID)
+                    if (playerID == ThePlayer.PlayerEntity.PlayerID)
                     {
-                        thePlayer.playerEntity.entityPosition = new Vector2(x, y);
+                        ThePlayer.PlayerEntity.EntityPosition = new Vector2(x, y);
                     }
                     else
                     {
-                        foreach (PlayerEntity pe in otherPlayers)
+                        foreach (PlayerEntity pe in OtherPlayers)
                         {
                             if (pe.PlayerID == playerID)
                             {
-                                pe.entityPosition = new Vector2(x, y);
+                                pe.EntityPosition = new Vector2(x, y);
                             }
                         }
                     }
@@ -356,17 +333,17 @@ namespace MiningGame.Code
                     playerID = p.readByte();
                     x = p.readShort();
                     y = p.readShort();
-                    if (playerID == thePlayer.playerEntity.PlayerID)
+                    if (playerID == ThePlayer.PlayerEntity.PlayerID)
                     {
-                        thePlayer.playerEntity.entityPosition = new Vector2(x, y);
+                        ThePlayer.PlayerEntity.EntityPosition = new Vector2(x, y);
                     }
                     else
                     {
-                        foreach (PlayerEntity pe in otherPlayers)
+                        foreach (PlayerEntity pe in OtherPlayers)
                         {
                             if (pe.PlayerID == playerID)
                             {
-                                pe.entityPosition = new Vector2(x, y);
+                                pe.EntityPosition = new Vector2(x, y);
                             }
                         }
                     }
@@ -374,7 +351,7 @@ namespace MiningGame.Code
 
                 case GameServer.GameEvents.Player_Leave:
                     byte pId = p.readByte();
-                    otherPlayers.Remove(otherPlayers.Where(pl => pl.PlayerID == pId).FirstOrDefault());
+                    OtherPlayers.Remove(OtherPlayers.Where(pl => pl.PlayerID == pId).FirstOrDefault());
                     ConsoleManager.Log("Player " + pId + " left.");
                     break;
 
@@ -382,20 +359,20 @@ namespace MiningGame.Code
                     byte index = p.readByte();
                     byte id = p.readByte();
                     int num = p.readInt();
-                    if (index < thePlayer.playerInventory.Count)
+                    if (index < ThePlayer.PlayerInventory.Count)
                     {
-                        thePlayer.playerInventory[index] = new ItemStack(num, id);
+                        ThePlayer.PlayerInventory[index] = new ItemStack(num, id);
                     }
                     break;
 
                 case GameServer.GameEvents.Player_Inventory_Add:
                     byte itemID = p.readByte();
                     int itemNum = p.readInt();
-                    thePlayer.playerInventory.Add(new ItemStack(itemNum, itemID));
+                    ThePlayer.PlayerInventory.Add(new ItemStack(itemNum, itemID));
                     break;
 
                 case GameServer.GameEvents.Player_Inventory_Remove:
-                    thePlayer.playerInventory.RemoveAt(p.readByte());
+                    ThePlayer.PlayerInventory.RemoveAt(p.readByte());
                     break;
 
             }
@@ -414,9 +391,9 @@ namespace MiningGame.Code
                 for (int y = startY + 1; y < endY; y++)
                 {
                     if (level == 1)
-                        worldBlocksSeen[x, y, level] = 1;
+                        WorldBlocksSeen[x, y, level] = 1;
                     if (level == 0)
-                        worldBlocksSeen[x, y, level] += sign;
+                        WorldBlocksSeen[x, y, level] += sign;
                 }
             }
             for (int x = startX; x <= endX; x++)
@@ -424,9 +401,9 @@ namespace MiningGame.Code
                 for (int y = startY + 1; y < endY; y++)
                 {
                     if (level == 1)
-                        worldBlocksSeen[x, y, level] = 1;
+                        WorldBlocksSeen[x, y, level] = 1;
                     if (level == 0)
-                        worldBlocksSeen[x, y, level] += sign;
+                        WorldBlocksSeen[x, y, level] += sign;
                 }
             }
             for (int y = startY; y <= endY; y++)
@@ -434,9 +411,9 @@ namespace MiningGame.Code
                 for (int x = startX + 1; x < endX; x++)
                 {
                     if (level == 1)
-                        worldBlocksSeen[x, y, level] = 1;
+                        WorldBlocksSeen[x, y, level] = 1;
                     if (level == 0)
-                        worldBlocksSeen[x, y, level] += sign;
+                        WorldBlocksSeen[x, y, level] += sign;
                 }
             }
         }

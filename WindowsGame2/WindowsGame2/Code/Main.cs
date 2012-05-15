@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.IO;
+using MiningGame.Code.Items;
 using MiningGame.Code.Structs;
 using MiningGame.Code.Managers;
 using MiningGame.Code.Interfaces;
@@ -339,7 +340,7 @@ namespace MiningGame.Code
             AssetManager.LoadAsset<Effect>("WaterLevel", "WaterLevelEffect", Content);
 
             GameWorld.LoadBlocks();
-            Item.makeItems();
+            Item.MakeItems();
 
             PauseManager = new PauseManager();
             ChatInterface chat = new ChatInterface();
@@ -358,7 +359,7 @@ namespace MiningGame.Code
             {
                 foreach (string f in Directory.GetFiles(dir))
                 {
-                    
+
                     AssetManager.LoadAsset<Texture2D>(f.Replace(dir + "\\", "").Replace(".png", ""), f.Replace(path, ""), Content);
                 }
             }
@@ -416,25 +417,28 @@ namespace MiningGame.Code
 
             base.Update(gameTime);
         }
+
+        private int numDone = 0;
         protected override void Draw(GameTime gameTime)
         {
             //RenderTarget2D rend = new RenderTarget2D(GraphicsDevice, GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight, false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 1, RenderTargetUsage.PreserveContents);
 
             //GraphicsDevice.SetRenderTarget(rend);
 
+
             GraphicsDevice.Clear(backColor);
 
             spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null);
 
-            for (int i = 0; i < drawables.Count; i++)
-            {
-                if (drawables[i].inCamera() && drawables[i] != null)
-                    drawables[i].Draw(spriteBatch);
-            }
-            foreach (Interface i in interfaces.OrderBy(x => x.depth))
-            {
-                i.Draw(spriteBatch);
-            }
+             for (int i = 0; i < drawables.Count; i++)
+             {
+                 if (drawables[i].inCamera() && drawables[i] != null)
+                     drawables[i].Draw(spriteBatch);
+             }
+             foreach (Interface i in interfaces.OrderBy(x => x.depth))
+             {
+                 i.Draw(spriteBatch);
+             }
 
             spriteBatch.End();
 

@@ -41,5 +41,3 @@
     setBlockOnUpdated((x, y) =>{
         return 1;
     });
-    
-    setBlockNumConnectionsAllowed(1);

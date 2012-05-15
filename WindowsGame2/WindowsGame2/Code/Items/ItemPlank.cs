@@ -12,9 +12,9 @@ namespace MiningGame.Code.Items
         public ItemPlank()
             : base()
         {
-            setName("Plank").setDescription("Planks!").setID(6).setValue(1).setAsset("planks").setBlockID(200);
+            SetName("Plank").SetDescription("Planks!").SetID(6).SetValue(1).SetAsset("planks").SetBlockID(200);
         }
-        public override void onItemUsed(int x, int y)
+        public override void OnItemUsed(int x, int y)
         {
             //throw new NotImplementedException();
         }

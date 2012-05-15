@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using MiningGame.Code.Items;
 using MiningGame.Code.Structs;
 using MiningGame.Code.Packets;
 using Microsoft.Xna.Framework;
@@ -18,6 +19,8 @@ namespace MiningGame.Code.Server
         public short PlayerAimAngle = 0;
         public int PlayerInventorySelected;
 
+        public int PlayerTeam = 0;
+
         public NetworkPlayer(byte playerID, NetConnection connection, Vector2 playerPos, string name)
         {
             this.NetConnection = connection;
@@ -30,23 +33,23 @@ namespace MiningGame.Code.Server
             if (PlayerEntity == null) return;
             if (PressedKeys.Contains('a'))
             {
-                PlayerEntity.entityVelocity.X = MathHelper.Clamp(PlayerEntity.entityVelocity.X - 3, -3, 3);
+                PlayerEntity.EntityVelocity.X = MathHelper.Clamp(PlayerEntity.EntityVelocity.X - 3, -3, 3);
             }
             if (PressedKeys.Contains('w'))
             {
-                if (!PlayerEntity.falling && _jumpTimer <= 0)
+                if (!PlayerEntity.Falling && _jumpTimer <= 0)
                 {
-                    PlayerEntity.entityVelocity.Y -= 10;
+                    PlayerEntity.EntityVelocity.Y -= 10;
                     _jumpTimer = 20;
                 }
             }
             if (PressedKeys.Contains('d'))
             {
-                PlayerEntity.entityVelocity.X = MathHelper.Clamp(PlayerEntity.entityVelocity.X + 3, -3, 3);
+                PlayerEntity.EntityVelocity.X = MathHelper.Clamp(PlayerEntity.EntityVelocity.X + 3, -3, 3);
             }
             PlayerEntity.Update(theTime, true);
             
-            Packet1SCGameEvent packet = new Packet1SCGameEvent(GameServer.GameEvents.Player_Aim_And_Position, (byte)PlayerEntity.PlayerID, (short)PlayerEntity.entityPosition.X, (short)PlayerEntity.entityPosition.Y);
+            Packet1SCGameEvent packet = new Packet1SCGameEvent(GameServer.GameEvents.Player_Aim_And_Position, (byte)PlayerEntity.PlayerID, (short)PlayerEntity.EntityPosition.X, (short)PlayerEntity.EntityPosition.Y);
             Main.serverNetworkManager.SendPacket(packet);
         }
 
@@ -91,7 +94,7 @@ namespace MiningGame.Code.Server
         {
             if (PlayerInventorySelected >= PlayerInventory.Count) PlayerInventorySelected = -1;
             if (PlayerInventorySelected == -1) return null;
-            return Item.getItem(PlayerInventory[PlayerInventorySelected].itemID);
+            return Item.GetItem(PlayerInventory[PlayerInventorySelected].itemID);
         }
 
         public void PickupItem(ItemStack item)
