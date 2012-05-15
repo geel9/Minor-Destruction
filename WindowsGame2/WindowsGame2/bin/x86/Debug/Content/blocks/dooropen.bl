@@ -1,0 +1,13 @@
+	setBlockID(12);
+	setBlockName("Door");
+	setBlockHardness(5);
+	setBlockRenderSpecial(true);
+	setBlockGetRender((x, y, spriteBatch) => { return AssetManager.GetTexture("door_open"); });
+	setGetBlockBB((x, y) =>{
+		Vector2 pos = new Vector2(x * GameWorld.blockWidth, y * GameWorld.blockHeight);
+		return new Rectangle((int)pos.X, (int)pos.Y, 9, GameWorld.blockHeight);
+	});
+    setBlockWalkThrough(true);
+    setBlockOnUsed((x, y) =>{
+        GameServer.setBlock(x, y, 11);
+    });

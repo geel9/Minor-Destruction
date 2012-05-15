@@ -1,0 +1,47 @@
+	setBlockID(14);
+	setBlockName("Portal");
+	setBlockHardness(1);
+	setBlockRenderSpecial(true);
+    setBlockWalkThrough(true);
+    
+    setBlockOnPlaced((x, y, notify) =>{
+        GameServer.scheduleUpdate(x, y);
+    });
+    
+	setBlockGetRender((x, y, spriteBatch) => { 
+        List<ConnectedBlock> otherBlocks = GameServer.getBlocksConnectedTo(x, y);
+        if(otherBlocks.Count != 1){
+            return AssetManager.GetTexture("portaloff");
+        }
+        else{
+            if(otherBlocks[0].connectedNum == 1){
+                return AssetManager.GetTexture("portalblue");
+            }
+            else{
+                return AssetManager.GetTexture("portalorange");
+            }
+        }
+    });
+    
+    setBlockOnUpdated((x, y) =>{
+        ConsoleManager.Log("hello");
+        byte meta = GameServer.getBlockMDAt(x, y);
+        if(meta > 0)
+            GameServer.setBlockMetaData(x, y, (byte)(meta - 1));
+        return 1;
+    });
+    
+    setBlockOnTouched((x, y, side, entity) => {
+        byte meta = GameServer.getBlockMDAt(x, y);
+        if(meta != 0) return;
+        List<ConnectedBlock> otherBlocks = GameServer.getBlocksConnectedTo(x, y);
+        if(otherBlocks.Count == 1){
+            Vector2 otherPos = otherBlocks[0].blockPosition;
+            GameServer.setBlockMetaData(x, y, (byte)40);
+            GameServer.setBlockMetaData((int)otherPos.X, (int)otherPos.Y, (byte)40);
+            entity.entityPosition = (otherPos + new Vector2(0.5f)) * new Vector2(GameWorld.blockWidth, GameWorld.blockHeight);
+            ConsoleManager.Log("Teleporting. " + x + " " + y + " " + otherPos);
+        }
+    });
+    
+    setBlockNumConnectionsAllowed(1);

@@ -1,0 +1,8 @@
+setBlockColor(Color.SaddleBrown);
+setBlockID(2);
+setBlockName("Dirt");
+setBlockHardness(1);
+setBlockGetDrop((x, y) => { return 1;});
+setBlockGetDropNum((x, y) => {return 1;});
+setBlockRenderSpecial(true);
+setBlockGetRender((x, y, spritebatch) => {return AssetManager.GetTexture("dirt");});

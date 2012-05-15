@@ -1,0 +1,7 @@
+setBlockColor(Color.Blue);
+setBlockID(4);
+setBlockName("Coal");
+setBlockHardness(2);
+setBlockGetDrop((x, y) => { return 3;});
+setBlockGetDropNum((x, y) => {return 1;});
+setBlockHide(false);

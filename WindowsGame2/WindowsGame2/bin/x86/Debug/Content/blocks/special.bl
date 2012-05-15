@@ -1,0 +1,22 @@
+setBlockOnPlaced((x, y, notify) =>{
+GameServer.scheduleUpdate(x, y, 1);
+});
+
+setBlockOnUpdated((x, y) => {
+	
+	for(int i = 0; i < Block.allBlocks.Count; i++){
+	
+		Block b = Block.allBlocks[i];
+		if(b.getBlockID() == 8){
+			Block.allBlocks[i].setBlockColor(new Color(MiningGame.Main.r.Next(0, 256), MiningGame.Main.r.Next(0, 255), MiningGame.Main.r.Next(0, 254)));
+		}
+	}
+	return 5;
+});
+
+setBlockWalkThrough(true);
+setBlockID(8);
+setBlockName("Rope");
+setBlockColor(Color.Red);
+setBlockHardness(1);
+setBlockLightLevel(2);

@@ -1,0 +1,43 @@
+setBlockOnUpdated((x, y) =>{
+	GameServer.setBlock(x, y, 0);
+	return -1;
+});
+
+//Cut in the middle?
+setBlockOnRemoved((x, y) =>{
+	int spoolHeight = -1;
+	for(int y2 = y - 1; y2 >= (y - 30); y2--){
+		byte blockID = GameServer.getBlockIDAt(x, y2);
+		//Found an empty block, which means that there can't be a spool.
+		if(blockID == 0) return;
+		if(blockID == 7){
+			spoolHeight = y2;
+			break;
+		}
+	}
+	
+	//No spool; that must mean that the rope is breaking naturally.
+	if(spoolHeight == -1){
+		ConsoleManager.Log("Destroyed, but found no spool");
+	}
+	ConsoleManager.Log("Destroyed, found spool at " + spoolHeight);
+	
+	//Stop the spool from generating FOREVERRRR
+	GameServer.setBlockMetaData(x, spoolHeight, 31);
+	
+	for(int y2 = y + 1; y2 <= (y + (30 - (y - spoolHeight))); y2++){
+		byte blockID = GameServer.getBlockIDAt(x, y2);
+		//End of the line, fox!
+		if(blockID != 6) return;
+		//Schedule an update for the rope to break.
+		GameServer.scheduleUpdate(x, y2, ((y2 - y) + 1) * 5);
+	}
+});
+
+setBlockWalkThrough(true);
+setBlockID(6);
+setBlockName("Rope");
+setBlockHardness(1);
+setBlockRenderSpecial(true);
+setBlockGetRender((x, y, spriteBatch) => { return AssetManager.GetTexture("ladder"); });
+setBlockLightLevel(2);

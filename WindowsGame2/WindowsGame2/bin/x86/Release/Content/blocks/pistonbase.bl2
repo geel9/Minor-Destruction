@@ -1,0 +1,45 @@
+	setBlockID(15);
+	setBlockName("Piston");
+	setBlockHardness(1);
+	setBlockRenderSpecial(true);
+    
+    setBlockOnPlaced((x, y, notify) =>{
+        /*GameServer.scheduleUpdate(x, y);
+        PlayerEntity p = GameServer.thePlayer.playerEntity;
+        Vector2 pos = new Vector2(x + 0.5f, y + 0.5f) * new Vector2(GameWorld.BlockWidth, GameWorld.BlockHeight);
+        Vector2 dist = pos - p.entityPosition;
+        ConsoleManager.Log("dist: " + dist);
+        byte metaData = 0;
+        if(Math.Abs(dist.X) > Math.Abs(dist.Y)){
+            //Above/below
+            metaData = (dist.Y > 0) ? (byte)1 : (byte)3;
+        }
+        else{
+            //Right/left
+            metaData = (dist.X > 0) ? (byte)0 : (byte)2;
+        }
+        GameServer.SetBlockMetaData(x, y, (byte)metaData);*/
+    });
+    
+	setBlockGetRender((x, y, spriteBatch) => { 
+        byte metaData = GameServer.GetBlockIDAt(x, y);
+        Vector2 position = new Vector2(x + 0.5f, y + 0.5f) * new Vector2(GameWorld.BlockWidth, GameWorld.BlockHeight);
+        position -= CameraManager.cameraPosition;
+        Vector2 origin = new Vector2(GameWorld.BlockWidth / 2, GameWorld.BlockHeight / 2);
+        float rotation = 0f;
+        Texture2D text = AssetManager.GetTexture("pistonbase");
+        if(metaData == 0) //pointing up
+            rotation = (float)ConversionManager.DegreeToRadians(90);
+        if(metaData == 1) //pointing right
+            rotation = (float)ConversionManager.DegreeToRadians(180);
+        if(metaData == 2) //pointing down
+            rotation = (float)ConversionManager.DegreeToRadians(-90);
+        spriteBatch.Draw(text, position, null, Color.White, rotation, origin, Vector2.One, SpriteEffects.None, 0f);
+        return null;
+    });
+    
+    setBlockOnUpdated((x, y) =>{
+        return 1;
+    });
+    
+    setBlockNumConnectionsAllowed(1);

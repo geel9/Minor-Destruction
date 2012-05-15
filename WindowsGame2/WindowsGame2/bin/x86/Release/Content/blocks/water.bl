@@ -1,0 +1,164 @@
+setBlockOnPlaced((x, y, notify) =>{
+	GameServer.ScheduleUpdate(x, y, 1);
+});
+
+setBlockOnUpdated((x, y) => {
+	byte curBlockMD = GameServer.GetBlockMDAt(x, y);
+	
+	if(curBlockMD <= 0 || curBlockMD > 100){
+		GameServer.SetBlock(x, y, 0, true, 0);
+		return -2;
+	}
+	byte blockDown = GameServer.GetBlockIDAt(x, y + 1);
+	byte blockLeft = GameServer.GetBlockIDAt(x - 1, y);
+	byte blockRight = GameServer.GetBlockIDAt(x + 1, y);
+	
+	byte blockDownMD = GameServer.GetBlockMDAt(x, y + 1);
+	byte blockLeftMD = GameServer.GetBlockMDAt(x - 1, y);
+	byte blockRightMD = GameServer.GetBlockMDAt(x + 1, y);
+	
+	byte shareAtATime = 1;
+	
+	//Test downwards first, then if that's not an option test right/left.
+	if(blockDown == 0){
+		//Beam me down, scotty!
+		GameServer.SetBlock(x, y + 1, 10, true, curBlockMD);
+		GameServer.SetBlock(x, y, 0, true, 0);
+		//We don't need no DAMN updates anymore!
+		return -2;
+	}
+	
+	else if(blockDown == 10 && blockDownMD < 100){
+		if(curBlockMD + blockDownMD <= 100){
+			//We can simply merge with the lower block.
+			GameServer.SetBlockMetaData(x, y + 1, (byte)(curBlockMD + blockDownMD));
+			GameServer.SetBlock(x, y, 0);
+			return -2;
+		}
+		
+		else{
+			//We would overflow the block.
+			int remove = 100 - blockDownMD;
+			curBlockMD -= (byte)remove;
+			GameServer.SetBlockMetaData(x, y, (byte)(curBlockMD));
+			GameServer.SetBlockMetaData(x, y + 1, (byte)100);
+			//return 1;
+		}
+	}
+	
+	//Testing left/right
+	//Don't share if the water level is too low.
+	if(curBlockMD <= shareAtATime){
+		//GameWorld.SetBlock(x, y, 0);
+		//return 1;
+	}
+	//Let's test right/left.
+	bool leftCanReceive = (blockLeft == 0 || blockLeft == 10) && blockLeftMD < 100;
+	bool rightCanReceive = (blockRight == 0 || blockRight == 10) && blockRightMD < 100;
+	
+	bool both = leftCanReceive && rightCanReceive;
+	
+	
+	if(leftCanReceive){
+		if(blockLeft == 0){
+			byte toShare = shareAtATime;
+			if(curBlockMD <= shareAtATime){
+				toShare = (byte)(curBlockMD);
+			}
+			curBlockMD -= (byte)toShare;
+			GameServer.SetBlock(x - 1,  y, 10, true, (byte)toShare);
+			GameServer.SetBlockMetaData(x, y, (byte)curBlockMD);
+		}
+		else{
+			if(blockLeftMD < curBlockMD){
+			
+				byte toShare = shareAtATime;
+				if(blockLeftMD + toShare > 100){
+					toShare = (byte)(100 - blockLeftMD);
+				}
+				if(curBlockMD - toShare < 0){
+					toShare = (byte)curBlockMD;
+				}
+				if(blockLeftMD + (toShare * 2) > curBlockMD){
+					toShare = (byte)((byte)(curBlockMD - blockLeftMD) - (byte)0);
+				}
+				if(toShare > 0){
+					curBlockMD -= (byte)toShare;
+					GameServer.SetBlockMetaData(x - 1, y, (byte)(blockLeftMD + (byte)toShare));
+					GameServer.SetBlockMetaData(x, y, (byte)curBlockMD);
+				}
+			}
+		}
+	}
+	if(curBlockMD <= 0 || curBlockMD > 100){
+		GameServer.SetBlock(x, y, 0);
+		return -2;
+	}
+	if(rightCanReceive){
+		if(blockRight == 0){
+			byte toShare = shareAtATime;
+			if(curBlockMD <= shareAtATime){
+				toShare = (byte)(curBlockMD);
+			}
+			curBlockMD -= toShare;
+			GameServer.SetBlock(x + 1,  y, 10, true, (byte)toShare);
+			GameServer.SetBlockMetaData(x, y, (byte)curBlockMD);
+		}
+		else{
+			if(blockRightMD < curBlockMD){
+				byte toShare = shareAtATime;
+				
+				if(blockRightMD + toShare > 100){
+					toShare = (byte)(100 - blockRightMD);
+				}
+				if(curBlockMD - toShare < 0){
+					toShare = (byte)curBlockMD;
+				}
+				if(blockRightMD + (toShare * 2) > curBlockMD){
+					toShare = (byte)((byte)(curBlockMD - blockRightMD) - (byte)0);
+				}
+				
+				if(toShare > 0){
+					curBlockMD -= toShare;
+					GameServer.SetBlockMetaData(x + 1, y, (byte)(blockRightMD + toShare));
+					GameServer.SetBlockMetaData(x, y, (byte)curBlockMD);
+				}
+			}
+		}
+	}
+	
+	if(curBlockMD <= 0 || curBlockMD > 100){
+		GameServer.SetBlock(x, y, 0, true, 0);
+		return -2;
+	}
+	return 1;
+});
+
+setBlockWalkThrough(true);
+setBlockID(10);
+setBlockName("Water");
+setBlockHardness(-1);
+
+setBlockRenderSpecial(true);
+
+setBlockGetRender((x, y, spriteBatch) =>{
+	byte blockUp = GameWorld.GetBlockIDAt(x, y - 1);
+	byte blockDown = GameWorld.GetBlockIDAt(x, y + 1);
+	byte metaData = GameServer.GetBlockMDAt(x, y);
+	Vector2 position = new Vector2(x, y);
+	position *= new Vector2(GameWorld.BlockWidth, GameWorld.BlockHeight);
+	position += (new Vector2(GameWorld.BlockWidth, GameWorld.BlockHeight) / 2);
+	position -= CameraManager.cameraPosition;
+	
+	if(blockDown != 0){
+		Effect e = AssetManager.GetEffect("WaterLevel");
+		if(blockUp == 10 && metaData >= 95) e.Parameters["override"].SetValue(true);
+		else e.Parameters["override"].SetValue(false);
+		e.Parameters["height"].SetValue((int)metaData);
+		DrawManager.Draw_Box(position, GameWorld.BlockWidth, GameWorld.BlockHeight, Color.White, spriteBatch, 0f, 255, e);
+	}
+	else{
+		DrawManager.Draw_Circle(position, 3, Color.Blue, Color.Black, spriteBatch);
+	}
+	return null;
+});

@@ -1,0 +1,17 @@
+	setBlockID(13);
+	setBlockName("Trampoline");
+	setBlockHardness(5);
+	setBlockRenderSpecial(true);
+	setBlockGetRender((x, y, spriteBatch) => { return AssetManager.GetTexture("trampoline"); });
+	setGetBlockBB((x, y) =>{
+		Vector2 pos = new Vector2(x * GameWorld.blockWidth, (y + 0.5f) * GameWorld.blockHeight);
+		return new Rectangle((int)pos.X, (int)pos.Y, GameWorld.blockWidth, GameWorld.blockHeight / 2);
+	});
+    setBlockOnUsed((x, y) =>{
+        GameServer.setBlock(x, y, 12);
+    });
+    
+    setBlockOnTouched((x, y, side, entity) => {
+        ConsoleManager.Log("Trampoline touched at (" + x + ", " + y + ") on " + side + " side and by " + entity + ".");
+        if(side == 0) entity.entityVelocity.Y -= 10;
+    });

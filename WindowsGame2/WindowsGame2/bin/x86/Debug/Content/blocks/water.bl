@@ -1,0 +1,126 @@
+setBlockOnPlaced((x, y, notify) =>{
+	GameServer.scheduleUpdate(x, y, 2);
+});
+
+setBlockOnUpdated((x, y) => {
+	byte blockUp = GameServer.getBlockIDAt(x, y - 1);
+	byte blockDown = GameServer.getBlockIDAt(x, y + 1);
+	byte blockLeft = GameServer.getBlockIDAt(x - 1, y);
+	byte blockRight = GameServer.getBlockIDAt(x + 1, y);
+	byte blockLeftBottom = GameServer.getBlockIDAt(x - 1, y + 1);
+	byte blockRightBottom = GameServer.getBlockIDAt(x + 1, y + 1);
+	
+	if(blockDown == 0){
+		GameServer.setBlock(x, y + 1, 10);
+		GameServer.setBlock(x, y, 0);
+		return -1;
+	}
+	bool waterIsAbove = (blockUp == 10);
+	bool canMoveLeft = (blockLeft == 0 && blockLeftBottom == 0);
+	bool canMoveRight = (blockRight == 0 && blockRightBottom == 0);
+	if(canMoveLeft || canMoveRight){
+		int which = MiningGame.Main.r.Next(0, 2);
+		if(canMoveLeft && canMoveRight){
+			if(which == 1 && blockRight == 0){
+				GameServer.setBlock(x + 1, y, 10);
+				GameServer.setBlock(x, y, 0);
+			}
+			else if(which == 0 && blockLeft == 0){
+				GameServer.setBlock(x - 1, y, 10);
+				GameServer.setBlock(x, y, 0);
+			}
+		}
+		else{
+			if(canMoveLeft){
+				GameServer.setBlock(x - 1, y, 10);
+				GameServer.setBlock(x, y, 0);
+			}
+			else if(canMoveRight){
+				GameServer.setBlock(x + 1, y, 10);
+				GameServer.setBlock(x, y, 0);
+			}
+		}
+	}
+	if(waterIsAbove){
+		bool left = (blockLeft == 0);
+		bool right = (blockRight == 0);
+		//It's an edge block
+		if(left || right){
+			if(left && right){
+				int which = MiningGame.Main.r.Next(0, 2);
+				if(which == 0)
+				{
+					GameServer.setBlock(x + 1, y, 10);
+					GameServer.setBlock(x, y, 0);
+				}
+				else if(which == 1){
+					GameServer.setBlock(x - 1, y, 10);
+					GameServer.setBlock(x, y, 0);
+				}	
+			}
+			else{
+				if(left){
+					GameServer.setBlock(x - 1, y, 10);
+					GameServer.setBlock(x, y, 0);
+				}
+				else if(right){
+					GameServer.setBlock(x + 1, y, 10);
+					GameServer.setBlock(x, y, 0);
+				}
+			}
+		}
+		//Gonna have to move a lot of water. Sigh.
+		else{
+			//Either move to the left or to the right.
+			//Find all the water blocks to the right and see if we can move 'em.
+			int xValue = x;
+			for(int x2 = x; x2 < GameServer.worldSizeX; x2++){
+				byte block = GameServer.getBlockIDAt(x2, y);
+				//Empty space, so we can move there.
+				if(block == 0)
+				{
+					xValue = x2;
+					break;
+				}
+				//Wall, can't possible move.
+				if(block != 10 && block != 0){
+					break;
+				}
+			}
+			if(xValue == x){
+				for(int x2 = x; x2 > 0; x2--){
+					byte block = GameServer.getBlockIDAt(x2, y);
+					//Empty space, so we can move there.
+					if(block == 0)
+					{
+						xValue = x2;
+						break;
+					}
+					//Wall, can't possible move.
+					if(block != 10 && block != 0){
+						break;
+					}
+				}
+			}
+			//Can move water!
+			if(xValue != x){
+				left = (xValue < x);
+				GameServer.setBlock(xValue, y, 10);
+				if(left){
+					//Only need to set the block nearest us to 0 (it's the exact same as moving them all).
+					GameServer.setBlock(x - 1, y, 0);
+				}
+				else{
+					GameServer.setBlock(x + 1, y, 0);
+				}
+			}
+		}
+	}
+	return 2;
+});
+
+setBlockWalkThrough(true);
+setBlockID(10);
+setBlockName("Water");
+setBlockColor(Color.Blue);
+setBlockHardness(-1);

@@ -1,0 +1,44 @@
+setBlockOnPlaced((x, y, notify) =>{
+	byte metaData = GameServer.getBlockMDAt(x, y);
+	ConsoleManager.Log("Used at: " + x + ", " + y + ": " + metaData);
+	if(metaData <= 30)
+		GameServer.scheduleUpdate(x, y, 5);
+});
+
+setBlockOnUpdated((x, y) => {
+	byte metaData = (byte)(GameServer.getBlockMDAt(x, y) + 1);
+	ConsoleManager.Log("" + metaData);
+	byte below = GameServer.getBlockIDAt(x,y + metaData);
+	if(metaData > 30)
+	{
+		return -1;
+	}
+	if(below == 0){
+		GameServer.setBlock(x, y + metaData, 6);
+		GameServer.setBlockMetaData(x, y, metaData);
+		return 5;
+	}
+	else{
+		GameServer.setBlockMetaData(x, y, (byte)(metaData - 1));
+		return 30;
+	}
+	return -1;
+});
+
+setBlockOnRemoved((x, y) =>{
+	byte metaData = (byte)(GameServer.getBlockMDAt(x, y) + 1);
+	for(int y2 = y + 1; y2 < y + metaData; y2++){
+		byte blockID = GameServer.getBlockIDAt(x, y2);
+		if(blockID == 6){
+			GameServer.scheduleUpdate(x, y2, ((y2 - y) + 1) * 5);
+		}
+	}
+});
+
+setBlockWalkThrough(true);
+setBlockID(7);
+setBlockName("RopeStart");
+setBlockHardness(1);
+setBlockRenderSpecial(true);
+setBlockGetRender((x, y, spriteBatch) => { return AssetManager.GetTexture("ropespool"); });
+setBlockLightLevel(2);

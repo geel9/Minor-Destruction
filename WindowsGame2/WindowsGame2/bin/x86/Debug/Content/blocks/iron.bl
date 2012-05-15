@@ -1,0 +1,9 @@
+	setBlockHide(true);
+	setBlockColor(Color.Brown);
+	setBlockID(5);
+	setBlockName("Iron");
+	setBlockHardness(5);
+	setBlockRenderSpecial(true);
+	setBlockGetDrop((x, y) => { return 4; });
+	setBlockGetDropNum((x, y) => { return 1; });
+	setBlockGetRender((x, y, spriteBatch) => { return AssetManager.GetTexture("iron"); });
