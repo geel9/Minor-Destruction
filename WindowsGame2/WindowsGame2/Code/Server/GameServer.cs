@@ -23,7 +23,7 @@ namespace MiningGame.Code.Server
         public static List<NetworkPlayer> NetworkPlayers = new List<NetworkPlayer>();
         public static EntityProjectile[] GameProjectiles = new EntityProjectile[256];
 
-        public const int WorldSizeX = 200, WorldSizeY = 50;
+        public const int WorldSizeX = 50, WorldSizeY = 50;
         public static byte[,] WorldBlocks = new byte[WorldSizeX, WorldSizeY];
         public static byte[,] WorldBlocksMetaData = new byte[WorldSizeX, WorldSizeY];
 
