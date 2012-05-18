@@ -130,7 +130,7 @@ namespace MiningGame.Code.Entities
             List<Vector2> hits = RectangleHitsTiles(BoundBox);
             foreach (Vector2 vec in hits)
             {
-                DrawManager.Draw_Outline(new Vector2(vec.X * GameWorld.BlockWidth + (GameWorld.BlockWidth / 2), vec.Y * GameWorld.BlockHeight + (GameWorld.BlockHeight / 2)) - CameraManager.cameraPosition, GameWorld.BlockWidth, GameWorld.BlockHeight, Color.Red, sb);
+                //DrawManager.Draw_Outline(new Vector2(vec.X * GameWorld.BlockWidth + (GameWorld.BlockWidth / 2), vec.Y * GameWorld.BlockHeight + (GameWorld.BlockHeight / 2)) - CameraManager.cameraPosition, GameWorld.BlockWidth, GameWorld.BlockHeight, Color.Red, sb);
             }
             Rotation = (float)((float)Math.Atan2(EntityPosition.Y - LastPosition.Y, EntityPosition.X - LastPosition.X) +
                                 ConversionManager.DegreeToRadians(90));
