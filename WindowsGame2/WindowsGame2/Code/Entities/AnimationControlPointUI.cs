@@ -24,7 +24,7 @@ namespace MiningGame.Code.Entities
         {
             get
             {
-                return (position * scale) + Main.center;
+                return (position * scale) + Main.Center;
             }
         }
         public float scale = 1f;

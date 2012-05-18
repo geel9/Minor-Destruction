@@ -29,7 +29,7 @@ namespace MiningGame.Code.Interfaces
         public Button addFrameButton;
         public Button delFrameButton;
 
-        public TextField textFieldFrameName;
+        public TextField textFieldframeName;
         public TextField textFieldFrameAsset;
         public TextField textFieldStartLooping;
         public TextField textFieldEndLooping;
@@ -68,7 +68,7 @@ namespace MiningGame.Code.Interfaces
             InputManager.BindMouse(() =>
             {
                 if (framesListBox.selectedIndex != -1)
-                    controlPoints.Add(new AnimationControlPointUI((InputManager.GetMousePosV() - Main.center), "CP", imgScale));
+                    controlPoints.Add(new AnimationControlPointUI((InputManager.GetMousePosV() - Main.Center), "CP", imgScale));
             }, MouseButton.Middle);
 
             InputManager.BindKey(() =>
@@ -129,7 +129,7 @@ namespace MiningGame.Code.Interfaces
             start.Y = 65;
             textFieldFrameAsset = new TextField(start, 200, 20, Color.Black, AssetManager.GetFont("Console"), (string s) => { }, (string s) => { textBoxesChanged(); });
             start.Y += 40;
-            textFieldFrameName = new TextField(start, 200, 20, Color.Black, AssetManager.GetFont("Console"), (string s) => { }, (string s) => { textBoxesChanged(); });
+            textFieldframeName = new TextField(start, 200, 20, Color.Black, AssetManager.GetFont("Console"), (string s) => { }, (string s) => { textBoxesChanged(); });
 
             start.Y += 40;
             textFieldFrameDelay = new TextField(start, 100, 20, Color.Black, AssetManager.GetFont("Console"), (string s) => { }, (string s) => { textBoxesChanged(); });
@@ -143,11 +143,11 @@ namespace MiningGame.Code.Interfaces
 
             start.Y += 40;
             start.X += 45;
-            startLoopingButton = new Button(start, "Start", AssetManager.GetFont("Console"), () => { curAnimateable.startLooping(textFieldStartLooping.GetText(), textFieldEndLooping.GetText()); });
+            startLoopingButton = new Button(start, "Start", AssetManager.GetFont("Console"), () => { curAnimateable.StartLooping(textFieldStartLooping.GetText(), textFieldEndLooping.GetText()); });
             start.X += 110;
-            stopLoopingButton = new Button(start, "Stop", AssetManager.GetFont("Console"), curAnimateable.stopLooping);
+            stopLoopingButton = new Button(start, "Stop", AssetManager.GetFont("Console"), curAnimateable.StopLooping);
 
-            textFieldFrameName.placeHolderText = "Frame name";
+            textFieldframeName.placeHolderText = "Frame name";
             textFieldFrameAsset.placeHolderText = "Frame asset";
             textFieldStartLooping.placeHolderText = "Loop start";
             textFieldEndLooping.placeHolderText = "Loop end";
@@ -189,12 +189,12 @@ namespace MiningGame.Code.Interfaces
         public void moveDown()
         {
             int index = framesListBox.selectedIndex;
-            if (index >= 0 && index < curAnimateable.curAnimation.numberFrames - 1)
+            if (index >= 0 && index < curAnimateable.CurAnimation.numberFrames - 1)
             {
-                AnimationFrame below = curAnimateable.curAnimation.frames[index + 1];
-                AnimationFrame current = curAnimateable.curAnimation.frames[index];
-                curAnimateable.curAnimation.frames[index + 1] = current;
-                curAnimateable.curAnimation.frames[index] = below;
+                AnimationFrame below = curAnimateable.CurAnimation.frames[index + 1];
+                AnimationFrame current = curAnimateable.CurAnimation.frames[index];
+                curAnimateable.CurAnimation.frames[index + 1] = current;
+                curAnimateable.CurAnimation.frames[index] = below;
                 framesListBox.selectedIndex++;
                 recomputeListBox();
             }
@@ -203,12 +203,12 @@ namespace MiningGame.Code.Interfaces
         public void moveUp()
         {
             int index = framesListBox.selectedIndex;
-            if (index >= 1 && index < curAnimateable.curAnimation.numberFrames)
+            if (index >= 1 && index < curAnimateable.CurAnimation.numberFrames)
             {
-                AnimationFrame above = curAnimateable.curAnimation.frames[index - 1];
-                AnimationFrame current = curAnimateable.curAnimation.frames[index];
-                curAnimateable.curAnimation.frames[index - 1] = current;
-                curAnimateable.curAnimation.frames[index] = above;
+                AnimationFrame above = curAnimateable.CurAnimation.frames[index - 1];
+                AnimationFrame current = curAnimateable.CurAnimation.frames[index];
+                curAnimateable.CurAnimation.frames[index - 1] = current;
+                curAnimateable.CurAnimation.frames[index] = above;
                 framesListBox.selectedIndex--;
                 recomputeListBox();
             }
@@ -218,13 +218,13 @@ namespace MiningGame.Code.Interfaces
         public void textBoxesChanged()
         {
             int index = framesListBox.selectedIndex;
-            if (index >= 0 && index < curAnimateable.curAnimation.numberFrames)
+            if (index >= 0 && index < curAnimateable.CurAnimation.numberFrames)
             {
-                curAnimateable.curAnimation.frames[index].assetName = textFieldFrameAsset.GetText();
-                curAnimateable.curAnimation.frames[index].frameName = textFieldFrameName.GetText();
+                curAnimateable.CurAnimation.frames[index].assetName = textFieldFrameAsset.GetText();
+                curAnimateable.CurAnimation.frames[index].frameName = textFieldframeName.GetText();
                 string delay = textFieldFrameDelay.GetText();
                 if (delay == "") delay = "1";
-                curAnimateable.curAnimation.frames[index].delay = Convert.ToInt32(delay);
+                curAnimateable.CurAnimation.frames[index].delay = Convert.ToInt32(delay);
                 recomputeListBox();
             }
         }
@@ -233,15 +233,15 @@ namespace MiningGame.Code.Interfaces
         {
             int ind = framesListBox.selectedIndex;
             controlPoints.Clear();
-            if (ind != -1 && ind < curAnimateable.curAnimation.frames.Count)
+            if (ind != -1 && ind < curAnimateable.CurAnimation.frames.Count)
             {
-                textFieldFrameName.SetText(curAnimateable.curAnimation.frames[ind].frameName);
-                textFieldFrameAsset.SetText(curAnimateable.curAnimation.frames[ind].assetName);
-                textFieldFrameDelay.SetText(curAnimateable.curAnimation.frames[ind].delay.ToString());
-                curAnimateable.gotoAndStop(ind);
+                textFieldframeName.SetText(curAnimateable.CurAnimation.frames[ind].frameName);
+                textFieldFrameAsset.SetText(curAnimateable.CurAnimation.frames[ind].assetName);
+                textFieldFrameDelay.SetText(curAnimateable.CurAnimation.frames[ind].delay.ToString());
+                curAnimateable.GotoAndStop(ind);
                 try
                 {
-                    controlPoints = CpToCpUi(curAnimateable.curAnimation.frames[curAnimateable.currentFrame].controlPoints);
+                    controlPoints = CpToCpUi(curAnimateable.CurAnimation.frames[curAnimateable.CurrentFrame].controlPoints);
                 }
                 catch (Exception)
                 {
@@ -252,23 +252,23 @@ namespace MiningGame.Code.Interfaces
             if (ind == -1)
             {
                 textFieldFrameAsset.SetText("");
-                textFieldFrameName.SetText("");
+                textFieldframeName.SetText("");
                 textFieldFrameDelay.SetText("");
             }
         }
 
         public void addFrame()
         {
-            curAnimateable.curAnimation.addFrame("error", "");
+            curAnimateable.CurAnimation.AddFrame("error", "");
             recomputeListBox();
         }
 
         public void delFrame()
         {
             int index = framesListBox.selectedIndex;
-            if (index < curAnimateable.curAnimation.numberFrames && index >= 0)
+            if (index < curAnimateable.CurAnimation.numberFrames && index >= 0)
             {
-                curAnimateable.curAnimation.frames.RemoveAt(index);
+                curAnimateable.CurAnimation.frames.RemoveAt(index);
                 recomputeListBox();
             }
         }
@@ -281,9 +281,9 @@ namespace MiningGame.Code.Interfaces
             if (AssetManager.Animations.ContainsKey(filename))
             {
                 controlPoints.Clear();
-                curAnimateable.setAnimation(AssetManager.GetAnimation(filename));
-                curAnimateable.stop();
-                curAnimateable.stopLooping();
+                curAnimateable.SetAnimation(AssetManager.GetAnimation(filename));
+                curAnimateable.Stop();
+                curAnimateable.StopLooping();
                 recomputeListBox();
             }
         }
@@ -293,7 +293,7 @@ namespace MiningGame.Code.Interfaces
             openAnimationButton.active = false;
             saveAnimationButton.active = false;
             textFieldFrameAsset.active = false;
-            textFieldFrameName.active = false;
+            textFieldframeName.active = false;
             newAnimationButton.active = false;
             delFrameButton.active = false;
             backButton.active = false;
@@ -314,7 +314,7 @@ namespace MiningGame.Code.Interfaces
             openAnimationButton = null;
             saveAnimationButton = null;
             textFieldFrameAsset = null;
-            textFieldFrameName = null;
+            textFieldframeName = null;
             newAnimationButton = null;
             framesListBox = null;
             moveDownButton = null;
@@ -330,9 +330,9 @@ namespace MiningGame.Code.Interfaces
         public void recomputeListBox()
         {
             List<string> names = new List<string>();
-            for (int i = 0; i < curAnimateable.curAnimation.numberFrames; i++)
+            for (int i = 0; i < curAnimateable.CurAnimation.numberFrames; i++)
             {
-                AnimationFrame a = curAnimateable.curAnimation.frames[i];
+                AnimationFrame a = curAnimateable.CurAnimation.frames[i];
                 names.Add(a.assetName + ((a.frameName != "") ? " | " + a.frameName : ""));
             }
             framesListBox.dataSource = names;
@@ -348,7 +348,7 @@ namespace MiningGame.Code.Interfaces
             addFrameButton.Update(time);
             delFrameButton.Update(time);
             textFieldFrameAsset.Update(time);
-            textFieldFrameName.Update(time);
+            textFieldframeName.Update(time);
             moveDownButton.Update(time);
             moveUpButton.Update(time);
             curAnimateable.AnimationUpdate();
@@ -359,8 +359,8 @@ namespace MiningGame.Code.Interfaces
             stopLoopingButton.Update(time);
             textFieldFrameDelay.Update(time);
             foreach (AnimationControlPointUI cp in controlPoints) { cp.Update(time); }
-            if (framesListBox.selectedIndex >= 0 && framesListBox.selectedIndex < curAnimateable.curAnimation.numberFrames)
-                curAnimateable.curAnimation.frames[framesListBox.selectedIndex].controlPoints = CpUiToCp(controlPoints);
+            if (framesListBox.selectedIndex >= 0 && framesListBox.selectedIndex < curAnimateable.CurAnimation.numberFrames)
+                curAnimateable.CurAnimation.frames[framesListBox.selectedIndex].controlPoints = CpUiToCp(controlPoints);
             base.Update(time);
         }
 
@@ -388,15 +388,15 @@ namespace MiningGame.Code.Interfaces
             stopLoopingButton.Draw(sb);
 
             textFieldFrameAsset.Draw(sb);
-            textFieldFrameName.Draw(sb);
+            textFieldframeName.Draw(sb);
             textFieldEndLooping.Draw(sb);
             textFieldStartLooping.Draw(sb);
             textFieldFrameDelay.Draw(sb);
 
-            Texture2D frame = curAnimateable.getCurrentFrame();
-            sb.Draw(frame, Main.center, null, Color.White, 0f, new Vector2(frame.Width / 2, frame.Height / 2), imgScale, SpriteEffects.None, 0f);
+            Texture2D frame = curAnimateable.GetCurrentFrame();
+            sb.Draw(frame, Main.Center, null, Color.White, 0f, new Vector2(frame.Width / 2, frame.Height / 2), imgScale, SpriteEffects.None, 0f);
 
-            if (!curAnimateable.playing)
+            if (!curAnimateable.Playing)
             {
                 foreach (AnimationControlPointUI cp in controlPoints)
                 {
@@ -409,7 +409,7 @@ namespace MiningGame.Code.Interfaces
 
         public void newAnimation()
         {
-            curAnimateable.curAnimation = new Animation();
+            curAnimateable.CurAnimation = new Animation();
             recomputeListBox();
         }
 
@@ -417,7 +417,7 @@ namespace MiningGame.Code.Interfaces
         {
 
             string savePath = FormManager.ShowFileSaveDialog("animation", ".anm");
-            string save = JSONManager.Serialize(curAnimateable.curAnimation);
+            string save = JSONManager.Serialize(curAnimateable.CurAnimation);
             FileWriterManager.WriteFile(savePath, save.TrimEnd('\n'));
             ConsoleManager.ConsoleInput("reset_textures", true);
         }

@@ -18,13 +18,12 @@ namespace MiningGame.Code.Entities
         public ProjectileArrow(Vector2 Position, float angle, int strength = 10)
             :base ()
         {
-            scale = 1;
             EntityPosition = Position;
             float strengthX = (float)(strength * Math.Cos(angle));
             float strengthY = (float)(strength * Math.Sin(angle));
             
             EntityVelocity = new Vector2(strengthX, strengthY);
-            _lastPosition = Position - EntityVelocity;
+            LastPosition = Position - EntityVelocity;
 
             EffectOfGravity = 0.13f;
 

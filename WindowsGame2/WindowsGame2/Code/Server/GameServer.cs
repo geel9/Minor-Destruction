@@ -23,7 +23,7 @@ namespace MiningGame.Code.Server
         public static List<NetworkPlayer> NetworkPlayers = new List<NetworkPlayer>();
         public static EntityProjectile[] GameProjectiles = new EntityProjectile[256];
 
-        public const int WorldSizeX = 50, WorldSizeY = 50;
+        public const int WorldSizeX = 200, WorldSizeY = 50;
         public static byte[,] WorldBlocks = new byte[WorldSizeX, WorldSizeY];
         public static byte[,] WorldBlocksMetaData = new byte[WorldSizeX, WorldSizeY];
 
@@ -410,6 +410,45 @@ namespace MiningGame.Code.Server
                     GameProjectiles[i] = null;
                 }
             }
+
+            foreach(NetworkPlayer t in NetworkPlayers)
+            {
+                var playersToUpdate = new List<NetworkPlayer>();
+                foreach(NetworkPlayer t2 in NetworkPlayers)
+                {
+                    int hDist = (int) Math.Abs(t.PlayerEntity.EntityPosition.X - t2.PlayerEntity.EntityPosition.X);
+                    int vDist = (int) Math.Abs(t.PlayerEntity.EntityPosition.Y - t2.PlayerEntity.EntityPosition.Y);
+                    if (hDist >= 830 || vDist >= 530) continue;
+                    if ((t2.UpdateMask & (int)PlayerUpdateFlags.Player_Update) == 0) continue;
+                    playersToUpdate.Add(t2);
+                }
+                if (playersToUpdate.Count == 0) continue;
+
+                Packet200SCPlayerUpdate packet = new Packet200SCPlayerUpdate();
+                packet.writeByte((byte) playersToUpdate.Count);
+
+                foreach(NetworkPlayer p in playersToUpdate)
+                {
+                    byte realUpdateMask = p.UpdateMask;
+                    if (p.FacingLeft) realUpdateMask |= (int)PlayerUpdateFlags.Player_Facing_Left;
+
+                    packet.writeByte(p.PlayerEntity.PlayerID);
+                    packet.writeByte(realUpdateMask);
+                    if((p.UpdateMask & (int)PlayerUpdateFlags.Player_Position_X) != 0)
+                    {
+                        packet.writeShort((short) p.Position.X);
+                    }
+
+                    if ((p.UpdateMask & (int)PlayerUpdateFlags.Player_Position_Y) != 0)
+                    {
+                        packet.writeShort((short)p.Position.Y);
+                    }
+                }
+                Main.serverNetworkManager.SendPacket(packet, t.NetConnection);
+            }
+
+            foreach (NetworkPlayer t in NetworkPlayers)
+                t.UpdateMask = 0;
         }
 
         public static void HandleGameEvent(byte eventID, Packet p, NetworkPlayer player)

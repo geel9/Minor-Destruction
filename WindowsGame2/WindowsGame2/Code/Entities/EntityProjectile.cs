@@ -24,7 +24,7 @@ namespace MiningGame.Code.Entities
         {
         }
 
-        internal Vector2 _lastPosition = Vector2.Zero;
+        internal Vector2 LastPosition = Vector2.Zero;
 
         internal List<Vector2> RectangleHitsTiles(AABB rect)
         {
@@ -132,10 +132,10 @@ namespace MiningGame.Code.Entities
             {
                 DrawManager.Draw_Outline(new Vector2(vec.X * GameWorld.BlockWidth + (GameWorld.BlockWidth / 2), vec.Y * GameWorld.BlockHeight + (GameWorld.BlockHeight / 2)) - CameraManager.cameraPosition, GameWorld.BlockWidth, GameWorld.BlockHeight, Color.Red, sb);
             }
-            Rotation = (float)((float)Math.Atan2(EntityPosition.Y - _lastPosition.Y, EntityPosition.X - _lastPosition.X) +
+            Rotation = (float)((float)Math.Atan2(EntityPosition.Y - LastPosition.Y, EntityPosition.X - LastPosition.X) +
                                 ConversionManager.DegreeToRadians(90));
 
-            _lastPosition = EntityPosition;
+            LastPosition = EntityPosition;
 
             base.Draw(sb);
         }

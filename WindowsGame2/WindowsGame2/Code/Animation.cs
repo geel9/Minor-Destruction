@@ -30,22 +30,20 @@ namespace MiningGame.Code
             frames = new List<AnimationFrame>();
         }
 
-        public void addFrame(string assetName, string name = "")
+        public void AddFrame(string assetName, string name = "")
         {
             frames.Add(new AnimationFrame(name, assetName, 2));
         }
 
         public AnimationFrame getFrame(int frame)
         {
-            if (frame < numberFrames) return frames[frame];
-            return null;
+            return frame < numberFrames ? frames[frame] : null;
         }
 
         public AnimationFrame getFrame(string frame)
         {
             IEnumerable<AnimationFrame> query = frames.Where(x => x.frameName == frame);
-            if (query.Count() > 0) return query.FirstOrDefault();
-            return null;
+            return query.Count() > 0 ? query.FirstOrDefault() : null;
         }
     }
 

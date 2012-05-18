@@ -40,9 +40,9 @@ namespace MiningGame.Code
                 if (InterfaceManager.blocking) return;
                 Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_KeyPress, 'a', true);
                 Main.clientNetworkManager.SendPacket(pack);
-                PlayerEntity.FacingLeft = true;
-                PlayerEntity.TorsoAnimateable.startLooping("player_run_start", "player_run_end");
-                PlayerEntity.LegsAnimateable.startLooping("player_run_start", "player_run_end");
+                //PlayerEntity.FacingLeft = true;
+                PlayerEntity.TorsoAnimateable.StartLooping("player_run_start", "player_run_end");
+                PlayerEntity.LegsAnimateable.StartLooping("player_run_start", "player_run_end");
             }, Keys.A, true);
 
             InputManager.BindKey(() =>
@@ -50,25 +50,25 @@ namespace MiningGame.Code
                 if (InterfaceManager.blocking) return;
                 Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_KeyPress, 'd', true);
                 Main.clientNetworkManager.SendPacket(pack);
-                PlayerEntity.TorsoAnimateable.startLooping("player_run_start", "player_run_end");
-                PlayerEntity.LegsAnimateable.startLooping("player_run_start", "player_run_end");
-                PlayerEntity.FacingLeft = false;
+                PlayerEntity.TorsoAnimateable.StartLooping("player_run_start", "player_run_end");
+                PlayerEntity.LegsAnimateable.StartLooping("player_run_start", "player_run_end");
+                //PlayerEntity.FacingLeft = false;
             }, Keys.D, true);
 
             InputManager.BindKey(() =>
             {
                 Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_KeyPress, 'a', (bool)false);
                 Main.clientNetworkManager.SendPacket(pack);
-                PlayerEntity.TorsoAnimateable.startLooping("player_idle", "player_idle");
-                PlayerEntity.LegsAnimateable.startLooping("player_idle", "player_idle");
+                PlayerEntity.TorsoAnimateable.StartLooping("player_idle", "player_idle");
+                PlayerEntity.LegsAnimateable.StartLooping("player_idle", "player_idle");
             }, Keys.A, true, false);
 
             InputManager.BindKey(() =>
             {
                 Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_KeyPress, 'd', (bool)false);
                 Main.clientNetworkManager.SendPacket(pack);
-                PlayerEntity.TorsoAnimateable.startLooping("player_idle", "player_idle");
-                PlayerEntity.LegsAnimateable.startLooping("player_idle", "player_idle");
+                PlayerEntity.TorsoAnimateable.StartLooping("player_idle", "player_idle");
+                PlayerEntity.LegsAnimateable.StartLooping("player_idle", "player_idle");
             }, Keys.D, true, false);
 
             InputManager.BindKey(() =>

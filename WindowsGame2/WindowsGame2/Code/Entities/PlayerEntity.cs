@@ -53,20 +53,20 @@ namespace MiningGame.Code.Entities
             PlayerName = name;
             TorsoAnimateable = new Animateable();
             LegsAnimateable = new Animateable();
-            TorsoAnimateable.setAnimation(AssetManager.GetAnimation("playertorso"));
-            LegsAnimateable.setAnimation(AssetManager.GetAnimation("playerlegs"));
-            TorsoAnimateable.startLooping("player_idle", "player_idle");
-            LegsAnimateable.startLooping("player_idle", "player_idle");
+            TorsoAnimateable.SetAnimation(AssetManager.GetAnimation("playertorso"));
+            LegsAnimateable.SetAnimation(AssetManager.GetAnimation("playerlegs"));
+            TorsoAnimateable.StartLooping("player_idle", "player_idle");
+            LegsAnimateable.StartLooping("player_idle", "player_idle");
         }
 
         public override void Draw(SpriteBatch sb)
         {
-            AnimationControlPoint hatCP = TorsoAnimateable.getControlPoint("player_hat");
+            AnimationControlPoint hatCP = TorsoAnimateable.GetControlPoint("player_hat");
             Vector2 hatPos = new Vector2(hatCP.x, hatCP.y);
             if (FacingLeft) hatPos.X = -hatPos.X;
             Texture2D hat = AssetManager.GetTexture("hat");
-            Texture2D torso = TorsoAnimateable.getCurrentFrame();
-            Texture2D legs = LegsAnimateable.getCurrentFrame();
+            Texture2D torso = TorsoAnimateable.GetCurrentFrame();
+            Texture2D legs = LegsAnimateable.GetCurrentFrame();
             Vector2 drawPos = (EntityPosition - new Vector2(BoundBox.Width / 2, 2)) - CameraManager.cameraPosition;
             sb.Draw(torso, drawPos , null, Color.White, 0f, new Vector2(PlayerWidth / 2, PlayerHeight / 2), 1f, !FacingLeft ? SpriteEffects.None :SpriteEffects.FlipHorizontally, 0f);
             sb.Draw(legs, drawPos, null, Color.White, 0f, new Vector2(PlayerWidth / 2, PlayerHeight / 2), 1f, !FacingLeft ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);

@@ -7,13 +7,13 @@ namespace MiningGame.Code.Structs
 {
     public struct BoundPacket
     {
-        public Action<Packet> toFire;
-        public byte idToFireOn;
+        public Action<Packet> ToFire;
+        public byte IDToFireOn;
 
         public BoundPacket(Action<Packet> a, byte b)
         {
-            this.toFire = a;
-            this.idToFireOn = b;
+            this.ToFire = a;
+            this.IDToFireOn = b;
         }
     }
 }

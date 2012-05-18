@@ -51,7 +51,7 @@ namespace MiningGame.Code.Managers
                         NetConnectionStatus status = (NetConnectionStatus)msg.ReadByte();
                         if (status == NetConnectionStatus.Connected)
                         {
-                            onConnected();
+                            OnConnected();
                         }
                         break;
                 }
@@ -74,9 +74,9 @@ namespace MiningGame.Code.Managers
             byte num = p.readByte();
             foreach (BoundPacket bp in boundPackets)
             {
-                if (bp.idToFireOn == num)
+                if (bp.IDToFireOn == num)
                 {
-                    bp.toFire(p);
+                    bp.ToFire(p);
                 }
             }
         }
@@ -96,16 +96,16 @@ namespace MiningGame.Code.Managers
                 short X = p.readShort();
                 short Y = p.readShort();
                 float angle = p.readFloat();
-                GameWorld.GameProjectiles.Add(new ProjectileArrow(new Vector2(X, Y), angle) {ProjectileID = ID});
+                GameWorld.GameProjectiles.Add(new ProjectileArrow(new Vector2(X, Y), angle) { ProjectileID = ID });
             }, 2));
 
             boundPackets.Add(new BoundPacket((Packet p) =>
                                                  {
                                                      byte toRemove = p.readByte();
                                                      EntityProjectile proj = null;
-                                                     foreach(EntityProjectile projectile in GameWorld.GameProjectiles)
+                                                     foreach (EntityProjectile projectile in GameWorld.GameProjectiles)
                                                      {
-                                                         if(projectile.ProjectileID == toRemove)
+                                                         if (projectile.ProjectileID == toRemove)
                                                          {
                                                              proj = projectile;
                                                              break;
@@ -118,6 +118,7 @@ namespace MiningGame.Code.Managers
             {
                 string pName = p.readString();
                 byte id = p.readByte();
+                
                 int posX = p.readInt();
                 int posY = p.readInt();
                 if (GameWorld.OtherPlayers.Where(pl => pl.PlayerID == id).Count() > 0) return;
@@ -132,12 +133,14 @@ namespace MiningGame.Code.Managers
                 }
             }, 0));
 
-            boundPackets.Add(new BoundPacket((Packet p) =>
+            boundPackets.Add(new BoundPacket(p =>
             {
                 byte id = p.readByte();
                 ConsoleManager.Log("My id is " + id);
-                GameWorld.ThePlayer.PlayerEntity = new PlayerEntity(new Microsoft.Xna.Framework.Vector2(0, 0), id, ConsoleManager.getVariableValue("player_name"));
+                GameWorld.ThePlayer.PlayerEntity = new PlayerEntity(new Vector2(0, 0), id, ConsoleManager.getVariableValue("player_name"));
             }, 255));
+
+            boundPackets.Add(new BoundPacket(PlayerUpdating, 200));
         }
 
         public void Connect(string ip, int port)
@@ -150,7 +153,7 @@ namespace MiningGame.Code.Managers
             {
                 IPEndPoint serverEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
                 netClient.Connect(serverEndPoint);
-                
+
             }
             catch (Exception)
             {
@@ -158,7 +161,7 @@ namespace MiningGame.Code.Managers
             }
         }
 
-        public void onConnected()
+        public void OnConnected()
         {
             Main.theWorld = new GameWorld();
             InGameInterface i = new InGameInterface();
@@ -181,6 +184,35 @@ namespace MiningGame.Code.Managers
             }
             catch (Exception)
             {
+            }
+        }
+
+        public void PlayerUpdating(Packet p)
+        {
+            int numToUpdate = p.readByte();
+            for (int i = 0; i < numToUpdate; i++)
+            {
+                int playerID = p.readByte();
+                PlayerEntity player;
+                if (playerID == GameWorld.ThePlayer.PlayerEntity.PlayerID)
+                    player = GameWorld.ThePlayer.PlayerEntity;
+                else
+                {
+                    player = GameWorld.OtherPlayers.Where(pl => pl.PlayerID == playerID).First();
+                }
+                byte updateMask = p.readByte();
+
+                if ((updateMask & (int)PlayerUpdateFlags.Player_Position_X) != 0)
+                {
+                    short x = p.readShort();
+                    player.EntityPosition.X = x;
+                }
+                if ((updateMask & (int)PlayerUpdateFlags.Player_Position_Y) != 0)
+                {
+                    short y = p.readShort();
+                    player.EntityPosition.Y = y;
+                }
+                player.FacingLeft = (updateMask & (int)PlayerUpdateFlags.Player_Facing_Left) != 0;
             }
         }
     }

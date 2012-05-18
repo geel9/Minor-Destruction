@@ -48,14 +48,14 @@ namespace MiningGame.Code
         public static SoundManager SoundManager = new SoundManager();
         public static MusicManager MusicManager = new MusicManager();
         public static PauseManager PauseManager;
-        public static Color backColor = Color.SkyBlue;
+        public static Color BackColor = Color.SkyBlue;
         public static bool isActive = false;
 
         public static Random r = new Random();
 
-        public bool inGame = false;
+        public bool InGame = false;
 
-        public static Vector2 center;
+        public static Vector2 Center;
 
         public static MiningGame.Code.Entities.Console console;
 
@@ -63,12 +63,12 @@ namespace MiningGame.Code
         {
             graphics = new GraphicsDeviceManager(this);
             graphics.SynchronizeWithVerticalRetrace = true;
-            this.IsMouseVisible = true;
+            IsMouseVisible = true;
             Content.RootDirectory = "Content";
             graphics.PreferMultiSampling = true;
             graphics.PreferredBackBufferHeight = 500;
             graphics.PreferredBackBufferWidth = 800;
-            isActive = this.IsActive;
+            isActive = IsActive;
         }
 
         protected override void Initialize()
@@ -315,7 +315,7 @@ namespace MiningGame.Code
             });
 
 
-            center = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
+            Center = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
             PlayerBindManager.InitBinds();
             ConsoleManager.ConsoleInput("exec exec", true);
 
@@ -426,7 +426,7 @@ namespace MiningGame.Code
             //GraphicsDevice.SetRenderTarget(rend);
 
 
-            GraphicsDevice.Clear(backColor);
+            GraphicsDevice.Clear(BackColor);
 
             spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null);
 

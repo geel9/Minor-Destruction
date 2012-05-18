@@ -96,7 +96,6 @@ namespace MiningGame.Code.Server
             catch
             {
             }
-            //netServer.Recycle(msg);
         }
 
         public void HandlePacket(Packet p, NetworkPlayer player)
@@ -113,8 +112,14 @@ namespace MiningGame.Code.Server
                     {
                         if (player.PlayerEntity != null)
                         {
-                            Packet0SCPlayerConnect packet = new Packet0SCPlayerConnect(pl.PlayerEntity.PlayerName, pl.PlayerEntity.PlayerID, pl.PlayerPosition);
-                            SendPacket(packet);
+                            var packet = new Packet0SCPlayerConnect(pl.PlayerEntity.PlayerName, pl.PlayerEntity.PlayerID, pl.Position);
+                            SendPacket(packet, player.NetConnection);
+                        }
+                        if(pl != player)
+                        {
+                            var packet = new Packet0SCPlayerConnect(player.PlayerEntity.PlayerName,
+                                                                    player.PlayerEntity.PlayerID, player.Position);
+                            SendPacket(packet, pl.NetConnection);
                         }
                     }
                     break;

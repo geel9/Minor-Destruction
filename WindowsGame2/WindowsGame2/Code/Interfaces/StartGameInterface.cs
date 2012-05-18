@@ -22,14 +22,14 @@ namespace MiningGame.Code.Interfaces
         {
             base.initialize(1);
             base.blocking = true;
-            HostGameButton = new Button(new Vector2(Main.center.X - 30, Main.center.Y + 100), "Host", AssetManager.GetFont("Console"), () => { Host(); });
-            JoinGameButton = new Button(new Vector2(Main.center.X + 30, Main.center.Y + 100), "Connect", AssetManager.GetFont("Console"), () => { Connect(); });
-            PlayerNameTextField = new TextField(new Vector2(Main.center.X - 90, Main.center.Y), 180, 20, Color.Black, AssetManager.GetFont("Console"), null);
-            ServerIPTextField = new TextField(new Vector2(Main.center.X - 90, Main.center.Y - 100), 180, 20, Color.Black, AssetManager.GetFont("Console"), null);
+            HostGameButton = new Button(new Vector2(Main.Center.X - 30, Main.Center.Y + 100), "Host", AssetManager.GetFont("Console"), () => { Host(); });
+            JoinGameButton = new Button(new Vector2(Main.Center.X + 30, Main.Center.Y + 100), "Connect", AssetManager.GetFont("Console"), () => { Connect(); });
+            PlayerNameTextField = new TextField(new Vector2(Main.Center.X - 90, Main.Center.Y), 180, 20, Color.Black, AssetManager.GetFont("Console"), null);
+            ServerIPTextField = new TextField(new Vector2(Main.Center.X - 90, Main.Center.Y - 100), 180, 20, Color.Black, AssetManager.GetFont("Console"), null);
             ServerIPTextField.stringPattern = "^\\d+?\\.\\d+?\\.\\d+?\\.\\d+?$";
-            ServerPortTextField = new TextField(new Vector2(Main.center.X - 90, Main.center.Y - 50), 180, 20, Color.Black, AssetManager.GetFont("Console"), null);
+            ServerPortTextField = new TextField(new Vector2(Main.Center.X - 90, Main.Center.Y - 50), 180, 20, Color.Black, AssetManager.GetFont("Console"), null);
             ServerPortTextField.stringPattern = "^\\d*?$";
-            AnimationEditorButton = new Button(Main.center - new Vector2(0, 200), "Animation editor", AssetManager.GetFont("Console"), () => { destroy(); AnimationEditorInterface ae = new AnimationEditorInterface(); ae.initialize(1); });
+            AnimationEditorButton = new Button(Main.Center - new Vector2(0, 200), "Animation editor", AssetManager.GetFont("Console"), () => { destroy(); AnimationEditorInterface ae = new AnimationEditorInterface(); ae.initialize(1); });
             PlayerNameTextField.SetText("Player1");
             ServerIPTextField.SetText("127.0.0.1");
             ServerPortTextField.SetText("870");
@@ -80,8 +80,8 @@ namespace MiningGame.Code.Interfaces
 
         public override void Draw(SpriteBatch sb)
         {
-            DrawManager.Draw_Box(Main.center, 200, 300, Color.Black, sb, 0f, 200);
-            DrawManager.Draw_Outline(Main.center, 200, 300, Color.Black, sb);
+            DrawManager.Draw_Box(Main.Center, 200, 300, Color.Black, sb, 0f, 200);
+            DrawManager.Draw_Outline(Main.Center, 200, 300, Color.Black, sb);
             HostGameButton.Draw(sb);
             JoinGameButton.Draw(sb);
             PlayerNameTextField.Draw(sb);

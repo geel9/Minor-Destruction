@@ -19,22 +19,39 @@ namespace MiningGame.Code.Server
         public short PlayerAimAngle = 0;
         public int PlayerInventorySelected;
 
+        public bool FacingLeft
+        {
+            get { return PlayerEntity.FacingLeft; }
+            set { PlayerEntity.FacingLeft = value; }
+        }
+        
+        public Vector2 Position
+        {
+            get { return PlayerEntity.EntityPosition; }
+            set { PlayerEntity.EntityPosition = value; }
+        }
+
+        public byte UpdateMask = 0;
+
         public int PlayerTeam = 0;
 
         public NetworkPlayer(byte playerID, NetConnection connection, Vector2 playerPos, string name)
         {
-            this.NetConnection = connection;
-            this.PlayerEntity = new PlayerEntity(playerPos, playerID, name);
+            NetConnection = connection;
+            PlayerEntity = new PlayerEntity(playerPos, playerID, name);
+            UpdateMask |= 1;
+            UpdateMask |= (int)
+            PlayerUpdateFlags.Player_Position_X;
+            UpdateMask |= (int)
+            PlayerUpdateFlags.Player_Position_Y;
         }
 
         public void Update(GameTime theTime)
         {
             if (_jumpTimer > 0) _jumpTimer--;
             if (PlayerEntity == null) return;
-            if (PressedKeys.Contains('a'))
-            {
-                PlayerEntity.EntityVelocity.X = MathHelper.Clamp(PlayerEntity.EntityVelocity.X - 3, -3, 3);
-            }
+
+            bool facingLeft = FacingLeft;
             if (PressedKeys.Contains('w'))
             {
                 if (!PlayerEntity.Falling && _jumpTimer <= 0)
@@ -43,14 +60,28 @@ namespace MiningGame.Code.Server
                     _jumpTimer = 20;
                 }
             }
+            if (PressedKeys.Contains('a'))
+            {
+                PlayerEntity.EntityVelocity.X = MathHelper.Clamp(PlayerEntity.EntityVelocity.X - 3, -3, 3);
+                FacingLeft = true;
+            }
+
             if (PressedKeys.Contains('d'))
             {
                 PlayerEntity.EntityVelocity.X = MathHelper.Clamp(PlayerEntity.EntityVelocity.X + 3, -3, 3);
+                FacingLeft = false;
             }
+
+            Vector2 oldPos = new Vector2(PlayerEntity.EntityPosition.X, PlayerEntity.EntityPosition.Y);
             PlayerEntity.Update(theTime, true);
-            
-            Packet1SCGameEvent packet = new Packet1SCGameEvent(GameServer.GameEvents.Player_Aim_And_Position, (byte)PlayerEntity.PlayerID, (short)PlayerEntity.EntityPosition.X, (short)PlayerEntity.EntityPosition.Y);
-            Main.serverNetworkManager.SendPacket(packet);
+            if(oldPos != PlayerEntity.EntityPosition)
+            {
+                UpdateMask |= (int)PlayerUpdateFlags.Player_Update;
+                if(oldPos.X != PlayerEntity.EntityPosition.X)
+                    UpdateMask |= (int)PlayerUpdateFlags.Player_Position_X;
+                if (oldPos.Y != PlayerEntity.EntityPosition.Y)
+                    UpdateMask |= (int)PlayerUpdateFlags.Player_Position_Y;
+            }
         }
 
         public bool HasItem(byte id)

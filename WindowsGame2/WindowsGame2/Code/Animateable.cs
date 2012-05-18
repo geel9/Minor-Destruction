@@ -11,67 +11,67 @@ namespace MiningGame.Code
 {
     public class Animateable
     {
-        public Animation curAnimation = new Animation();
+        public Animation CurAnimation = new Animation();
 
-        public bool looping = false;
-        public bool playing = false;
-        private int loopingStart = 0;
-        private int loopingEnd = 0;
-        public int currentFrame = 0;
-        private int frameRateLimit = 0;
+        public bool Looping = false;
+        public bool Playing = false;
+        private int _loopingStart = 0;
+        private int _loopingEnd = 0;
+        public int CurrentFrame = 0;
+        private int _frameRateLimit = 0;
 
-        public void setAnimation(Animation a)
+        public void SetAnimation(Animation a)
         {
-            curAnimation = a;
-            startLooping(0, a.numberFrames);
-            playing = true;
+            CurAnimation = a;
+            StartLooping(0, a.numberFrames);
+            Playing = true;
         }
 
         public void AnimationUpdate()
         {
-            if (!playing) return;
-            if (frameRateLimit++ <= curAnimation.frames[currentFrame].delay) return;
-            currentFrame++;
-            frameRateLimit = 0;
-            if (looping)
+            if (!Playing) return;
+            if (_frameRateLimit++ <= CurAnimation.frames[CurrentFrame].delay) return;
+            CurrentFrame++;
+            _frameRateLimit = 0;
+            if (Looping)
             {
-                if (currentFrame > loopingEnd) currentFrame = loopingStart;
+                if (CurrentFrame > _loopingEnd) CurrentFrame = _loopingStart;
             }
-            if (currentFrame >= curAnimation.numberFrames) currentFrame = 0;
+            if (CurrentFrame >= CurAnimation.numberFrames) CurrentFrame = 0;
         }
 
-        public Texture2D getCurrentFrame()
+        public Texture2D GetCurrentFrame()
         {
-            return curAnimation.numberFrames > 0 ? curAnimation.getFrame(currentFrame).frameTexture() : AssetManager.GetTexture("error");
+            return CurAnimation.numberFrames > 0 ? CurAnimation.getFrame(CurrentFrame).frameTexture() : AssetManager.GetTexture("error");
         }
 
-        public void start()
+        public void Start()
         {
-            playing = true;
+            Playing = true;
         }
 
-        public void stop()
+        public void Stop()
         {
-            playing = false;
+            Playing = false;
         }
 
-        public void gotoAndStart(int frame)
+        public void GotoAndStart(int frame)
         {
-            currentFrame = frame;
-            playing = true;
+            CurrentFrame = frame;
+            Playing = true;
         }
 
-        public void gotoAndStop(int frame)
+        public void GotoAndStop(int frame)
         {
-            currentFrame = frame;
-            playing = false;
+            CurrentFrame = frame;
+            Playing = false;
         }
 
-        public AnimationControlPoint getControlPoint(string name)
+        public AnimationControlPoint GetControlPoint(string name)
         {
-            List<AnimationControlPoint> cps = curAnimation.frames[currentFrame].controlPoints;
+            List<AnimationControlPoint> cps = CurAnimation.frames[CurrentFrame].controlPoints;
             if (cps == null) cps = new List<AnimationControlPoint>();
-            Texture2D frame = getCurrentFrame();
+            Texture2D frame = GetCurrentFrame();
             foreach (AnimationControlPoint cp in cps)
             {
                 if (cp.name == name)
@@ -82,43 +82,43 @@ namespace MiningGame.Code
             return null;
         }
 
-        public int indexOfFrame(string name)
+        public int IndexOfFrame(string name)
         {
-            AnimationFrame frame = curAnimation.getFrame(name);
+            AnimationFrame frame = CurAnimation.getFrame(name);
             if (frame != null)
             {
-                return curAnimation.frames.IndexOf(frame);
+                return CurAnimation.frames.IndexOf(frame);
             }
             return -1;
         }
 
-        public void startLooping(int start, int end)
+        public void StartLooping(int start, int end)
         {
-            looping = true;
-            loopingStart = start;
-            loopingEnd = end;
+            Looping = true;
+            _loopingStart = start;
+            _loopingEnd = end;
         }
 
-        public void startLooping(string start, string end)
+        public void StartLooping(string start, string end)
         {
 
-            int s = indexOfFrame(start);
-            int e = indexOfFrame(end);
+            int s = IndexOfFrame(start);
+            int e = IndexOfFrame(end);
             if (s != -1 && e != -1)
             {
-                loopingStart = s;
-                loopingEnd = e;
-                looping = true;
-                playing = true;
+                _loopingStart = s;
+                _loopingEnd = e;
+                Looping = true;
+                Playing = true;
             }
         }
 
-        public void stopLooping()
+        public void StopLooping()
         {
-            loopingStart = 0;
-            loopingEnd = 0;
-            looping = false;
-            playing = false;
+            _loopingStart = 0;
+            _loopingEnd = 0;
+            Looping = false;
+            Playing = false;
         }
     }
 }

@@ -54,12 +54,12 @@ namespace MiningGame.Code.Managers
         }
 
         public static void setCameraPositionCenter(Vector2 position){
-            cameraPosition = position - Main.center;
+            cameraPosition = position - Main.Center;
         }
 
         public static void setCameraPositionCenterMin(Vector2 position, Vector2 min)
         {
-            cameraPosition = position - Main.center;
+            cameraPosition = position - Main.Center;
             if (cameraPosition.X < min.X) cameraPosition.X = min.X;
             if (cameraPosition.Y < min.Y) cameraPosition.Y = min.Y;
         }

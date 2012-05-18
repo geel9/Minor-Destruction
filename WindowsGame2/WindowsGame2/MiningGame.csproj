@@ -164,6 +164,7 @@
     <Compile Include="Code\Packets\Packet0CSPlayerConnect.cs" />
     <Compile Include="Code\Packets\Packet0SCPlayerConnect.cs" />
     <Compile Include="Code\Packets\Packet1CSGameEvent.cs" />
+    <Compile Include="Code\Packets\Packet200SCPlayerUpdate.cs" />
     <Compile Include="Code\Packets\Packet255SCConnectionConfirm.cs" />
     <Compile Include="Code\Packets\Packet2SCCreateProjectile.cs" />
     <Compile Include="Code\Packets\Packet3SCRemoveProjectile.cs" />

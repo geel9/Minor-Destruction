@@ -184,7 +184,7 @@ namespace MiningGame.Code
                     Texture2D backTexture = AssetManager.GetTexture("background_1");
                     if (y < 10)
                     {
-                        backColor = Main.backColor;
+                        backColor = Main.BackColor;
                     }
                     Vector2 drawPos = new Vector2(x * BlockWidth + (BlockWidth / 2), y * BlockHeight + (BlockHeight / 2));
                     drawPos -= CameraManager.cameraPosition;
