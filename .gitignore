@@ -6,3 +6,5 @@ _ReSharper.Rating War
 
 # mstest test results
 TestResults
+
+.pdb
