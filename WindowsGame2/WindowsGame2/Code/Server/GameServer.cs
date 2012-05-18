@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using MiningGame.Code.Blocks;
 using MiningGame.Code.Entities;
 using MiningGame.Code.Items;
@@ -9,10 +8,8 @@ using MiningGame.Code.Packets;
 using MiningGame.Code.CInterfaces;
 using Microsoft.Xna.Framework;
 using MiningGame.Code.Structs;
-using Lidgren.Network;
 using MiningGame.Code.Managers;
 using System.IO;
-using YogUILibrary.Managers;
 
 namespace MiningGame.Code.Server
 {
@@ -24,9 +21,6 @@ namespace MiningGame.Code.Server
         public static EntityProjectile[] GameProjectiles = new EntityProjectile[256];
 
         public const int WorldSizeX = 500, WorldSizeY = 500;
-        public static byte[,] WorldBlocks = new byte[WorldSizeX, WorldSizeY];
-        public static byte[,] WorldBlocksMetaData = new byte[WorldSizeX, WorldSizeY];
-
         public static List<BlockConnection> BlockConnections = new List<BlockConnection>();
         public static List<ItemRecipe> ItemRecipes = new List<ItemRecipe>();
 
@@ -130,7 +124,7 @@ namespace MiningGame.Code.Server
                 int highestPoint = 0;
                 for (int y = 0; y < WorldSizeY; y++)
                 {
-                    if (WorldBlocks[x, y] == 1)
+                    if (GameWorld.WorldBlocks[x, y] == 1)
                     {
                         highestPoint = y;
                         break;
@@ -174,8 +168,8 @@ namespace MiningGame.Code.Server
             if (x < WorldSizeX && y < WorldSizeY && blockID >= 0)
             {
                 if (blockID != GetBlockIDAt(x, y) && GetBlockIDAt(x, y) != 0) Block.GetBlock(GetBlockIDAt(x, y)).OnBlockRemoved(x, y);
-                WorldBlocksMetaData[x, y] = metaData;
-                WorldBlocks[x, y] = blockID;
+                GameWorld.WorldBlocksMetaData[x, y] = metaData;
+                GameWorld.WorldBlocks[x, y] = blockID;
                 if (blockID != 0) Block.GetBlock(blockID).OnBlockPlaced(x, y, notify);
 
                 //Packet1SCGameEvent pack = new Packet1SCGameEvent((byte)GameEvents.Block_Set, x, y, blockID, metaData);
@@ -185,7 +179,7 @@ namespace MiningGame.Code.Server
 
         public static void SetBlockMetaData(int x, int y, byte metadata)
         {
-            WorldBlocksMetaData[x, y] = metadata;
+            GameWorld.WorldBlocksMetaData[x, y] = metadata;
             //Packet1SCGameEvent pack = new Packet1SCGameEvent((byte)GameEvents.Block_Set, x, y, WorldBlocks[x, y], metadata);
             //Main.serverNetworkManager.SendPacket(pack);
         }
@@ -299,12 +293,12 @@ namespace MiningGame.Code.Server
 
         public static byte GetBlockIDAt(int x, int y)
         {
-            return (x >= 0 && y >= 0 && x < WorldSizeX && y < WorldSizeY) ? WorldBlocks[x, y] : (byte)255;
+            return (x >= 0 && y >= 0 && x < WorldSizeX && y < WorldSizeY) ? GameWorld.WorldBlocks[x, y] : (byte)255;
         }
 
         public static byte GetBlockIDAt(float x, float y)
         {
-            return (x >= 0 && y >= 0 && x < WorldSizeX && y < WorldSizeY) ? WorldBlocks[(int)x, (int)y] : (byte)0;
+            return (x >= 0 && y >= 0 && x < WorldSizeX && y < WorldSizeY) ? GameWorld.WorldBlocks[(int)x, (int)y] : (byte)0;
         }
 
         public static Block GetBlockAt(int x, int y)
@@ -320,13 +314,13 @@ namespace MiningGame.Code.Server
         public static byte GetBlockMDAt(int x, int y)
         {
             if (x < 0 || x >= WorldSizeX || y < 0 || y >= WorldSizeY) return 0;
-            byte ret = WorldBlocksMetaData[x, y];
+            byte ret = GameWorld.WorldBlocksMetaData[x, y];
             return (x >= 0 && y >= 0 && x < WorldSizeX && y < WorldSizeY) ? ret : (byte)0;
         }
 
         public static byte GetBlockMDAt(float x, float y)
         {
-            return (x >= 0 && y >= 0 && x < WorldSizeX && y < WorldSizeY) ? WorldBlocksMetaData[(int)x, (int)y] : (byte)0;
+            return (x >= 0 && y >= 0 && x < WorldSizeX && y < WorldSizeY) ? GameWorld.WorldBlocksMetaData[(int)x, (int)y] : (byte)0;
         }
 
         public static bool CanWalkThrough(byte id)

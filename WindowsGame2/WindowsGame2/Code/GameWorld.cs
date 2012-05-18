@@ -32,8 +32,6 @@ namespace MiningGame.Code
         public static byte[,] WorldBlocks = new byte[WorldSizeX, WorldSizeY];
         public static byte[,] WorldBlocksMetaData = new byte[WorldSizeX, WorldSizeY];
 
-        public static int[, ,] WorldBlocksSeen = new int[WorldSizeX, WorldSizeY, 2];
-
         public static void LoadBlocks()
         {
             Block.AllBlocks.Clear();
@@ -89,22 +87,21 @@ namespace MiningGame.Code
 
         public static bool IsBlockLit(int x, int y)
         {
-            return WorldBlocksSeen[x, y, 0] > 0 || WorldBlocksSeen[x, y, 1] > 0;
+            return true;
         }
 
         public static int GetBlockLitLevel(int x, int y)
         {
-            if (IsBlockFullyLit(x, y)) return 2;
-            if (WorldBlocksSeen[x, y, 1] > 0) return 1;
-            return 0;
+            return 2;
         }
 
         public static bool IsBlockFullyLit(int x, int y)
         {
+            return true;
             Vector2 playerTile = AbsoluteToTile(ThePlayer.PlayerEntity.EntityPosition);
             float xDist = Math.Abs(playerTile.X - x);
             float yDist = Math.Abs(playerTile.Y - y);
-            return WorldBlocksSeen[x, y, 0] > 0 || (xDist < PlayerVision && yDist < PlayerVision);
+            return true || (xDist < PlayerVision && yDist < PlayerVision);
         }
 
         public static int ShouldRenderBlock(int x, int y)
@@ -250,7 +247,7 @@ namespace MiningGame.Code
                 oth.Draw(sb);
             }
 
-            foreach(EntityProjectile projectile in GameProjectiles)
+            foreach (EntityProjectile projectile in GameProjectiles)
             {
                 projectile.Draw(sb);
             }
@@ -389,7 +386,7 @@ namespace MiningGame.Code
         }
 
         internal static void lightUpAroundRadius(int blockX, int blockY, int radius, int level = 1, int sign = 1)
-        {
+        {/*
             if (blockX - radius < 0 || blockX + radius >= GameServer.WorldSizeX || blockY - radius < 0 || blockY + radius >= GameServer.WorldSizeY) return;
             Vector2 playerTile = new Vector2(blockX, blockY);
             int startX = (int)MathHelper.Clamp(playerTile.X - radius, 0, playerTile.X);
@@ -425,7 +422,7 @@ namespace MiningGame.Code
                     if (level == 0)
                         WorldBlocksSeen[x, y, level] += sign;
                 }
-            }
+            }*/
         }
 
         #region interfaces

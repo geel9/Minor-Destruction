@@ -68,8 +68,8 @@ namespace MiningGame.Code.Server
                     byte cachedByte = PlayerBlockIDCache[x, y];
                     byte cachedByteM = PlayerBlockMDCache[x, y];
 
-                    byte realByte = GameServer.WorldBlocks[x, y];
-                    byte realByteM = GameServer.WorldBlocksMetaData[x, y];
+                    byte realByte = GameWorld.WorldBlocks[x, y];
+                    byte realByteM = GameWorld.WorldBlocksMetaData[x, y];
 
                     if (cachedByte == realByte && realByteM == cachedByteM) continue;
 

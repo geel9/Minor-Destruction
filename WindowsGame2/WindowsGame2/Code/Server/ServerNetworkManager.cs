@@ -139,14 +139,6 @@ namespace MiningGame.Code.Server
 
         public void HandleClient(NetworkPlayer player)
         {
-            for (int x = 0; x < GameServer.WorldSizeX; x++)
-            {
-                for (int y = 0; y < GameServer.WorldSizeY; y++)
-                {
-                    //Packet1SCGameEvent pack = new Packet1SCGameEvent((byte)GameServer.GameEvents.Block_Set, x, y, (byte)GameServer.WorldBlocks[x, y], (byte)GameServer.WorldBlocksMetaData[x, y]);
-                    //SendPacket(pack, player.NetConnection, NetDeliveryMethod.ReliableUnordered);
-                }
-            }
         }
     }
 }
