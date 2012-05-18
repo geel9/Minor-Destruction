@@ -56,14 +56,20 @@ namespace MiningGame.Code.Server
         {
             var blockPos = new Vector2((int)(Position.X / GameWorld.BlockWidth), (int)(Position.Y / GameWorld.BlockHeight));
 
-            int startX = (int)MathHelper.Clamp((int)blockPos.X - (800 / 16) - 1, 0, GameWorld.WorldSizeX);
-            int startY = (int)MathHelper.Clamp((int)blockPos.Y - (500 / 16) - 1, 0, GameWorld.WorldSizeY);
-            int endX = (int)MathHelper.Clamp((int)blockPos.X + (500 / 16) + 1, 0, GameWorld.WorldSizeX);
-            int endY = (int)MathHelper.Clamp((int)blockPos.Y + (800 / 16) + 1, 0, GameWorld.WorldSizeY);
+            short startX = (short)MathHelper.Clamp((int)blockPos.X - (800 / 16) - 1, 0, GameWorld.WorldSizeX);
+            short startY = (short)MathHelper.Clamp((int)blockPos.Y - (500 / 16) - 1, 0, GameWorld.WorldSizeY);
+            short endX = (short)MathHelper.Clamp((int)blockPos.X + (500 / 16) + 1, 0, GameWorld.WorldSizeX);
+            short endY = (short)MathHelper.Clamp((int)blockPos.Y + (800 / 16) + 1, 0, GameWorld.WorldSizeY);
 
-            for (int x = startX; x < endX; x++)
+            Packet packet = new Packet();
+            short numSending = 0;
+
+            int oneX = 0;
+            int oneY = 0;
+
+            for (short x = startX; x < endX; x++)
             {
-                for (int y = startY; y < endY; y++)
+                for (short y = startY; y < endY; y++)
                 {
                     byte cachedByte = PlayerBlockIDCache[x, y];
                     byte cachedByteM = PlayerBlockMDCache[x, y];
@@ -76,23 +82,31 @@ namespace MiningGame.Code.Server
                     PlayerBlockIDCache[x, y] = realByte;
                     PlayerBlockMDCache[x, y] = realByteM;
 
-                    Packet1CSGameEvent packet = null;
+                    oneX = x;
+                    oneY = y;
 
-                    if (cachedByte != realByte && cachedByteM != realByteM)
-                    {
-                        packet = new Packet1CSGameEvent(GameServer.GameEvents.Block_Set, (short)x, (short)y, realByte, realByteM);
-                    }
-                    else if (cachedByte == realByte && cachedByteM != realByteM)
-                    {
-                        packet = new Packet1CSGameEvent(GameServer.GameEvents.Block_Set_MD, (short)x, (short)y, realByteM);
-                    }
-                    else if(cachedByteM == realByteM && cachedByte != realByte)
-                    {
-                        packet = new Packet1CSGameEvent(GameServer.GameEvents.Block_Set_ID, (short)x, (short)y, realByte);
-                    }
-                    if (packet == null) continue;
-                    Main.serverNetworkManager.SendPacket(packet, NetConnection);
+                    packet.writeByte((byte) (x - startX));
+                    packet.writeByte((byte) (y - startY));
+                    packet.writeByte(realByte);
+                    packet.writeByte(realByteM);
+
+                    numSending++;
                 }
+            }
+            if(numSending > 1)
+            {
+                Packet packet2 = new Packet1SCGameEvent(GameServer.GameEvents.Block_Set_Chunk);
+                packet2.writeShort(numSending);
+                packet2.writeShort(startX);
+                packet2.writeShort(startY);
+                packet2.writeBytes(packet.data.ToArray());
+
+                Main.serverNetworkManager.SendPacket(packet2, NetConnection);
+            }
+            else if(numSending == 1)
+            {
+                Packet packet2 = new Packet1SCGameEvent(GameServer.GameEvents.Block_Set, (short)oneX, (short) oneY, GameWorld.WorldBlocks[oneX, oneY], GameWorld.WorldBlocksMetaData[oneX, oneY]);
+                Main.serverNetworkManager.SendPacket(packet2, NetConnection);
             }
         }
 

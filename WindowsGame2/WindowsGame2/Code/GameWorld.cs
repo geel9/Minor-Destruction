@@ -292,6 +292,22 @@ namespace MiningGame.Code
                     SetBlock(X, Y, WorldBlocks[X, Y], false, p.readByte());
                     break;
 
+                case GameServer.GameEvents.Block_Set_Chunk:
+                    int numSending = p.readShort();
+                    short startX = p.readShort();
+                    short startY = p.readShort();
+
+                    for (int i = 0; i < numSending; i++)
+                    {
+                        X = (short)(p.readByte() + startX);
+                        Y = (short)(p.readByte() + startY);
+                        byte Id = p.readByte();
+                        byte metadata = p.readByte();
+                        SetBlock(X, Y, Id, true, metadata);
+                    }
+
+                    break;
+
                 case GameServer.GameEvents.Player_Chat:
                     byte playerID = p.readByte();
                     bool teamChat = p.readBool();

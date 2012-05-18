@@ -124,6 +124,14 @@ namespace MiningGame.Code.Structs
             data.AddRange(toWrite);
         }
 
+        public void writeBytes(byte[] toWrite, int offset, int length)
+        {
+            for(int i = offset; i < offset + length; i++)
+            {
+                data.Add(toWrite[i]);
+            }
+        }
+
         public void writeAll(object[] objects)
         {
             foreach (object o in objects)
