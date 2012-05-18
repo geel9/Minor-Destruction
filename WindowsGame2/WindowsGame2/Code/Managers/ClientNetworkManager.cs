@@ -198,7 +198,7 @@ namespace MiningGame.Code.Managers
                     player = GameWorld.ThePlayer.PlayerEntity;
                 else
                 {
-                    player = GameWorld.OtherPlayers.Where(pl => pl.PlayerID == playerID).First();
+                    player = GameWorld.OtherPlayers.Where(pl => pl.PlayerID == playerID).FirstOrDefault();
                 }
                 byte updateMask = p.readByte();
 

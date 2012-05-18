@@ -25,6 +25,19 @@ namespace MiningGame.Code.Blocks
         private bool _hideBlock;
         private static Random _random = new Random();
 
+        public static void GenerateBlocks()
+        {
+            Assembly a = Assembly.GetExecutingAssembly();
+            foreach(Type t in a.GetTypes())
+            {
+                if(t.IsSubclassOf(typeof(Block)) || t == typeof(Block))
+                {
+                    Block b = (Block) Activator.CreateInstance(t);
+                    b.FinalizeBlock();
+                }
+            }
+        }
+
         public Block()
         {
             _blockName = "block";
@@ -63,8 +76,6 @@ namespace MiningGame.Code.Blocks
                 return this;
             }
         }
-
-    
 
         public static Block GetBlock(byte blockID)
         {
@@ -245,6 +256,7 @@ namespace MiningGame.Code.Blocks
         {
             return _blockColor;
         }
+
 
         public override string ToString()
         {

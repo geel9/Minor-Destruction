@@ -128,7 +128,7 @@
     <Compile Include="Code\Animation.cs" />
     <Compile Include="Code\Blocks\Block.cs" />
     <None Include="Code\Blocks\BlockGrass.csO" />
-    <None Include="Code\Blocks\BlockDirt.csO" />
+    <Compile Include="Code\Blocks\BlockDirt.cs" />
     <None Include="Code\Blocks\BlockCoal.csO" />
     <None Include="Code\Blocks\BlockRock.csO" />
     <None Include="Code\Blocks\BlockIron.csO" />

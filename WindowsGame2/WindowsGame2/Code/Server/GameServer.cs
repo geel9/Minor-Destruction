@@ -65,7 +65,7 @@ namespace MiningGame.Code.Server
                 {
                     SetBlock(x, y, 2);
                 }
-                SetBlock(x, 10 - rand2, 1);
+                SetBlock(x, 10 - rand2, 2);
             }
 
             //Generate caves

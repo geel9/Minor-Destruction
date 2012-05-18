@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.IO;
+using MiningGame.Code.Blocks;
 using MiningGame.Code.Items;
 using MiningGame.Code.Structs;
 using MiningGame.Code.Managers;
@@ -340,6 +341,7 @@ namespace MiningGame.Code
             AssetManager.LoadAsset<Effect>("WaterLevel", "WaterLevelEffect", Content);
 
             GameWorld.LoadBlocks();
+            Block.GenerateBlocks();
             Item.MakeItems();
 
             PauseManager = new PauseManager();

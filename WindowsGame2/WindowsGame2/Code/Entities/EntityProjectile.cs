@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using MiningGame.Code.Blocks;
 using MiningGame.Code.Managers;
+using MiningGame.Code.Server;
 using MiningGame.Code.Structs;
 using YogUILibrary.Managers;
 
@@ -22,6 +23,20 @@ namespace MiningGame.Code.Entities
 
         public EntityProjectile()
         {
+        }
+
+
+        public new float Rotation
+        {
+            get
+            {
+                return base.Rotation;
+            }
+            set
+            {
+                if (ShouldDestroy) return;
+                base.Rotation = value;
+            }
         }
 
         internal Vector2 LastPosition = Vector2.Zero;
@@ -100,6 +115,8 @@ namespace MiningGame.Code.Entities
                         EntityVelocity.X = 0;
                         EntityPosition.X = (newEntityPosition.X + collide.X);
                         ShouldDestroy = true;
+                        GameServer.SetBlock((int) newTile.X, (int) newTile.Y, 0);
+                        break;
                     }
                 }
                 if (collide.Y != 0 && newTile.Y >= highestY)
@@ -111,6 +128,8 @@ namespace MiningGame.Code.Entities
                         EntityVelocity.Y = 0;
                         EntityPosition.Y = (newEntityPosition.Y + collide.Y);
                         ShouldDestroy = true;
+                        GameServer.SetBlock((int)newTile.X, (int)newTile.Y, 0);
+                        break;
                     }
                 }
             }
