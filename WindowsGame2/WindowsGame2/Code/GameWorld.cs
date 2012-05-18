@@ -282,7 +282,17 @@ namespace MiningGame.Code
             switch ((GameServer.GameEvents)eventID)
             {
                 case GameServer.GameEvents.Block_Set:
-                    SetBlock(p.readInt(), p.readInt(), p.readByte(), false, p.readByte());
+                    SetBlock(p.readShort(), p.readShort(), p.readByte(), false, p.readByte());
+                    break;
+
+                case GameServer.GameEvents.Block_Set_ID:
+                    SetBlock(p.readShort(), p.readShort(), p.readByte(), false, 0);
+                    break;
+
+                case GameServer.GameEvents.Block_Set_MD:
+                    short X = p.readShort();
+                    short Y = p.readShort();
+                    SetBlock(X, Y, WorldBlocks[X, Y], false, p.readByte());
                     break;
 
                 case GameServer.GameEvents.Player_Chat:

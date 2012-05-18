@@ -200,6 +200,7 @@ namespace MiningGame.Code.Managers
                 {
                     player = GameWorld.OtherPlayers.Where(pl => pl.PlayerID == playerID).FirstOrDefault();
                 }
+                if(player == null) player = new PlayerEntity(Vector2.Zero, (byte)playerID);
                 byte updateMask = p.readByte();
 
                 if ((updateMask & (int)PlayerUpdateFlags.Player_Position_X) != 0)

@@ -17,14 +17,14 @@ namespace MiningGame.Code.Entities
             }
         }
         public Vector2 EntityPosition = new Vector2();
-        public byte alpha;
-        public virtual float Rotation { get; set; }
+        public byte Alpha;
+        public float Rotation { get; set; }
         public Texture2D SpriteTexture;
-        public float scale = 1;
-        public int layer;
-        public int entityID;
+        public float Scale = 1;
+        public int Layer;
+        public int EntityID;
 
-        public static int entIndex = 0;
+        public static int EntIndex = 0;
 
         public virtual AABB BoundBox
         {
@@ -34,8 +34,8 @@ namespace MiningGame.Code.Entities
                     return new AABB(
                         (int)EntityPosition.X - (SpriteTexture.Width / 2),
                         (int)EntityPosition.Y - (SpriteTexture.Height / 2),
-                        (int)(SpriteTexture.Width * scale),
-                        (int)(SpriteTexture.Height * scale), Rotation);
+                        (int)(SpriteTexture.Width * Scale),
+                        (int)(SpriteTexture.Height * Scale), Rotation);
 
                     return new AABB(1, 1, 1, 1, Rotation);
             }
@@ -57,7 +57,7 @@ namespace MiningGame.Code.Entities
 
         public void addToList()
         {
-            entityID = ++entIndex;
+            EntityID = ++EntIndex;
             addToUpdateList();
             addToDrawList();
         }
@@ -123,14 +123,14 @@ namespace MiningGame.Code.Entities
         public virtual void Draw(SpriteBatch sb)
         {
             Color white = Color.White;
-            white.A = alpha;
+            white.A = Alpha;
             if (ConsoleManager.getVariableBool("draw_hitboxes"))
             {
                 DrawManager.Draw_Outline(EntityPosition - (CameraManager.cameraPosition), BoundBox.Width, BoundBox.Height, Color.Yellow, sb);
             }
            // sb.DrawString(AssetManager.GetFont("Console"), entityID.ToString(), entityPosition - new Vector2(0, 10) - CameraManager.cameraPosition, Color.White);
             if (SpriteTexture != null)
-                sb.Draw(SpriteTexture, EntityPosition - (CameraManager.cameraPosition), new Rectangle(0, 0, SpriteTexture.Width, SpriteTexture.Height), white, Rotation, new Vector2(SpriteTexture.Width / 2, SpriteTexture.Height / 2), scale * CameraManager.cameraZoom, SpriteEffects.None, layer);
+                sb.Draw(SpriteTexture, EntityPosition - (CameraManager.cameraPosition), new Rectangle(0, 0, SpriteTexture.Width, SpriteTexture.Height), white, Rotation, new Vector2(SpriteTexture.Width / 2, SpriteTexture.Height / 2), Scale * CameraManager.cameraZoom, SpriteEffects.None, Layer);
         }
 
         public void addToUpdateList()

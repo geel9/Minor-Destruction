@@ -27,10 +27,10 @@ namespace MiningGame.Code.Entities
             this.degrees = degrees;
             EntityPosition = position;
             this.active = active;
-            base.alpha = alpha;
+            base.Alpha = alpha;
             this.speed = speed;
             this.lifetime = lifetime;
-            base.scale = scale;
+            base.Scale = scale;
             Texture2D t = AssetManager.GetTexture(assetname);
             SpriteTexture = t;
             addToList();

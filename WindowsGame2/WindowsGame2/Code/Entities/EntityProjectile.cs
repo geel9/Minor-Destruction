@@ -21,10 +21,6 @@ namespace MiningGame.Code.Entities
 
         public bool ShouldDestroy = false;
 
-        public EntityProjectile()
-        {
-        }
-
 
         public new float Rotation
         {

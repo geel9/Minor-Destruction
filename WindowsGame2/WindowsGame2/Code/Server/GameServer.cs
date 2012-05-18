@@ -23,7 +23,7 @@ namespace MiningGame.Code.Server
         public static List<NetworkPlayer> NetworkPlayers = new List<NetworkPlayer>();
         public static EntityProjectile[] GameProjectiles = new EntityProjectile[256];
 
-        public const int WorldSizeX = 50, WorldSizeY = 50;
+        public const int WorldSizeX = 500, WorldSizeY = 500;
         public static byte[,] WorldBlocks = new byte[WorldSizeX, WorldSizeY];
         public static byte[,] WorldBlocksMetaData = new byte[WorldSizeX, WorldSizeY];
 
@@ -177,16 +177,17 @@ namespace MiningGame.Code.Server
                 WorldBlocksMetaData[x, y] = metaData;
                 WorldBlocks[x, y] = blockID;
                 if (blockID != 0) Block.GetBlock(blockID).OnBlockPlaced(x, y, notify);
-                Packet1SCGameEvent pack = new Packet1SCGameEvent((byte)GameEvents.Block_Set, x, y, blockID, metaData);
-                Main.serverNetworkManager.SendPacket(pack);
+
+                //Packet1SCGameEvent pack = new Packet1SCGameEvent((byte)GameEvents.Block_Set, x, y, blockID, metaData);
+               // Main.serverNetworkManager.SendPacket(pack);
             }
         }
 
         public static void SetBlockMetaData(int x, int y, byte metadata)
         {
             WorldBlocksMetaData[x, y] = metadata;
-            Packet1SCGameEvent pack = new Packet1SCGameEvent((byte)GameServer.GameEvents.Block_Set, x, y, (byte)WorldBlocks[x, y], (byte)metadata);
-            Main.serverNetworkManager.SendPacket(pack);
+            //Packet1SCGameEvent pack = new Packet1SCGameEvent((byte)GameEvents.Block_Set, x, y, WorldBlocks[x, y], metadata);
+            //Main.serverNetworkManager.SendPacket(pack);
         }
 
         public static void LoadRecipes()
@@ -521,6 +522,8 @@ namespace MiningGame.Code.Server
             Player_Join,
             Player_Leave,
             Block_Set,
+            Block_Set_ID,
+            Block_Set_MD,
             Player_Chat,
             Player_KeyPress,
             Player_Position,

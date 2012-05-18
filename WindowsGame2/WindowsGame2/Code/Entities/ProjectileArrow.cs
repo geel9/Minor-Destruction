@@ -28,7 +28,7 @@ namespace MiningGame.Code.Entities
             EffectOfGravity = 0.13f;
 
             SpriteTexture = AssetManager.GetTexture("ladder");
-            alpha = 255;
+            Alpha = 255;
         }
     }
 }

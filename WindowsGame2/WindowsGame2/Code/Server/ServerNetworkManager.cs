@@ -47,7 +47,7 @@ namespace MiningGame.Code.Server
                             ConsoleManager.Log("Client " + (++NumNetworkPlayers));
                             NetworkPlayer player = new NetworkPlayer((byte)NumNetworkPlayers, msg.SenderConnection, new Microsoft.Xna.Framework.Vector2(100, 70), "");
                             GameServer.NetworkPlayers.Add(player);
-                            handleClient(player);
+                            HandleClient(player);
                         }
 
                         if (status == NetConnectionStatus.Disconnected)
@@ -137,14 +137,14 @@ namespace MiningGame.Code.Server
             }
         }
 
-        public void handleClient(NetworkPlayer player)
+        public void HandleClient(NetworkPlayer player)
         {
             for (int x = 0; x < GameServer.WorldSizeX; x++)
             {
                 for (int y = 0; y < GameServer.WorldSizeY; y++)
                 {
-                    Packet1SCGameEvent pack = new Packet1SCGameEvent((byte)GameServer.GameEvents.Block_Set, x, y, (byte)GameServer.WorldBlocks[x, y], (byte)GameServer.WorldBlocksMetaData[x, y]);
-                    SendPacket(pack, player.NetConnection, NetDeliveryMethod.ReliableUnordered);
+                    //Packet1SCGameEvent pack = new Packet1SCGameEvent((byte)GameServer.GameEvents.Block_Set, x, y, (byte)GameServer.WorldBlocks[x, y], (byte)GameServer.WorldBlocksMetaData[x, y]);
+                    //SendPacket(pack, player.NetConnection, NetDeliveryMethod.ReliableUnordered);
                 }
             }
         }

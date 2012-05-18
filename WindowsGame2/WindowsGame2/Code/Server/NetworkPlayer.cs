@@ -19,12 +19,15 @@ namespace MiningGame.Code.Server
         public short PlayerAimAngle = 0;
         public int PlayerInventorySelected;
 
+        public byte[,] PlayerBlockIDCache;
+        public byte[,] PlayerBlockMDCache;
+
         public bool FacingLeft
         {
             get { return PlayerEntity.FacingLeft; }
             set { PlayerEntity.FacingLeft = value; }
         }
-        
+
         public Vector2 Position
         {
             get { return PlayerEntity.EntityPosition; }
@@ -44,10 +47,59 @@ namespace MiningGame.Code.Server
             PlayerUpdateFlags.Player_Position_X;
             UpdateMask |= (int)
             PlayerUpdateFlags.Player_Position_Y;
+
+            PlayerBlockIDCache = new byte[GameServer.WorldSizeX, GameServer.WorldSizeY];
+            PlayerBlockMDCache = new byte[GameServer.WorldSizeX, GameServer.WorldSizeY];
+        }
+
+        public void UpdateCache()
+        {
+            var blockPos = new Vector2((int)(Position.X / GameWorld.BlockWidth), (int)(Position.Y / GameWorld.BlockHeight));
+
+            int startX = (int)MathHelper.Clamp((int)blockPos.X - (800 / 16) - 1, 0, GameWorld.WorldSizeX);
+            int startY = (int)MathHelper.Clamp((int)blockPos.Y - (500 / 16) - 1, 0, GameWorld.WorldSizeY);
+            int endX = (int)MathHelper.Clamp((int)blockPos.X + (500 / 16) + 1, 0, GameWorld.WorldSizeX);
+            int endY = (int)MathHelper.Clamp((int)blockPos.Y + (800 / 16) + 1, 0, GameWorld.WorldSizeY);
+
+            for (int x = startX; x < endX; x++)
+            {
+                for (int y = startY; y < endY; y++)
+                {
+                    byte cachedByte = PlayerBlockIDCache[x, y];
+                    byte cachedByteM = PlayerBlockMDCache[x, y];
+
+                    byte realByte = GameServer.WorldBlocks[x, y];
+                    byte realByteM = GameServer.WorldBlocksMetaData[x, y];
+
+                    if (cachedByte == realByte && realByteM == cachedByteM) continue;
+
+                    PlayerBlockIDCache[x, y] = realByte;
+                    PlayerBlockMDCache[x, y] = realByteM;
+
+                    Packet1CSGameEvent packet = null;
+
+                    if (cachedByte != realByte && cachedByteM != realByteM)
+                    {
+                        packet = new Packet1CSGameEvent(GameServer.GameEvents.Block_Set, (short)x, (short)y, realByte, realByteM);
+                    }
+                    else if (cachedByte == realByte && cachedByteM != realByteM)
+                    {
+                        packet = new Packet1CSGameEvent(GameServer.GameEvents.Block_Set_MD, (short)x, (short)y, realByteM);
+                    }
+                    else if(cachedByteM == realByteM && cachedByte != realByte)
+                    {
+                        packet = new Packet1CSGameEvent(GameServer.GameEvents.Block_Set_ID, (short)x, (short)y, realByte);
+                    }
+                    if (packet == null) continue;
+                    Main.serverNetworkManager.SendPacket(packet, NetConnection);
+                }
+            }
         }
 
         public void Update(GameTime theTime)
         {
+            UpdateCache();
+
             if (_jumpTimer > 0) _jumpTimer--;
             if (PlayerEntity == null) return;
 
@@ -74,10 +126,10 @@ namespace MiningGame.Code.Server
 
             Vector2 oldPos = new Vector2(PlayerEntity.EntityPosition.X, PlayerEntity.EntityPosition.Y);
             PlayerEntity.Update(theTime, true);
-            if(oldPos != PlayerEntity.EntityPosition)
+            if (oldPos != PlayerEntity.EntityPosition)
             {
                 UpdateMask |= (int)PlayerUpdateFlags.Player_Update;
-                if(oldPos.X != PlayerEntity.EntityPosition.X)
+                if (oldPos.X != PlayerEntity.EntityPosition.X)
                     UpdateMask |= (int)PlayerUpdateFlags.Player_Position_X;
                 if (oldPos.Y != PlayerEntity.EntityPosition.Y)
                     UpdateMask |= (int)PlayerUpdateFlags.Player_Position_Y;
