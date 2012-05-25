@@ -5,19 +5,25 @@ setBlockName("Grass");
 setBlockHardness(1);
 setBlockRenderSpecial(true);
     setBlockOnPlaced((x, y, notify) =>{
-        GameServer.scheduleUpdate(x, y, 200);
+        GameServer.ScheduleUpdate(x, y, 200);
     });
     
     setBlockOnUpdated((x, y) =>{
         byte blockToLeft = 0;
         byte blockToRight = 0;
         if( x > 0)
-            blockToLeft = GameServer.getBlockIDAt(x - 1, y);
-        if( x < GameServer.worldSizeX - 1)
-            blockToRight = GameServer.getBlockIDAt(x + 1, y);
+            blockToLeft = GameServer.GetBlockIDAt(x - 1, y);
+        if( x < GameServer.WorldSizeX - 1)
+            blockToRight = GameServer.GetBlockIDAt(x + 1, y);
         
-        if( blockToLeft == 2) GameServer.setBlock(x - 1, y, 1);
-        if( blockToRight == 2) GameServer.setBlock(x + 1, y, 1);
+        if( blockToLeft == 2 && GameServer.GetBlockIDAt(x - 1, y - 1) == 0)
+		{
+			GameServer.SetBlock(x - 1, y, 1);
+		}
+        if( blockToRight == 2 && GameServer.GetBlockIDAt(x + 1, y - 1) == 0)
+		{
+			GameServer.SetBlock(x + 1, y, 1);
+		}
         return 200;
     });
 

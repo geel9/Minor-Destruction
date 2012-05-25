@@ -1,4 +1,3 @@
-setBlockColor(Color.SaddleBrown);
 setBlockID(2);
 setBlockName("Dirt");
 setBlockHardness(1);

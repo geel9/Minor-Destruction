@@ -1,8 +1,6 @@
 <Configuration>
   <RecentFiles>
     <RecentFiles>
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:PlayerEntity.cs" caret="0" fromTop="0" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Managers/f:AssetManager.cs" caret="0" fromTop="0" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:Animation.cs" caret="0" fromTop="0" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Interfaces/f:AnimationEditorInterface.cs" caret="0" fromTop="0" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:Animateable.cs" caret="0" fromTop="0" />
@@ -12,8 +10,6 @@
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Structs/f:BoundPacket.cs" caret="0" fromTop="0" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:EntityDroppedItem.cs" caret="0" fromTop="0" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Structs/f:AABB.cs" caret="0" fromTop="0" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:EntityMoveable.cs" caret="0" fromTop="0" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Structs/f:Packet.cs" caret="0" fromTop="0" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Packets/f:Packet2SCCreateProjectile.cs" caret="0" fromTop="0" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Packets/f:Packet3SCRemoveProjectile.cs" caret="0" fromTop="0" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Packets/f:Packet1SCGameEvent.cs" caret="0" fromTop="0" />
@@ -31,38 +27,42 @@
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Blocks/f:BlockGrass.csO" caret="0" fromTop="0" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Blocks/f:BlockRock.csO" caret="0" fromTop="0" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Blocks/f:BlockLadder.csO" caret="0" fromTop="0" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:ServerNetworkManager.cs" caret="410" fromTop="12" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:NetworkPlayer.cs" caret="3662" fromTop="22" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:Entity.cs" caret="736" fromTop="19" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:EntityMoveable.cs" caret="2024" fromTop="21" />
     </RecentFiles>
     <RecentEdits>
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:Main.cs" caret="14462" fromTop="19" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Blocks/f:BlockDirt.cs" caret="121" fromTop="4" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Blocks/f:BlockDirt.cs" caret="553" fromTop="17" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:EntityProjectile.cs" caret="4241" fromTop="23" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:EntityProjectile.cs" caret="4768" fromTop="36" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:EntityProjectile.cs" caret="670" fromTop="31" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:EntityProjectile.cs" caret="840" fromTop="37" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:EntityProjectile.cs" caret="622" fromTop="9" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:Entity.cs" caret="574" fromTop="20" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:NetworkPlayer.cs" caret="773" fromTop="4" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:NetworkPlayer.cs" caret="5303" fromTop="28" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:NetworkPlayer.cs" caret="3616" fromTop="28" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:GameServer.cs" caret="19546" fromTop="27" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:GameServer.cs" caret="6966" fromTop="27" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:GameServer.cs" caret="6473" fromTop="18" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:GameWorld.cs" caret="11460" fromTop="19" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:GameWorld.cs" caret="13227" fromTop="22" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:GameWorld.cs" caret="11926" fromTop="23" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:ServerNetworkManager.cs" caret="6476" fromTop="21" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:ServerNetworkManager.cs" caret="6054" fromTop="14" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:Entity.cs" caret="677" fromTop="22" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:NetworkPlayer.cs" caret="3616" fromTop="30" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:NetworkPlayer.cs" caret="3616" fromTop="25" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:NetworkPlayer.cs" caret="3106" fromTop="21" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:NetworkPlayer.cs" caret="3919" fromTop="35" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:NetworkPlayer.cs" caret="4133" fromTop="28" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Managers/f:ClientNetworkManager.cs" caret="7846" fromTop="23" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:NetworkPlayer.cs" caret="3050" fromTop="19" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:GameServer.cs" caret="798" fromTop="25" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:NetworkPlayer.cs" caret="2283" fromTop="9" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:GameWorld.cs" caret="3443" fromTop="27" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:GameWorld.cs" caret="3219" fromTop="24" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:GameWorld.cs" caret="16450" fromTop="7" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:GameWorld.cs" caret="18184" fromTop="22" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:GameServer.cs" caret="4200" fromTop="20" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:GameServer.cs" caret="6143" fromTop="21" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:GameServer.cs" caret="6583" fromTop="20" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:GameServer.cs" caret="10623" fromTop="20" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:GameServer.cs" caret="10824" fromTop="20" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:GameServer.cs" caret="11329" fromTop="20" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:GameServer.cs" caret="11618" fromTop="20" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:GameServer.cs" caret="345" fromTop="11" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:NetworkPlayer.cs" caret="2970" fromTop="21" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:NetworkPlayer.cs" caret="2676" fromTop="17" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:NetworkPlayer.cs" caret="3487" fromTop="33" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:GameServer.cs" caret="19414" fromTop="28" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:NetworkPlayer.cs" caret="3268" fromTop="28" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:NetworkPlayer.cs" caret="2508" fromTop="4" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Structs/f:Packet.cs" caret="3172" fromTop="19" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:NetworkPlayer.cs" caret="3843" fromTop="34" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:NetworkPlayer.cs" caret="3591" fromTop="20" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:NetworkPlayer.cs" caret="3967" fromTop="28" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:NetworkPlayer.cs" caret="4327" fromTop="33" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:GameWorld.cs" caret="12343" fromTop="29" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:GameWorld.cs" caret="11875" fromTop="20" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:Main.cs" caret="14493" fromTop="20" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Server/f:ServerNetworkManager.cs" caret="6181" fromTop="23" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:EntityMoveable.cs" caret="1375" fromTop="21" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:EntityMoveable.cs" caret="6168" fromTop="17" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:EntityMoveable.cs" caret="4602" fromTop="24" />
     </RecentEdits>
   </RecentFiles>
   <CompletionStatisticsManager>
@@ -79,13 +79,13 @@
       <Item value="public" priority="1630" />
       <Item value="virtual" priority="159" />
       <Item value="Rectangle`0" priority="127" />
-      <Item value="int" priority="2384" />
-      <Item value="return" priority="1023" />
-      <Item value="new" priority="1343" />
+      <Item value="int" priority="2800" />
+      <Item value="return" priority="1055" />
+      <Item value="new" priority="1471" />
       <Item value="Rectangle" priority="116" />
-      <Item value="X" priority="159" />
-      <Item value="Y" priority="127" />
-      <Item value="GameWorld`0" priority="383" />
+      <Item value="X" priority="191" />
+      <Item value="Y" priority="159" />
+      <Item value="GameWorld`0" priority="479" />
       <Item value="void" priority="255" />
       <Item value="Entities" priority="31" />
       <Item value="EntityMoveable`0" priority="58" />
@@ -94,34 +94,34 @@
       <Item value="null" priority="319" />
       <Item value="bool" priority="223" />
       <Item value="false" priority="159" />
-      <Item value="byte" priority="734" />
+      <Item value="byte" priority="798" />
       <Item value="Packet1CSGameEvent`0" priority="159" />
-      <Item value="Packet1CSGameEvent" priority="86" />
-      <Item value="GameServer`0" priority="223" />
+      <Item value="Packet1CSGameEvent" priority="115" />
+      <Item value="GameServer`0" priority="287" />
       <Item value="float" priority="963" />
       <Item value="Vector2`0" priority="447" />
       <Item value="aim" priority="127" />
       <Item value="entityPosition" priority="31" />
       <Item value="MathHelper`0" priority="127" />
       <Item value="PlayerEntity" priority="284" />
-      <Item value="case" priority="31" />
+      <Item value="case" priority="63" />
       <Item value="Player_Attack" priority="16" />
-      <Item value="p" priority="959" />
+      <Item value="p" priority="1183" />
       <Item value="break" priority="63" />
       <Item value="ConsoleManager`0" priority="31" />
-      <Item value="Main`0" priority="159" />
-      <Item value="packet" priority="351" />
+      <Item value="Main`0" priority="191" />
+      <Item value="packet" priority="671" />
       <Item value="angle" priority="319" />
       <Item value="EffectOfGravity" priority="63" />
       <Item value="AirFriction" priority="63" />
       <Item value="base" priority="159" />
       <Item value="private" priority="127" />
-      <Item value="this" priority="287" />
+      <Item value="this" priority="319" />
       <Item value="Math`0" priority="127" />
       <Item value="EntityPosition" priority="127" />
       <Item value="_lastPosition" priority="127" />
       <Item value="entIndex" priority="31" />
-      <Item value="short" priority="385" />
+      <Item value="short" priority="451" />
       <Item value="EntityMovement`0" priority="31" />
       <Item value="Packets" priority="31" />
       <Item value="Packet2SCCreateProjectile`0" priority="63" />
@@ -138,7 +138,7 @@
       <Item value="ret" priority="159" />
       <Item value="ConversionManager`0" priority="159" />
       <Item value="strengthX" priority="96" />
-      <Item value="EntityVelocity" priority="63" />
+      <Item value="EntityVelocity" priority="127" />
       <Item value="strengthY" priority="31" />
       <Item value="SpriteTexture" priority="31" />
       <Item value="AssetManager`0" priority="63" />
@@ -158,8 +158,8 @@
       <Item value="BoundPacket" priority="57" />
       <Item value="ProjectileArrow" priority="57" />
       <Item value="shouldDestroy" priority="159" />
-      <Item value="true" priority="191" />
-      <Item value="if" priority="1183" />
+      <Item value="true" priority="287" />
+      <Item value="if" priority="1311" />
       <Item value="Packet3SCRemoveProjectile`0" priority="63" />
       <Item value="projectileID" priority="31" />
       <Item value="EncodingInfo`0" priority="31" />
@@ -168,12 +168,12 @@
       <Item value="ProtocolFamily`0" priority="31" />
       <Item value="proj" priority="63" />
       <Item value="EntityProjectile" priority="28" />
-      <Item value="for" priority="159" />
-      <Item value="i" priority="255" />
+      <Item value="for" priority="255" />
+      <Item value="i" priority="383" />
       <Item value="Length" priority="53" />
       <Item value="GetFreeProjectileSlot`0" priority="31" />
       <Item value="nextslot" priority="128" />
-      <Item value="continue" priority="223" />
+      <Item value="continue" priority="287" />
       <Item value="alpha" priority="31" />
       <Item value="AxisAlignedBoundBox`0" priority="191" />
       <Item value="rotation" priority="127" />
@@ -219,7 +219,7 @@
       <Item value="r" priority="159" />
       <Item value="Packet200SCPlayerUpdate`0" priority="63" />
       <Item value="enum" priority="30" />
-      <Item value="Packet`0" priority="31" />
+      <Item value="Packet`0" priority="127" />
       <Item value="PlayerUpdating`0" priority="31" />
       <Item value="NetworkPlayer`0" priority="159" />
       <Item value="NetworkPlayers" priority="127" />
@@ -238,11 +238,11 @@
       <Item value="numToUpdate" priority="31" />
       <Item value="PlayerEntity`0" priority="63" />
       <Item value="playerID" priority="63" />
-      <Item value="else" priority="95" />
+      <Item value="else" priority="127" />
       <Item value="Update`0" priority="63" />
       <Item value="updateMask" priority="97" />
-      <Item value="x" priority="351" />
-      <Item value="y" priority="351" />
+      <Item value="x" priority="415" />
+      <Item value="y" priority="415" />
       <Item value="FacingLeft" priority="127" />
       <Item value="PressedKeys" priority="31" />
       <Item value="facingLeft" priority="63" />
@@ -270,17 +270,34 @@
       <Item value="lastRotation" priority="63" />
       <Item value="PlayerBlockIDCache" priority="95" />
       <Item value="blockPos" priority="127" />
-      <Item value="startX" priority="31" />
+      <Item value="startX" priority="159" />
       <Item value="endX" priority="31" />
-      <Item value="startY" priority="31" />
+      <Item value="startY" priority="127" />
       <Item value="endY" priority="31" />
       <Item value="PlayerBlockMDCache" priority="63" />
       <Item value="cachedByte" priority="63" />
-      <Item value="realByte" priority="127" />
+      <Item value="realByte" priority="159" />
       <Item value="cachedByteM" priority="159" />
-      <Item value="realByteM" priority="223" />
+      <Item value="realByteM" priority="255" />
       <Item value="WorldBlocks" priority="31" />
       <Item value="UpdateCache`0" priority="31" />
+      <Item value="Packet" priority="58" />
+      <Item value="numSending" priority="127" />
+      <Item value="Packet1SCGameEvent" priority="57" />
+      <Item value="oneX" priority="127" />
+      <Item value="oneY" priority="127" />
+      <Item value="packet2" priority="95" />
+      <Item value="offset" priority="95" />
+      <Item value="length" priority="63" />
+      <Item value="data" priority="31" />
+      <Item value="toWrite" priority="31" />
+      <Item value="SetBlock`0" priority="31" />
+      <Item value="Id" priority="31" />
+      <Item value="metadata" priority="31" />
+      <Item value="NetServer" priority="63" />
+      <Item value="topLeftHit" priority="127" />
+      <Item value="bottomRightHit" priority="128" />
+      <Item value="up" priority="63" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@System.Windows.Forms.Application">
       <Item value="ExecutablePath" priority="26" />
@@ -290,8 +307,10 @@
       <Item value="BlockHeight" priority="80" />
       <Item value="GameProjectiles" priority="80" />
       <Item value="ThePlayer" priority="53" />
-      <Item value="WorldSizeX" priority="26" />
-      <Item value="WorldBlocks" priority="26" />
+      <Item value="WorldSizeX" priority="53" />
+      <Item value="WorldBlocks" priority="53" />
+      <Item value="AbsoluteToTile`0" priority="26" />
+      <Item value="WorldBlocksMetaData" priority="26" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:MiningGame.Code.Blocks.Block">
       <Item value="OnBlockUpdate`0" priority="26" />
@@ -304,7 +323,7 @@
       <Item value="FinalizeBlock`0" priority="26" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@MiningGame.Code.Server.GameServer">
-      <Item value="GameEvents`0" priority="53" />
+      <Item value="GameEvents`0" priority="134" />
       <Item value="SetBlock`0" priority="26" />
       <Item value="WorldSizeX" priority="26" />
       <Item value="WorldSizeY" priority="26" />
@@ -312,7 +331,8 @@
     </ItemStatistics>
     <ItemStatistics item="Qualified:@MiningGame.Code.Server.GameServer+GameEvents">
       <Item value="Player_Attack" priority="26" />
-      <Item value="Block_Set" priority="26" />
+      <Item value="Block_Set" priority="53" />
+      <Item value="Block_Set_Chunk" priority="53" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@System.Math">
       <Item value="Atan2`0" priority="53" />
@@ -321,8 +341,8 @@
       <Item value="Abs`0" priority="26" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:Microsoft.Xna.Framework.Vector2">
-      <Item value="X" priority="944" />
-      <Item value="Y" priority="703" />
+      <Item value="X" priority="1160" />
+      <Item value="Y" priority="757" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:MiningGame.Code.Entities.PlayerEntity">
       <Item value="GetAimingAngle`0" priority="26" />
@@ -333,8 +353,13 @@
     </ItemStatistics>
     <ItemStatistics item="Qualified:MiningGame.Code.Structs.Packet">
       <Item value="readFloat`0" priority="53" />
-      <Item value="readByte`0" priority="188" />
-      <Item value="readShort`0" priority="162" />
+      <Item value="readByte`0" priority="297" />
+      <Item value="readShort`0" priority="297" />
+      <Item value="offset" priority="26" />
+      <Item value="writeShort`0" priority="134" />
+      <Item value="writeByte`0" priority="107" />
+      <Item value="writeBytes`0" priority="26" />
+      <Item value="data" priority="108" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@MiningGame.Code.Managers.ConsoleManager">
       <Item value="Log`0" priority="54" />
@@ -369,10 +394,11 @@
       <Item value="GetTexture`0" priority="53" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:System.Collections.Generic.List`1">
-      <Item value="Count" priority="80" />
-      <Item value="Add`0" priority="164" />
+      <Item value="Count" priority="135" />
+      <Item value="Add`0" priority="191" />
       <Item value="Remove`0" priority="55" />
       <Item value="Contains`0" priority="26" />
+      <Item value="ToArray`0" priority="26" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:MiningGame.Code.Server.NetworkPlayer">
       <Item value="PlayerEntity" priority="215" />
@@ -470,6 +496,17 @@
     </ItemStatistics>
     <ItemStatistics item="Qualified:System.Int32">
       <Item value="CompareTo`0" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Lidgren.Network.NetServer">
+      <Item value="Configuration" priority="80" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Lidgren.Network.NetPeerConfiguration">
+      <Item value="NetworkThreadName" priority="26" />
+      <Item value="m_minimumOneWayLatency" priority="53" />
+      <Item value="m_randomOneWayLatency" priority="27" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:MiningGame.Code.Main">
+      <Item value="Window" priority="26" />
     </ItemStatistics>
   </CompletionStatisticsManager>
   <NAntValidationSettings>

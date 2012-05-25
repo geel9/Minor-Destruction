@@ -19,7 +19,6 @@ namespace MiningGame.Code.Packets
         Player_Update = 1,
         Player_Position_X = 2,
         Player_Position_Y = 4,
-        Player_Animation = 8,
-        Player_Facing_Left = 16,
+        Player_Movement_Flags = 8
     }
 }

@@ -4,4 +4,3 @@
 	setBlockHardness(3);
 	setBlockGetDrop((x, y) => { return 2; });
 	setBlockGetDropNum((x, y) => { return 1; });
-    setBlockNumConnectionsAllowed(3);

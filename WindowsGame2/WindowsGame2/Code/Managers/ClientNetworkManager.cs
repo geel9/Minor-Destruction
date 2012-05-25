@@ -118,7 +118,7 @@ namespace MiningGame.Code.Managers
             {
                 string pName = p.readString();
                 byte id = p.readByte();
-                
+
                 int posX = p.readInt();
                 int posY = p.readInt();
                 if (GameWorld.OtherPlayers.Where(pl => pl.PlayerID == id).Count() > 0) return;
@@ -200,7 +200,7 @@ namespace MiningGame.Code.Managers
                 {
                     player = GameWorld.OtherPlayers.Where(pl => pl.PlayerID == playerID).FirstOrDefault();
                 }
-                if(player == null) player = new PlayerEntity(Vector2.Zero, (byte)playerID);
+                if (player == null) player = new PlayerEntity(Vector2.Zero, (byte)playerID);
                 byte updateMask = p.readByte();
 
                 if ((updateMask & (int)PlayerUpdateFlags.Player_Position_X) != 0)
@@ -213,7 +213,34 @@ namespace MiningGame.Code.Managers
                     short y = p.readShort();
                     player.EntityPosition.Y = y;
                 }
-                player.FacingLeft = (updateMask & (int)PlayerUpdateFlags.Player_Facing_Left) != 0;
+                if ((updateMask & (int)PlayerUpdateFlags.Player_Movement_Flags) != 0)
+                {
+                    byte flags = p.readByte();
+                    player.OtherPlayerNetworkFlags = flags;
+                    bool leftPress = (flags & (int) PlayerMovementFlag.Left_Pressed) != 0;
+                    bool rightPress = (flags & (int)PlayerMovementFlag.Right_Pressed) != 0;
+                    if(leftPress || rightPress)
+                    {
+                        player.FacingLeft = leftPress && !rightPress;
+                        if (!(leftPress && rightPress))
+                        {
+                            player.TorsoAnimateable.StartLooping("player_run_start", "player_run_end");
+                            player.LegsAnimateable.StartLooping("player_run_start", "player_run_end");
+                        }
+                        else
+                        {
+                            player.TorsoAnimateable.StartLooping("player_idle", "player_idle");
+                            player.LegsAnimateable.StartLooping("player_idle", "player_idle");
+                        }
+                    }
+                    else
+                    {
+                        player.TorsoAnimateable.StartLooping("player_idle", "player_idle");
+                        player.LegsAnimateable.StartLooping("player_idle", "player_idle");
+                    }
+                                        
+                }
+                //player.FacingLeft = (updateMask & (int)PlayerUpdateFlags.Player_Facing_Left) != 0;
             }
         }
     }

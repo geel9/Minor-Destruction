@@ -11,6 +11,7 @@ using MiningGame.Code.Entities;
 using MiningGame.Code.Blocks;
 using MiningGame.Code.Packets;
 using MiningGame.Code.Server;
+using MiningGame.Code.Structs;
 using YogUILibrary.Managers;
 namespace MiningGame.Code
 {
@@ -27,10 +28,48 @@ namespace MiningGame.Code
         public int DigStrength = 100;
         public Vector2 CurMining;
 
+        public short PlayerAimAngle = 0;
+
+        private bool leftPressed, rightPressed, jumpPressed, attackPressed;
+
+        public byte MovementFlags
+        {
+            get
+            {
+                byte ret = 0;
+                if (leftPressed)
+                    ret |= (int)PlayerMovementFlag.Left_Pressed;
+                if (rightPressed)
+                    ret |= (int)PlayerMovementFlag.Right_Pressed;
+                if (jumpPressed)
+                    ret |= (int)PlayerMovementFlag.Jump_Pressed;
+                if (attackPressed)
+                    ret |= (int)PlayerMovementFlag.Attack_Pressed;
+                return ret;
+            }
+        }
 
         public PlayerController()
         {
             PlayerEntity = new PlayerEntity(new Vector2(-100, -100), 0);
+        }
+
+        public void SendMovementFlags()
+        {
+            Packet packet;// = new Packet4CSPlayerMovementFlags(MovementFlags);
+
+            short angle = PlayerEntity.GetAimingAngle();
+            if (angle != PlayerAimAngle)
+            {
+                packet = new Packet5CSPlayerMovementFlagsAndAim(MovementFlags, angle);
+                PlayerAimAngle = PlayerEntity.GetAimingAngle();
+            }
+            else
+            {
+                packet = new Packet4CSPlayerMovementFlags(MovementFlags);
+            }
+
+            Main.clientNetworkManager.SendPacket(packet);
         }
 
         public void Start()
@@ -38,51 +77,57 @@ namespace MiningGame.Code
             InputManager.BindKey(() =>
             {
                 if (InterfaceManager.blocking) return;
-                Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_KeyPress, 'a', true);
-                Main.clientNetworkManager.SendPacket(pack);
-                //PlayerEntity.FacingLeft = true;
-                PlayerEntity.TorsoAnimateable.StartLooping("player_run_start", "player_run_end");
-                PlayerEntity.LegsAnimateable.StartLooping("player_run_start", "player_run_end");
-            }, Keys.A, true);
+                leftPressed = true;
+                SendMovementFlags();
+               //PlayerEntity.TorsoAnimateable.StartLooping("player_run_start", "player_run_end");
+              //  PlayerEntity.LegsAnimateable.StartLooping("player_run_start", "player_run_end");
+            }, Keys.A);
 
             InputManager.BindKey(() =>
             {
                 if (InterfaceManager.blocking) return;
-                Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_KeyPress, 'd', true);
-                Main.clientNetworkManager.SendPacket(pack);
-                PlayerEntity.TorsoAnimateable.StartLooping("player_run_start", "player_run_end");
-                PlayerEntity.LegsAnimateable.StartLooping("player_run_start", "player_run_end");
+                rightPressed = true;
+                SendMovementFlags();
+               // PlayerEntity.TorsoAnimateable.StartLooping("player_run_start", "player_run_end");
+               // PlayerEntity.LegsAnimateable.StartLooping("player_run_start", "player_run_end");
                 //PlayerEntity.FacingLeft = false;
-            }, Keys.D, true);
+            }, Keys.D);
+
+            InputManager.BindMouse(() =>
+                                       {
+                                           short angle = (short)ConversionManager.RadianToDegrees(PlayerAimAngle);
+                                           if(angle != PlayerAimAngle)
+                                               SendMovementFlags();
+                                       }, MouseButton.Movement, true, true);
 
             InputManager.BindKey(() =>
-            {
-                Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_KeyPress, 'a', (bool)false);
-                Main.clientNetworkManager.SendPacket(pack);
-                PlayerEntity.TorsoAnimateable.StartLooping("player_idle", "player_idle");
-                PlayerEntity.LegsAnimateable.StartLooping("player_idle", "player_idle");
-            }, Keys.A, true, false);
+                                     {
+                                         leftPressed = false;
+                                         SendMovementFlags();
+                                        // PlayerEntity.TorsoAnimateable.StartLooping("player_idle", "player_idle");
+                                        // PlayerEntity.LegsAnimateable.StartLooping("player_idle", "player_idle");
+                                     }, Keys.A, true, false);
 
             InputManager.BindKey(() =>
-            {
-                Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_KeyPress, 'd', (bool)false);
-                Main.clientNetworkManager.SendPacket(pack);
-                PlayerEntity.TorsoAnimateable.StartLooping("player_idle", "player_idle");
-                PlayerEntity.LegsAnimateable.StartLooping("player_idle", "player_idle");
-            }, Keys.D, true, false);
+                                     {
+                                         rightPressed = false;
+                                         SendMovementFlags();
+                                      //   PlayerEntity.TorsoAnimateable.StartLooping("player_idle", "player_idle");
+                                      //   PlayerEntity.LegsAnimateable.StartLooping("player_idle", "player_idle");
+                                     }, Keys.D, true, false);
 
             InputManager.BindKey(() =>
             {
                 if (InterfaceManager.blocking) return;
-                Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_KeyPress, 'w', (bool)true);
-                Main.clientNetworkManager.SendPacket(pack);
+                jumpPressed = true;
+                SendMovementFlags();
             }, Keys.W, true);
 
             InputManager.BindKey(() =>
-            {
-                Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_KeyPress, 'w', (bool)false);
-                Main.clientNetworkManager.SendPacket(pack);
-            }, Keys.W, true, false);
+                                     {
+                                         jumpPressed = false;
+                                         SendMovementFlags();
+                                     }, Keys.W, false, false);
 
 
             InputManager.BindKey(() =>
@@ -98,20 +143,22 @@ namespace MiningGame.Code
 
             InputManager.BindKey(() =>
             {
-                Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_KeyPress, 's', (bool)false);
-                Main.clientNetworkManager.SendPacket(pack);
+                //Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_KeyPress, 's', (bool)false);
+                // Main.clientNetworkManager.SendPacket(pack);
             }, Keys.S, true, false);
 
             InputManager.BindMouse(() =>
             {
                 if (InterfaceManager.blocking) return;
-                Packet1CSGameEvent packet = new Packet1CSGameEvent(GameServer.GameEvents.Player_Attack, (float)PlayerEntity.GetAimingAngle());
-                Main.clientNetworkManager.SendPacket(packet);
-            }, MouseButton.Left, true, false);
+                attackPressed = true;
+                SendMovementFlags();
+            }, MouseButton.Left);
 
             InputManager.BindMouse(() =>
-            {
-            }, MouseButton.Left, false);
+                                       {
+                                           attackPressed = false;
+                                           SendMovementFlags();
+                                       }, MouseButton.Left, false);
 
             InputManager.BindMouse(() =>
             {

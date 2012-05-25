@@ -168,6 +168,8 @@
     <Compile Include="Code\Packets\Packet255SCConnectionConfirm.cs" />
     <Compile Include="Code\Packets\Packet2SCCreateProjectile.cs" />
     <Compile Include="Code\Packets\Packet3SCRemoveProjectile.cs" />
+    <Compile Include="Code\Packets\Packet4CSPlayerMovementFlags.cs" />
+    <Compile Include="Code\Packets\Packet5CSPlayerMovementFlagsAndAim.cs" />
     <Compile Include="Code\Server\NetworkPlayer.cs" />
     <Compile Include="Code\PlayerController.cs" />
     <Compile Include="Code\Server\GameServer.cs" />

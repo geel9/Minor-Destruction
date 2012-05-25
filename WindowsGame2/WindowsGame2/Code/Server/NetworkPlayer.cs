@@ -15,9 +15,11 @@ namespace MiningGame.Code.Server
         public PlayerEntity PlayerEntity = null;
         public List<char> PressedKeys = new List<char>();
         public List<ItemStack> PlayerInventory = new List<ItemStack>();
-        private int _jumpTimer = 0;
-        public short PlayerAimAngle = 0;
+        private int _jumpTimer, _attackTimer;
+        public float PlayerAimAngle = 0;
         public int PlayerInventorySelected;
+
+        public byte MovementFlags = 0;
 
         public byte[,] PlayerBlockIDCache;
         public byte[,] PlayerBlockMDCache;
@@ -85,15 +87,15 @@ namespace MiningGame.Code.Server
                     oneX = x;
                     oneY = y;
 
-                    packet.writeByte((byte) (x - startX));
-                    packet.writeByte((byte) (y - startY));
+                    packet.writeByte((byte)(x - startX));
+                    packet.writeByte((byte)(y - startY));
                     packet.writeByte(realByte);
                     packet.writeByte(realByteM);
 
                     numSending++;
                 }
             }
-            if(numSending > 1)
+            if (numSending > 1)
             {
                 Packet packet2 = new Packet1SCGameEvent(GameServer.GameEvents.Block_Set_Chunk);
                 packet2.writeShort(numSending);
@@ -103,9 +105,9 @@ namespace MiningGame.Code.Server
 
                 Main.serverNetworkManager.SendPacket(packet2, NetConnection);
             }
-            else if(numSending == 1)
+            else if (numSending == 1)
             {
-                Packet packet2 = new Packet1SCGameEvent(GameServer.GameEvents.Block_Set, (short)oneX, (short) oneY, GameWorld.WorldBlocks[oneX, oneY], GameWorld.WorldBlocksMetaData[oneX, oneY]);
+                Packet packet2 = new Packet1SCGameEvent(GameServer.GameEvents.Block_Set, (short)oneX, (short)oneY, GameWorld.WorldBlocks[oneX, oneY], GameWorld.WorldBlocksMetaData[oneX, oneY]);
                 Main.serverNetworkManager.SendPacket(packet2, NetConnection);
             }
         }
@@ -115,10 +117,10 @@ namespace MiningGame.Code.Server
             UpdateCache();
 
             if (_jumpTimer > 0) _jumpTimer--;
+            if (_attackTimer > 0) _attackTimer--;
             if (PlayerEntity == null) return;
 
-            bool facingLeft = FacingLeft;
-            if (PressedKeys.Contains('w'))
+            if ((MovementFlags & (int)PlayerMovementFlag.Jump_Pressed) != 0)
             {
                 if (!PlayerEntity.Falling && _jumpTimer <= 0)
                 {
@@ -126,16 +128,39 @@ namespace MiningGame.Code.Server
                     _jumpTimer = 20;
                 }
             }
-            if (PressedKeys.Contains('a'))
+            if ((MovementFlags & (int)PlayerMovementFlag.Left_Pressed) != 0)
             {
                 PlayerEntity.EntityVelocity.X = MathHelper.Clamp(PlayerEntity.EntityVelocity.X - 3, -3, 3);
                 FacingLeft = true;
             }
 
-            if (PressedKeys.Contains('d'))
+            if ((MovementFlags & (int)PlayerMovementFlag.Right_Pressed) != 0)
             {
                 PlayerEntity.EntityVelocity.X = MathHelper.Clamp(PlayerEntity.EntityVelocity.X + 3, -3, 3);
                 FacingLeft = false;
+            }
+
+            if ((MovementFlags & (int)PlayerMovementFlag.Attack_Pressed) != 0)
+            {
+                if (_attackTimer <= 0)
+                {
+                    _attackTimer = 20;
+                    int nextslot = GameServer.GetFreeProjectileSlot();
+                    if (nextslot != -1)
+                    {
+
+                        var packet = new Packet2SCCreateProjectile((byte)nextslot, 1,
+                                                                   (short)PlayerEntity.EntityPosition.X,
+                                                                   (short)
+                                                                   ((short)PlayerEntity.EntityPosition.Y - 10),
+                                                                   PlayerAimAngle);
+                        Main.serverNetworkManager.SendPacket(packet);
+
+                        GameServer.GameProjectiles[nextslot] =
+                            new ProjectileArrow(new Vector2(PlayerEntity.EntityPosition.X,
+                                                            PlayerEntity.EntityPosition.Y - 10), PlayerAimAngle) { ProjectileID = (byte)nextslot };
+                    }
+                }
             }
 
             Vector2 oldPos = new Vector2(PlayerEntity.EntityPosition.X, PlayerEntity.EntityPosition.Y);

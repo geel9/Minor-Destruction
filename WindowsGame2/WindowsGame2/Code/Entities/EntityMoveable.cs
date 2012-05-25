@@ -16,8 +16,8 @@ namespace MiningGame.Code.Entities
 
         public Vector2 EntityVelocity = Vector2.Zero;
 
-        internal int TimeFalling = 0;
-        internal bool Falling = false;
+        internal int TimeFalling;
+        internal bool Falling;
 
         internal List<Vector2> RectangleHitsTiles(AABB rect)
         {
@@ -26,7 +26,12 @@ namespace MiningGame.Code.Entities
             Vector2 rectCenter = rect.Center;
 
             Vector2 topLeftHit = GameWorld.AbsoluteToTile(new Vector2(rect.Left, rect.Top));
+            topLeftHit.X = (topLeftHit.X > 0) ? topLeftHit.X - 1 : topLeftHit.X;
+            topLeftHit.Y = (topLeftHit.Y > 0) ? topLeftHit.Y - 1 : topLeftHit.Y;
+
             Vector2 bottomRightHit = GameWorld.AbsoluteToTile(new Vector2(rect.Right - 2, rect.Bottom - 2));
+            bottomRightHit.X = (bottomRightHit.X < GameWorld.WorldSizeX) ? bottomRightHit.X + 1 : bottomRightHit.X;
+            bottomRightHit.Y = (bottomRightHit.Y < GameWorld.WorldSizeY) ? bottomRightHit.Y + 1 : bottomRightHit.Y;
             //From the top of the rectangle to the bottom, find the tiles that the rectangle intersects and add them.
             for (int y = (int)topLeftHit.Y; y <= bottomRightHit.Y; y++)
             {
@@ -95,7 +100,7 @@ namespace MiningGame.Code.Entities
                 if (collide.Y != 0 && newTile.Y >= highestY)
                 {
                     bool up = (collide.Y > 0);
-
+                    if (up && EntityVelocity.Y < 0) continue;
                     if (!walkThrough)
                     {
                         EntityVelocity.Y = 0;

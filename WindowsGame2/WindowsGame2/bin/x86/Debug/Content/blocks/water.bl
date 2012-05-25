@@ -1,126 +1,164 @@
 setBlockOnPlaced((x, y, notify) =>{
-	GameServer.scheduleUpdate(x, y, 2);
+	GameServer.ScheduleUpdate(x, y, 1);
 });
 
 setBlockOnUpdated((x, y) => {
-	byte blockUp = GameServer.getBlockIDAt(x, y - 1);
-	byte blockDown = GameServer.getBlockIDAt(x, y + 1);
-	byte blockLeft = GameServer.getBlockIDAt(x - 1, y);
-	byte blockRight = GameServer.getBlockIDAt(x + 1, y);
-	byte blockLeftBottom = GameServer.getBlockIDAt(x - 1, y + 1);
-	byte blockRightBottom = GameServer.getBlockIDAt(x + 1, y + 1);
+	byte curBlockMD = GameServer.GetBlockMDAt(x, y);
 	
+	if(curBlockMD <= 0 || curBlockMD > 100){
+		GameServer.SetBlock(x, y, 0, true, 0);
+		return -2;
+	}
+	byte blockDown = GameServer.GetBlockIDAt(x, y + 1);
+	byte blockLeft = GameServer.GetBlockIDAt(x - 1, y);
+	byte blockRight = GameServer.GetBlockIDAt(x + 1, y);
+	
+	byte blockDownMD = GameServer.GetBlockMDAt(x, y + 1);
+	byte blockLeftMD = GameServer.GetBlockMDAt(x - 1, y);
+	byte blockRightMD = GameServer.GetBlockMDAt(x + 1, y);
+	
+	byte shareAtATime = 1;
+	
+	//Test downwards first, then if that's not an option test right/left.
 	if(blockDown == 0){
-		GameServer.setBlock(x, y + 1, 10);
-		GameServer.setBlock(x, y, 0);
-		return -1;
+		//Beam me down, scotty!
+		GameServer.SetBlock(x, y + 1, 10, true, curBlockMD);
+		GameServer.SetBlock(x, y, 0, true, 0);
+		//We don't need no DAMN updates anymore!
+		return -2;
 	}
-	bool waterIsAbove = (blockUp == 10);
-	bool canMoveLeft = (blockLeft == 0 && blockLeftBottom == 0);
-	bool canMoveRight = (blockRight == 0 && blockRightBottom == 0);
-	if(canMoveLeft || canMoveRight){
-		int which = MiningGame.Main.r.Next(0, 2);
-		if(canMoveLeft && canMoveRight){
-			if(which == 1 && blockRight == 0){
-				GameServer.setBlock(x + 1, y, 10);
-				GameServer.setBlock(x, y, 0);
+	
+	else if(blockDown == 10 && blockDownMD < 100){
+		if(curBlockMD + blockDownMD <= 100){
+			//We can simply merge with the lower block.
+			GameServer.SetBlockMetaData(x, y + 1, (byte)(curBlockMD + blockDownMD));
+			GameServer.SetBlock(x, y, 0);
+			return -2;
+		}
+		
+		else{
+			//We would overflow the block.
+			int remove = 100 - blockDownMD;
+			curBlockMD -= (byte)remove;
+			GameServer.SetBlockMetaData(x, y, (byte)(curBlockMD));
+			GameServer.SetBlockMetaData(x, y + 1, (byte)100);
+			//return 1;
+		}
+	}
+	
+	//Testing left/right
+	//Don't share if the water level is too low.
+	if(curBlockMD <= shareAtATime){
+		//GameWorld.SetBlock(x, y, 0);
+		//return 1;
+	}
+	//Let's test right/left.
+	bool leftCanReceive = (blockLeft == 0 || blockLeft == 10) && blockLeftMD < 100;
+	bool rightCanReceive = (blockRight == 0 || blockRight == 10) && blockRightMD < 100;
+	
+	bool both = leftCanReceive && rightCanReceive;
+	
+	
+	if(leftCanReceive){
+		if(blockLeft == 0){
+			byte toShare = shareAtATime;
+			if(curBlockMD <= shareAtATime){
+				toShare = (byte)(curBlockMD);
 			}
-			else if(which == 0 && blockLeft == 0){
-				GameServer.setBlock(x - 1, y, 10);
-				GameServer.setBlock(x, y, 0);
-			}
+			curBlockMD -= (byte)toShare;
+			GameServer.SetBlock(x - 1,  y, 10, true, (byte)toShare);
+			GameServer.SetBlockMetaData(x, y, (byte)curBlockMD);
 		}
 		else{
-			if(canMoveLeft){
-				GameServer.setBlock(x - 1, y, 10);
-				GameServer.setBlock(x, y, 0);
-			}
-			else if(canMoveRight){
-				GameServer.setBlock(x + 1, y, 10);
-				GameServer.setBlock(x, y, 0);
+			if(blockLeftMD < curBlockMD){
+			
+				byte toShare = shareAtATime;
+				if(blockLeftMD + toShare > 100){
+					toShare = (byte)(100 - blockLeftMD);
+				}
+				if(curBlockMD - toShare < 0){
+					toShare = (byte)curBlockMD;
+				}
+				if(blockLeftMD + (toShare * 2) > curBlockMD){
+					toShare = (byte)((byte)(curBlockMD - blockLeftMD) - (byte)0);
+				}
+				if(toShare > 0){
+					curBlockMD -= (byte)toShare;
+					GameServer.SetBlockMetaData(x - 1, y, (byte)(blockLeftMD + (byte)toShare));
+					GameServer.SetBlockMetaData(x, y, (byte)curBlockMD);
+				}
 			}
 		}
 	}
-	if(waterIsAbove){
-		bool left = (blockLeft == 0);
-		bool right = (blockRight == 0);
-		//It's an edge block
-		if(left || right){
-			if(left && right){
-				int which = MiningGame.Main.r.Next(0, 2);
-				if(which == 0)
-				{
-					GameServer.setBlock(x + 1, y, 10);
-					GameServer.setBlock(x, y, 0);
-				}
-				else if(which == 1){
-					GameServer.setBlock(x - 1, y, 10);
-					GameServer.setBlock(x, y, 0);
-				}	
+	if(curBlockMD <= 0 || curBlockMD > 100){
+		GameServer.SetBlock(x, y, 0);
+		return -2;
+	}
+	if(rightCanReceive){
+		if(blockRight == 0){
+			byte toShare = shareAtATime;
+			if(curBlockMD <= shareAtATime){
+				toShare = (byte)(curBlockMD);
 			}
-			else{
-				if(left){
-					GameServer.setBlock(x - 1, y, 10);
-					GameServer.setBlock(x, y, 0);
-				}
-				else if(right){
-					GameServer.setBlock(x + 1, y, 10);
-					GameServer.setBlock(x, y, 0);
-				}
-			}
+			curBlockMD -= toShare;
+			GameServer.SetBlock(x + 1,  y, 10, true, (byte)toShare);
+			GameServer.SetBlockMetaData(x, y, (byte)curBlockMD);
 		}
-		//Gonna have to move a lot of water. Sigh.
 		else{
-			//Either move to the left or to the right.
-			//Find all the water blocks to the right and see if we can move 'em.
-			int xValue = x;
-			for(int x2 = x; x2 < GameServer.worldSizeX; x2++){
-				byte block = GameServer.getBlockIDAt(x2, y);
-				//Empty space, so we can move there.
-				if(block == 0)
-				{
-					xValue = x2;
-					break;
+			if(blockRightMD < curBlockMD){
+				byte toShare = shareAtATime;
+				
+				if(blockRightMD + toShare > 100){
+					toShare = (byte)(100 - blockRightMD);
 				}
-				//Wall, can't possible move.
-				if(block != 10 && block != 0){
-					break;
+				if(curBlockMD - toShare < 0){
+					toShare = (byte)curBlockMD;
 				}
-			}
-			if(xValue == x){
-				for(int x2 = x; x2 > 0; x2--){
-					byte block = GameServer.getBlockIDAt(x2, y);
-					//Empty space, so we can move there.
-					if(block == 0)
-					{
-						xValue = x2;
-						break;
-					}
-					//Wall, can't possible move.
-					if(block != 10 && block != 0){
-						break;
-					}
+				if(blockRightMD + (toShare * 2) > curBlockMD){
+					toShare = (byte)((byte)(curBlockMD - blockRightMD) - (byte)0);
 				}
-			}
-			//Can move water!
-			if(xValue != x){
-				left = (xValue < x);
-				GameServer.setBlock(xValue, y, 10);
-				if(left){
-					//Only need to set the block nearest us to 0 (it's the exact same as moving them all).
-					GameServer.setBlock(x - 1, y, 0);
-				}
-				else{
-					GameServer.setBlock(x + 1, y, 0);
+				
+				if(toShare > 0){
+					curBlockMD -= toShare;
+					GameServer.SetBlockMetaData(x + 1, y, (byte)(blockRightMD + toShare));
+					GameServer.SetBlockMetaData(x, y, (byte)curBlockMD);
 				}
 			}
 		}
 	}
-	return 2;
+	
+	if(curBlockMD <= 0 || curBlockMD > 100){
+		GameServer.SetBlock(x, y, 0, true, 0);
+		return -2;
+	}
+	return 1;
 });
 
 setBlockWalkThrough(true);
 setBlockID(10);
 setBlockName("Water");
-setBlockColor(Color.Blue);
 setBlockHardness(-1);
+
+setBlockRenderSpecial(true);
+
+setBlockGetRender((x, y, spriteBatch) =>{
+	byte blockUp = GameWorld.GetBlockIDAt(x, y - 1);
+	byte blockDown = GameWorld.GetBlockIDAt(x, y + 1);
+	byte metaData = GameServer.GetBlockMDAt(x, y);
+	Vector2 position = new Vector2(x, y);
+	position *= new Vector2(GameWorld.BlockWidth, GameWorld.BlockHeight);
+	position += (new Vector2(GameWorld.BlockWidth, GameWorld.BlockHeight) / 2);
+	position -= CameraManager.cameraPosition;
+	
+	if(blockDown != 0){
+		Effect e = AssetManager.GetEffect("WaterLevel");
+		if(blockUp == 10 && metaData >= 95) e.Parameters["override"].SetValue(true);
+		else e.Parameters["override"].SetValue(false);
+		e.Parameters["height"].SetValue((int)metaData);
+		DrawManager.Draw_Box(position, GameWorld.BlockWidth, GameWorld.BlockHeight, Color.White, spriteBatch, 0f, 255, e);
+	}
+	else{
+		DrawManager.Draw_Circle(position, 3, Color.Blue, Color.Black, spriteBatch);
+	}
+	return null;
+});

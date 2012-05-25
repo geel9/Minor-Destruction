@@ -1,0 +1,30 @@
+	setBlockID(11);
+	setBlockName("Door");
+	setBlockHardness(5);
+	setBlockRenderSpecial(true);
+	setBlockGetRender((x, y, spriteBatch) => {
+		byte md = GameServer.GetBlockMDAt(x, y);
+		bool above = GameServer.GetBlockIDAt(x, y - 1) == 11;
+		string doorName = "door" + (!above ? "top" : "");
+		doorName += (md == 1) ? "_open" : "";
+		return AssetManager.GetTexture(doorName); }
+	);
+	setGetBlockBB((x, y) =>{
+		Vector2 pos = new Vector2(x * GameWorld.BlockWidth, y * GameWorld.BlockHeight);
+		byte md = GameServer.GetBlockMDAt(x, y);
+		if(md != 1)
+			return new Rectangle((int)pos.X, (int)pos.Y, 5, GameWorld.BlockHeight);
+		else
+			return new Rectangle(0, 0, 0, 0);
+	});
+    setBlockOnUsed((x, y) =>{
+		bool above = GameServer.GetBlockIDAt(x, y - 1) == 11;
+		bool open = GameServer.GetBlockMDAt(x, y) == 1;
+		if(open){
+			GameServer.SetBlockMetaData(x, y, 0);
+			GameServer.SetBlockMetaData(x, y - (above ? 1 : -1), 0);
+			return;
+		}
+        GameServer.SetBlockMetaData(x, y, 1);
+		GameServer.SetBlockMetaData(x, y - (above ? 1 : -1), 1);
+    });

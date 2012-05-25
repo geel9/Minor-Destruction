@@ -10,7 +10,6 @@ namespace MiningGame.Code.Entities
 {
     public class PlayerEntity : EntityMoveable
     {
-
         public byte PlayerID = 0;
 
         public static int PlayerWidth
@@ -30,6 +29,7 @@ namespace MiningGame.Code.Entities
         }
 
         public bool FacingLeft = false;
+        public byte OtherPlayerNetworkFlags = 0;
 
         public string PlayerName = "player";
 
@@ -86,11 +86,11 @@ namespace MiningGame.Code.Entities
             base.Draw(sb);
         }
 
-        public float GetAimingAngle()
+        public short GetAimingAngle()
         {
             Vector2 aim = InputManager.GetMousePosV() + CameraManager.cameraPosition;
             aim -= EntityPosition;
-            return (float) Math.Atan2(aim.Y, aim.X);
+            return (short) ConversionManager.RadianToDegrees(Math.Atan2(aim.Y, aim.X));
         }
 
         public Vector2 GetBlockAimingAt()

@@ -425,7 +425,7 @@ namespace MiningGame.Code.Server
                 foreach(NetworkPlayer p in playersToUpdate)
                 {
                     byte realUpdateMask = p.UpdateMask;
-                    if (p.FacingLeft) realUpdateMask |= (int)PlayerUpdateFlags.Player_Facing_Left;
+                    //if (p.FacingLeft) realUpdateMask |= (int)PlayerUpdateFlags.Player_Facing_Left;
 
                     packet.writeByte(p.PlayerEntity.PlayerID);
                     packet.writeByte(realUpdateMask);
@@ -437,6 +437,11 @@ namespace MiningGame.Code.Server
                     if ((p.UpdateMask & (int)PlayerUpdateFlags.Player_Position_Y) != 0)
                     {
                         packet.writeShort((short)p.Position.Y);
+                    }
+
+                    if((p.UpdateMask & (int)PlayerUpdateFlags.Player_Movement_Flags) != 0)
+                    {
+                        packet.writeByte(p.MovementFlags);
                     }
                 }
                 Main.serverNetworkManager.SendPacket(packet, t.NetConnection);
@@ -453,9 +458,9 @@ namespace MiningGame.Code.Server
                 case GameEvents.Player_KeyPress:
                     char characterPressing = p.readChar();
                     bool isPressing = p.readBool();
-                    if (isPressing && !player.PressedKeys.Contains(characterPressing))
+                    /*if (isPressing && !player.PressedKeys.Contains(characterPressing))
                         player.PressedKeys.Add(characterPressing);
-                    if (!isPressing) player.PressedKeys.Remove(characterPressing);
+                    if (!isPressing) player.PressedKeys.Remove(characterPressing);*/
                     break;
 
                 case GameEvents.Player_Inventory_Selection_Change:
@@ -467,21 +472,6 @@ namespace MiningGame.Code.Server
                     string chatText = p.readString();
                     Packet1CSGameEvent pack = new Packet1CSGameEvent(GameEvents.Player_Chat, (byte)player.PlayerEntity.PlayerID, (bool)teamChat, chatText);
                     Main.serverNetworkManager.SendPacket(pack);
-                    break;
-
-                case GameEvents.Player_Attack:
-                    float angle = p.readFloat();
-
-                    int nextslot = GetFreeProjectileSlot();
-                    if (nextslot == -1) break;
-
-                    var packet = new Packet2SCCreateProjectile((byte)nextslot, 1,
-                                                               (short)player.PlayerEntity.EntityPosition.X,
-                                                                (short)((short)player.PlayerEntity.EntityPosition.Y - 10), angle);
-                    Main.serverNetworkManager.SendPacket(packet);
-
-                    GameProjectiles[nextslot] = new ProjectileArrow(new Vector2(player.PlayerEntity.EntityPosition.X,
-                                                                player.PlayerEntity.EntityPosition.Y - 10), angle){ProjectileID = (byte)nextslot};
                     break;
             }
         }
@@ -531,7 +521,6 @@ namespace MiningGame.Code.Server
             Player_Aim_And_Position,
             Player_Direction,
             Player_Animation,
-            Player_Attack
         }
     }
 }

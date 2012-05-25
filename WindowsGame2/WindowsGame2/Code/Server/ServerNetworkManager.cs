@@ -4,6 +4,8 @@ using MiningGame.Code.Managers;
 using MiningGame.Code.Packets;
 using Microsoft.Xna.Framework;
 using Lidgren.Network;
+using YogUILibrary.Managers;
+
 namespace MiningGame.Code.Server
 {
     public class ServerNetworkManager
@@ -68,7 +70,7 @@ namespace MiningGame.Code.Server
                 }
                 NetServer.Recycle(msg);
             }
-            
+
         }
 
         public void SendPacket(Packet p, NetConnection stream = null, NetDeliveryMethod method = NetDeliveryMethod.ReliableOrdered)
@@ -115,7 +117,7 @@ namespace MiningGame.Code.Server
                             var packet = new Packet0SCPlayerConnect(pl.PlayerEntity.PlayerName, pl.PlayerEntity.PlayerID, pl.Position);
                             SendPacket(packet, player.NetConnection);
                         }
-                        if(pl != player)
+                        if (pl != player)
                         {
                             var packet = new Packet0SCPlayerConnect(player.PlayerEntity.PlayerName,
                                                                     player.PlayerEntity.PlayerID, player.Position);
@@ -134,11 +136,35 @@ namespace MiningGame.Code.Server
                     int pY = p.readInt();
                     GameServer.SetBlock(pX, pY, 0, true, 0);
                     break;
+
+                case 4:
+                    byte flags = p.readByte();
+                    if (player.MovementFlags != flags)
+                    {
+                        player.UpdateMask |= (int)PlayerUpdateFlags.Player_Update;
+                        player.UpdateMask |= (int)PlayerUpdateFlags.Player_Movement_Flags;
+                    }
+                    player.MovementFlags = flags;
+                    break;
+
+                case 5:
+                    flags = p.readByte();
+                    float angle = (float)ConversionManager.DegreeToRadians(p.readShort());
+                    if (player.MovementFlags != flags || angle != player.PlayerAimAngle)
+                    {
+                        player.UpdateMask |= (int)PlayerUpdateFlags.Player_Update;
+                        player.UpdateMask |= (int)PlayerUpdateFlags.Player_Movement_Flags;
+                    }
+                    player.MovementFlags = flags;
+                    player.PlayerAimAngle = angle;
+                    break;
             }
         }
 
         public void HandleClient(NetworkPlayer player)
         {
+            //NetServer.Configuration.m_minimumOneWayLatency = 0.15f;
+            //NetServer.Configuration.m_randomOneWayLatency = 0.02f;
         }
     }
 }
