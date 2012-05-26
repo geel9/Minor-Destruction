@@ -36,7 +36,7 @@ namespace MiningGame.Code.Entities
             addToList();
         }
 
-        public override void Update(GameTime time)
+        public override void Update(GameTime time, bool serverContext = false)
         {
             if (active && !Main.PauseManager.Paused)
             {

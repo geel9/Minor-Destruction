@@ -21,6 +21,8 @@ namespace MiningGame.Code.Server
 
         public byte MovementFlags = 0;
 
+        public int PlayerHealth = 5;
+
         public byte[,] PlayerBlockIDCache;
         public byte[,] PlayerBlockMDCache;
 
@@ -153,12 +155,12 @@ namespace MiningGame.Code.Server
                                                                    (short)PlayerEntity.EntityPosition.X,
                                                                    (short)
                                                                    ((short)PlayerEntity.EntityPosition.Y - 10),
-                                                                   PlayerAimAngle);
+                                                                   PlayerAimAngle, PlayerEntity.PlayerID);
                         Main.serverNetworkManager.SendPacket(packet);
 
                         GameServer.GameProjectiles[nextslot] =
                             new ProjectileArrow(new Vector2(PlayerEntity.EntityPosition.X,
-                                                            PlayerEntity.EntityPosition.Y - 10), PlayerAimAngle) { ProjectileID = (byte)nextslot };
+                                                            PlayerEntity.EntityPosition.Y - 10), PlayerAimAngle, PlayerEntity.PlayerID) { ProjectileID = (byte)nextslot };
                     }
                 }
             }

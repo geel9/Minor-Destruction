@@ -62,7 +62,7 @@ namespace MiningGame.Code.Entities
             return new Vector2(BoundBox.Center.X / GameWorld.BlockWidth, (BoundBox.Bottom - 1) / GameWorld.BlockHeight);
         }
 
-        public void EntityMovement()
+        public virtual void EntityMovement(bool serverContext)
         {
             if (ShouldDestroy) return;
             if (BoundBox.Left < 0 || BoundBox.Top < 0 || BoundBox.Right > GameWorld.BlockWidth * GameWorld.WorldSizeX || BoundBox.Bottom > GameWorld.BlockHeight * GameWorld.WorldSizeY)
@@ -111,7 +111,8 @@ namespace MiningGame.Code.Entities
                         EntityVelocity.X = 0;
                         EntityPosition.X = (newEntityPosition.X + collide.X);
                         ShouldDestroy = true;
-                        GameServer.SetBlock((int) newTile.X, (int) newTile.Y, 0);
+                        if (serverContext)
+                            GameServer.SetBlock((int)newTile.X, (int)newTile.Y, 0);
                         break;
                     }
                 }
@@ -124,6 +125,7 @@ namespace MiningGame.Code.Entities
                         EntityVelocity.Y = 0;
                         EntityPosition.Y = (newEntityPosition.Y + collide.Y);
                         ShouldDestroy = true;
+                        if (serverContext)
                         GameServer.SetBlock((int)newTile.X, (int)newTile.Y, 0);
                         break;
                     }
@@ -155,9 +157,9 @@ namespace MiningGame.Code.Entities
             base.Draw(sb);
         }
 
-        public override void Update(GameTime time)
+        public void Update(GameTime time, bool serverContext = false)
         {
-            EntityMovement();
+            EntityMovement(serverContext);
         }
 
         public virtual byte GetProjectileType()

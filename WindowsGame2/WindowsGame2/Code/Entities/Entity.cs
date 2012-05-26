@@ -72,6 +72,10 @@ namespace MiningGame.Code.Entities
         {
         }
 
+        public virtual void Update(GameTime time, bool serverContext = false)
+        {
+        }
+
         public void RotateToPoint(Point point)
         {
             RotateToPoint(ConversionManager.PToV(point));

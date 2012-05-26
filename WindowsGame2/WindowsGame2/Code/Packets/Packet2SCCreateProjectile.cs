@@ -8,7 +8,7 @@ namespace MiningGame.Code.Packets
 {
     public class Packet2SCCreateProjectile : Packet
     {
-        public Packet2SCCreateProjectile(byte ProjectileID, byte projectileType, short X, short Y, float angle)
+        public Packet2SCCreateProjectile(byte ProjectileID, byte projectileType, short X, short Y, float angle, byte owner)
         {
             writeByte(2);
             writeByte(projectileType);
@@ -16,6 +16,7 @@ namespace MiningGame.Code.Packets
             writeShort(X);
             writeShort(Y);
             writeFloat(angle);
+            writeByte(owner);
         }
     }
 }

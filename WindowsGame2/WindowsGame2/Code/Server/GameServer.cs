@@ -397,7 +397,7 @@ namespace MiningGame.Code.Server
             {
                 EntityProjectile p = GameProjectiles[i];
                 if (p == null) continue;
-                p.Update(time);
+                p.Update(time, true);
                 if (p.ShouldDestroy)
                 {
                     Packet3SCRemoveProjectile remove = new Packet3SCRemoveProjectile(p.ProjectileID);

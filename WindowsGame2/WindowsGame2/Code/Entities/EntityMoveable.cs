@@ -144,7 +144,7 @@ namespace MiningGame.Code.Entities
             base.Draw(sb);
         }
 
-        public override void Update(GameTime time)
+        public override void Update(GameTime time, bool serverContext = false)
         {
             if (Falling) TimeFalling++;
             base.Update(time);

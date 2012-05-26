@@ -96,7 +96,8 @@ namespace MiningGame.Code.Managers
                 short X = p.readShort();
                 short Y = p.readShort();
                 float angle = p.readFloat();
-                GameWorld.GameProjectiles.Add(new ProjectileArrow(new Vector2(X, Y), angle) { ProjectileID = ID });
+                byte owner = p.readByte();
+                GameWorld.GameProjectiles.Add(new ProjectileArrow(new Vector2(X, Y), angle, owner) { ProjectileID = ID });
             }, 2));
 
             boundPackets.Add(new BoundPacket((Packet p) =>
