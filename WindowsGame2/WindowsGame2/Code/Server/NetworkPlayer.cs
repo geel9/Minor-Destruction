@@ -19,7 +19,7 @@ namespace MiningGame.Code.Server
         public float PlayerAimAngle = 0;
         public int PlayerInventorySelected;
 
-        public byte MovementFlags = 0;
+        public byte MovementFlags, OldMovementFlags;
 
         public int PlayerHealth = 5;
 
@@ -38,7 +38,9 @@ namespace MiningGame.Code.Server
             set { PlayerEntity.EntityPosition = value; }
         }
 
-        public byte UpdateMask = 0;
+        public byte UpdateMask;
+
+        private int TimeHeldAttack = 0;
 
         public int PlayerTeam = 0;
 
@@ -144,26 +146,42 @@ namespace MiningGame.Code.Server
 
             if ((MovementFlags & (int)PlayerMovementFlag.Attack_Pressed) != 0)
             {
-                if (_attackTimer <= 0)
+                TimeHeldAttack++;
+                if (TimeHeldAttack > 30) TimeHeldAttack = 30;
+                /**/
+            }
+
+            if ((OldMovementFlags & (int)PlayerMovementFlag.Attack_Pressed) != 0)
+            {
+                if ((MovementFlags & (int)PlayerMovementFlag.Attack_Pressed) == 0)
                 {
-                    _attackTimer = 20;
-                    int nextslot = GameServer.GetFreeProjectileSlot();
-                    if (nextslot != -1)
+                    if (_attackTimer <= 0)
                     {
+                        if (TimeHeldAttack == 0) TimeHeldAttack = 1;
+                        _attackTimer = 50;
+                        int nextslot = GameServer.GetFreeProjectileSlot();
+                        if (nextslot != -1)
+                        {
 
-                        var packet = new Packet2SCCreateProjectile((byte)nextslot, 1,
-                                                                   (short)PlayerEntity.EntityPosition.X,
-                                                                   (short)
-                                                                   ((short)PlayerEntity.EntityPosition.Y - 10),
-                                                                   PlayerAimAngle, PlayerEntity.PlayerID);
-                        Main.serverNetworkManager.SendPacket(packet);
+                            var packet = new Packet2SCCreateProjectile((byte)nextslot, 1,
+                                                                       (short)PlayerEntity.EntityPosition.X,
+                                                                       (short)
+                                                                       ((short)PlayerEntity.EntityPosition.Y - 10),
+                                                                       PlayerAimAngle, (byte)((TimeHeldAttack / 5) + 10),
+                                                                       PlayerEntity.PlayerID);
+                            Main.serverNetworkManager.SendPacket(packet);
 
-                        GameServer.GameProjectiles[nextslot] =
-                            new ProjectileArrow(new Vector2(PlayerEntity.EntityPosition.X,
-                                                            PlayerEntity.EntityPosition.Y - 10), PlayerAimAngle, PlayerEntity.PlayerID) { ProjectileID = (byte)nextslot };
+                            GameServer.GameProjectiles[nextslot] =
+                                new ProjectileArrow(new Vector2(PlayerEntity.EntityPosition.X,
+                                                                PlayerEntity.EntityPosition.Y - 10), PlayerAimAngle,
+                                                    PlayerEntity.PlayerID, (TimeHeldAttack / 5) + 10) { ProjectileID = (byte)nextslot };
+
+                        }
                     }
+                    TimeHeldAttack = 0;
                 }
             }
+
 
             Vector2 oldPos = new Vector2(PlayerEntity.EntityPosition.X, PlayerEntity.EntityPosition.Y);
             PlayerEntity.Update(theTime, true);
@@ -175,6 +193,7 @@ namespace MiningGame.Code.Server
                 if (oldPos.Y != PlayerEntity.EntityPosition.Y)
                     UpdateMask |= (int)PlayerUpdateFlags.Player_Position_Y;
             }
+            OldMovementFlags = MovementFlags;
         }
 
         public bool HasItem(byte id)
