@@ -13,7 +13,8 @@ using System.IO;
 using MiningGame.Code.Interfaces;
 using MiningGame.Code.Structs;
 using Microsoft.Xna.Framework.Input;
-using MiningGame.Code.Server;
+using MiningGameServer;
+using MiningGameServer.Packets;
 using YogUILibrary.Managers;
 
 namespace MiningGame.Code
@@ -396,6 +397,29 @@ namespace MiningGame.Code
 
                 case GameServer.GameEvents.Player_Inventory_Remove:
                     ThePlayer.PlayerInventory.RemoveAt(p.readByte());
+                    break;
+
+                    case GameServer.GameEvents.Player_Change_Name:
+                    playerID = p.readByte();
+                    string newName = p.readString();
+
+                    if (playerID == ThePlayer.PlayerEntity.PlayerID)
+                    {
+                        ChatInterface.chatEntries.Add(new ChatEntry("Server", ThePlayer.PlayerEntity.PlayerName + " has changed name to " + newName, Color.Blue, false));
+                        ThePlayer.PlayerEntity.PlayerName = newName;
+                    }
+                    else
+                    {
+                        foreach (PlayerEntity pe in OtherPlayers)
+                        {
+                            if (pe.PlayerID == playerID)
+                            {
+                                ChatInterface.chatEntries.Add(new ChatEntry("Server", pe.PlayerName + " has changed name to " + newName, Color.Blue, false));
+                                pe.PlayerName = newName;
+                            }
+                        }
+                    }
+
                     break;
 
             }

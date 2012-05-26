@@ -1,0 +1,24 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace RatingTDS.Code.Blocks
+{
+    public class BlockRock : Block
+    {
+        public BlockRock() : base()
+        {
+        }
+
+        public override byte getItemDrop()
+        {
+            return (byte)2;
+        }
+
+        public override int getItemDropNum()
+        {
+            return 1;
+        }
+    }
+}

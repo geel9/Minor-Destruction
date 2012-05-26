@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using MiningGame.Code.Items;
 using MiningGame.Code.Managers;
 using MiningGame.Code.Structs;
+using MiningGameServer.Structs;
 
 namespace MiningGame.Code.Entities
 {

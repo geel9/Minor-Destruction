@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using MiningGame.Code.Blocks;
 using MiningGame.Code.Managers;
-using MiningGame.Code.Server;
-using MiningGame.Code.Structs;
-using YogUILibrary.Managers;
+using MiningGameServer;
+using MiningGameServer.Structs;
 
 namespace MiningGame.Code.Entities
 {
@@ -20,7 +17,7 @@ namespace MiningGame.Code.Entities
             return 1;
         }
 
-        public void BlockCollision(bool serverContext)
+        public void BlockCollision()
         {
             List<Vector2> tilesHitting = RectangleHitsTiles(BoundBox);
 
@@ -65,9 +62,6 @@ namespace MiningGame.Code.Entities
                     {
                         EntityVelocity.X = 0;
                         EntityPosition.X = (newEntityPosition.X + collide.X);
-                        ShouldDestroy = true;
-                        if (serverContext)
-                            GameServer.SetBlock((int)newTile.X, (int)newTile.Y, 0);
                         break;
                     }
                 }
@@ -80,52 +74,14 @@ namespace MiningGame.Code.Entities
                         EntityVelocity.Y = 0;
                         EntityPosition.Y = (newEntityPosition.Y + collide.Y);
                         ShouldDestroy = true;
-                        if (serverContext)
-                            GameServer.SetBlock((int)newTile.X, (int)newTile.Y, 0);
                         break;
                     }
                 }
             }
         }
 
-        public void PlayerCollision(bool serverContext)
-        {
-            EntityPosition += EntityVelocity;
-            Vector2 newEntityPosition = EntityPosition;
-            AABB newRectTest = BoundBox;
-            EntityPosition -= EntityVelocity;
 
-            NetworkPlayer playerOwner = new NetworkPlayer(PlayerOwner, null, Vector2.Zero, "PLAYER");
-            foreach (NetworkPlayer p in GameServer.NetworkPlayers)
-            {
-                if (p.PlayerEntity.PlayerID == PlayerOwner)
-                {
-                    playerOwner = p;
-                    break;
-                }
-            }
-
-            foreach (NetworkPlayer p in GameServer.NetworkPlayers)
-            {
-                if (p.PlayerEntity.PlayerID == PlayerOwner) continue;
-                if (p.PlayerEntity.BoundBox.Intersects(newRectTest))
-                {
-                    ShouldDestroy = true;
-                    p.PlayerHealth--;
-                    if (p.PlayerHealth <= 0)
-                    {
-                        p.PlayerHealth = 5;
-                        p.PlayerEntity.EntityPosition = new Vector2(50, 50);
-                        GameServer.SendMessageToAll(playerOwner.PlayerEntity.PlayerName + " killed " + p.PlayerEntity.PlayerName + ".");
-                    }
-                    else
-                        GameServer.SendMessageToAll(playerOwner.PlayerEntity.PlayerName + " hit " + p.PlayerEntity.PlayerName + ". Their new health: " + p.PlayerHealth);
-                    break;
-                }
-            }
-        }
-
-        public override void EntityMovement(bool serverContext)
+        public override void EntityMovement()
         {
             if (ShouldDestroy) return;
             if (BoundBox.Left < 0 || BoundBox.Top < 0 || BoundBox.Right > GameWorld.BlockWidth * GameWorld.WorldSizeX || BoundBox.Bottom > GameWorld.BlockHeight * GameWorld.WorldSizeY)
@@ -133,14 +89,11 @@ namespace MiningGame.Code.Entities
                 ShouldDestroy = true;
                 return;
             }
-            if (serverContext)
-                PlayerCollision(serverContext);
-            if (!ShouldDestroy)
-                BlockCollision(serverContext);
+            //BlockCollision();
 
             EntityPosition += EntityVelocity;
 
-            if (EntityVelocity.Y < 6)
+            //if (EntityVelocity.Y < 6)
                 EntityVelocity.Y += EffectOfGravity;
 
 
@@ -159,9 +112,9 @@ namespace MiningGame.Code.Entities
             EntityVelocity = new Vector2(strengthX, strengthY);
             LastPosition = Position - EntityVelocity;
 
-            EffectOfGravity = 0.13f;
+            EffectOfGravity = 0.34f;
 
-            SpriteTexture = AssetManager.GetTexture("ladder");
+            SpriteTexture = AssetManager.GetTexture("arrow");
             Alpha = 255;
             PlayerOwner = owner;
         }

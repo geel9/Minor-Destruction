@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using MiningGame.Code.Items;
+﻿using MiningGame.Code.Items;
 using MiningGame.Code.Managers;
-using MiningGame.Code.Structs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MiningGame.Code.Server;
 using YogUILibrary.UIComponents;
 using YogUILibrary.Managers;
 namespace MiningGame.Code.Interfaces

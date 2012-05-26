@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using MiningGame.Code.Blocks;
-using MiningGame.Code.Managers;
-using MiningGame.Code.Server;
-using MiningGame.Code.Structs;
+using MiningGameServer.Structs;
 using YogUILibrary.Managers;
 
 namespace MiningGame.Code.Entities
@@ -62,7 +58,7 @@ namespace MiningGame.Code.Entities
             return new Vector2(BoundBox.Center.X / GameWorld.BlockWidth, (BoundBox.Bottom - 1) / GameWorld.BlockHeight);
         }
 
-        public virtual void EntityMovement(bool serverContext)
+        public virtual void EntityMovement()
         {
             if (ShouldDestroy) return;
             if (BoundBox.Left < 0 || BoundBox.Top < 0 || BoundBox.Right > GameWorld.BlockWidth * GameWorld.WorldSizeX || BoundBox.Bottom > GameWorld.BlockHeight * GameWorld.WorldSizeY)
@@ -112,9 +108,6 @@ namespace MiningGame.Code.Entities
                     {
                         EntityVelocity.X = 0;
                         EntityPosition.X = (newEntityPosition.X + collide.X);
-                        ShouldDestroy = true;
-                        if (serverContext)
-                            GameServer.SetBlock((int)newTile.X, (int)newTile.Y, 0);
                         break;
                     }
                 }
@@ -126,9 +119,6 @@ namespace MiningGame.Code.Entities
                     {
                         EntityVelocity.Y = 0;
                         EntityPosition.Y = (newEntityPosition.Y + collide.Y);
-                        ShouldDestroy = true;
-                        if (serverContext)
-                        GameServer.SetBlock((int)newTile.X, (int)newTile.Y, 0);
                         break;
                     }
                 }
@@ -151,17 +141,17 @@ namespace MiningGame.Code.Entities
             {
                 //DrawManager.Draw_Outline(new Vector2(vec.X * GameWorld.BlockWidth + (GameWorld.BlockWidth / 2), vec.Y * GameWorld.BlockHeight + (GameWorld.BlockHeight / 2)) - CameraManager.cameraPosition, GameWorld.BlockWidth, GameWorld.BlockHeight, Color.Red, sb);
             }
-            Rotation = (float)((float)Math.Atan2(EntityPosition.Y - LastPosition.Y, EntityPosition.X - LastPosition.X) +
-                                ConversionManager.DegreeToRadians(90));
-
-            LastPosition = EntityPosition;
-
             base.Draw(sb);
         }
 
-        public void Update(GameTime time, bool serverContext = false)
+        public void Update(GameTime time)
         {
-            EntityMovement(serverContext);
+            EntityMovement();
+            Rotation = (float)((float)Math.Atan2(EntityPosition.Y - LastPosition.Y, EntityPosition.X - LastPosition.X) +
+                    ConversionManager.DegreeToRadians(90));
+
+            LastPosition = EntityPosition;
+
         }
 
         public virtual byte GetProjectileType()

@@ -9,11 +9,11 @@ using MiningGame.Code.Items;
 using MiningGame.Code.Structs;
 using MiningGame.Code.Managers;
 using MiningGame.Code.Interfaces;
-using MiningGame.Code.Server;
 using MiningGame.Code.CInterfaces;
 using System.Text.RegularExpressions;
-using MiningGame.Code.Packets;
 using System.Diagnostics;
+using MiningGameServer;
+using MiningGameServer.Packets;
 using YogUILibrary;
 using YogUILibrary.Managers;
 
@@ -43,8 +43,8 @@ namespace MiningGame.Code
         public static GameWorld theWorld = null;
 
         public static ClientNetworkManager clientNetworkManager = new ClientNetworkManager();
-        public static ServerNetworkManager serverNetworkManager = new ServerNetworkManager();
-        // public static World gameWorld = new World(new Vector2(0f, 0.1f));
+
+        public static GameServer GameServer = null;
 
         public static SoundManager SoundManager = new SoundManager();
         public static MusicManager MusicManager = new MusicManager();
@@ -74,7 +74,6 @@ namespace MiningGame.Code
 
         protected override void Initialize()
         {
-            //TODO: Add your initialization logic here
             ConsoleManager.Log("Width: " + graphics.PreferredBackBufferWidth + " Height: " + graphics.PreferredBackBufferHeight);
             ConsoleManager.addConVar("window_title", "Window title", "Mining thing");
             ConsoleManager.addConVar("sv_cheats", "If 1, cheats may be used.", "1");
@@ -90,12 +89,16 @@ namespace MiningGame.Code
                 }
             });
 
-            ConsoleManager.addConCommand("disconnect", "Disconnect from the server", (string[] ls) =>
-            {
-                clientNetworkManager.Disconnect();
-            });
+            ConsoleManager.addConCommand("disconnect", "Disconnect from the server", (string[] ls) => clientNetworkManager.Disconnect());
 
-            ConsoleManager.addConVar("player_name", "Your name in a server", "Player_" + Main.r.Next(0, 1000));
+            ConsoleManager.addConVar("player_name", "Your name in a server", "Player_" + Main.r.Next(0, 1000), l =>
+            {
+                if (clientNetworkManager.isConnected())
+                {
+                    Packet1CSGameEvent packet = new Packet1CSGameEvent(GameServer.GameEvents.Player_Change_Name, l[0]);
+                    clientNetworkManager.SendPacket(packet);
+                }
+            });
 
             ConsoleManager.addConCommand("qhc", "Quick Host Connect", (string[] ls) =>
             {
@@ -103,17 +106,10 @@ namespace MiningGame.Code
                 ConsoleManager.ConsoleInput("connect 127.0.0.1 870", true);
             });
 
-            ConsoleManager.addConCommand("rcp", "recipes", (string[] ls) =>
-            {
-                GameServer.LoadRecipes();
-            });
-
             ConsoleManager.addConCommand("host", "Host a game", (string[] ls) =>
             {
                 int port = Convert.ToInt32(ls[0]);
-                serverNetworkManager.Host(port);
-                GameServer server = new GameServer();
-
+                GameServer = new GameServer(port);
             });
 
             ConsoleManager.addConCommand("music", "Play music", (string[] ls) =>
@@ -225,21 +221,6 @@ namespace MiningGame.Code
             {
                 string name = ls[0];
                 SaveGameManager.RemoveValue(name);
-            });
-
-            ConsoleManager.addConCommand("give", "Give a player an item", (string[] ls) =>
-            {
-                string playerName = ls[0];
-                int itemID = Convert.ToInt32(ls[1]);
-                int itemAmount = Convert.ToInt32(ls[2]);
-
-                foreach (NetworkPlayer s in GameServer.NetworkPlayers)
-                {
-                    if (s.PlayerEntity.PlayerName == playerName)
-                    {
-                        s.PickupItem(new ItemStack(itemAmount, (byte)itemID));
-                    }
-                }
             });
 
             ConsoleManager.addConCommand("read_keyvalues", "Reads the keyvalues!", (string[] ls) =>
@@ -400,7 +381,9 @@ namespace MiningGame.Code
             //Window.Title = "Tile X: " + tileX + " y: " + tileY + " ID: " + bid + " MD: " + MD + " update scheduled: " + GameServer.updateScheduled(tileX, tileY);
             YogUI.YogUI_Update(gameTime);
             clientNetworkManager.Update(gameTime);
-            serverNetworkManager.Update(gameTime);
+
+            if (GameServer != null)
+                GameServer.Update(gameTime);
 
             for (int i = 0; i < interfaces.Count; i++)
             {
@@ -432,15 +415,15 @@ namespace MiningGame.Code
 
             spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null);
 
-             for (int i = 0; i < drawables.Count; i++)
-             {
-                 if (drawables[i].inCamera() && drawables[i] != null)
-                     drawables[i].Draw(spriteBatch);
-             }
-             foreach (Interface i in interfaces.OrderBy(x => x.depth))
-             {
-                 i.Draw(spriteBatch);
-             }
+            for (int i = 0; i < drawables.Count; i++)
+            {
+                if (drawables[i].inCamera() && drawables[i] != null)
+                    drawables[i].Draw(spriteBatch);
+            }
+            foreach (Interface i in interfaces.OrderBy(x => x.depth))
+            {
+                i.Draw(spriteBatch);
+            }
 
             spriteBatch.End();
 

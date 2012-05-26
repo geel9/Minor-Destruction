@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using MiningGame.Code.Server;
+﻿using MiningGameServer;
 
 namespace MiningGame.Code.Items
 {

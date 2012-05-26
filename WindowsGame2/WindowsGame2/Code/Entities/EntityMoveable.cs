@@ -6,6 +6,7 @@ using MiningGame.Code.Managers;
 using Microsoft.Xna.Framework;
 using MiningGame.Code.Blocks;
 using MiningGame.Code.Structs;
+using MiningGameServer.Structs;
 using YogUILibrary.Managers;
 
 namespace MiningGame.Code.Entities

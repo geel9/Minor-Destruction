@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using MiningGame.Code.Structs;
+using MiningGameServer.Structs;
 
 namespace MiningGame.Code.Managers
 {

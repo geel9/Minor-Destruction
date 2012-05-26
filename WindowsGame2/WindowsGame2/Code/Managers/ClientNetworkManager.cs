@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using MiningGame.Code.Structs;
-using System.Net.Sockets;
 using System.Net;
-using System.Threading;
 using MiningGame.Code.Interfaces;
 using MiningGame.Code.Entities;
-using MiningGame.Code.Packets;
 using Microsoft.Xna.Framework;
 using Lidgren.Network;
+using MiningGameServer.Packets;
 
 namespace MiningGame.Code.Managers
 {
@@ -22,7 +19,7 @@ namespace MiningGame.Code.Managers
 
         public bool isConnected()
         {
-            return !(netClient == null) && (netClient.ConnectionStatus == NetConnectionStatus.Connected || netClient.ConnectionStatus == NetConnectionStatus.InitiatedConnect);
+            return netClient != null && (netClient.ConnectionStatus == NetConnectionStatus.Connected || netClient.ConnectionStatus == NetConnectionStatus.InitiatedConnect);
         }
 
         public ClientNetworkManager()

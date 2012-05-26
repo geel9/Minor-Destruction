@@ -127,12 +127,7 @@
     <Compile Include="Code\Animateable.cs" />
     <Compile Include="Code\Animation.cs" />
     <Compile Include="Code\Blocks\Block.cs" />
-    <None Include="Code\Blocks\BlockGrass.csO" />
     <Compile Include="Code\Blocks\BlockDirt.cs" />
-    <None Include="Code\Blocks\BlockCoal.csO" />
-    <None Include="Code\Blocks\BlockRock.csO" />
-    <None Include="Code\Blocks\BlockIron.csO" />
-    <None Include="Code\Blocks\BlockLadder.csO" />
     <Compile Include="Code\CInterfaces\Drawable.cs" />
     <Compile Include="Code\CInterfaces\Updatable.cs" />
     <Compile Include="Code\CInterfaces\UpdatableAndDrawable.cs" />
@@ -140,7 +135,6 @@
     <Compile Include="Code\Entities\EntityDroppedItem.cs" />
     <Compile Include="Code\Entities\EntityMoveable.cs" />
     <Compile Include="Code\Entities\EntityProjectile.cs" />
-    <Compile Include="Code\Entities\EntitySlime.cs" />
     <Compile Include="Code\Entities\PlayerEntity.cs" />
     <Compile Include="Code\Entities\ProjectileArrow.cs" />
     <Compile Include="Code\GameWorld.cs" />
@@ -160,21 +154,10 @@
     <Compile Include="Code\Managers\InterfaceManager.cs" />
     <Compile Include="Code\Managers\JSONManager.cs" />
     <Compile Include="Code\Managers\PlayerBindManager.cs" />
-    <Compile Include="Code\Packets\Packet1SCGameEvent.cs" />
-    <Compile Include="Code\Packets\Packet0CSPlayerConnect.cs" />
-    <Compile Include="Code\Packets\Packet0SCPlayerConnect.cs" />
-    <Compile Include="Code\Packets\Packet1CSGameEvent.cs" />
-    <Compile Include="Code\Packets\Packet200SCPlayerUpdate.cs" />
-    <Compile Include="Code\Packets\Packet255SCConnectionConfirm.cs" />
-    <Compile Include="Code\Packets\Packet2SCCreateProjectile.cs" />
-    <Compile Include="Code\Packets\Packet3SCRemoveProjectile.cs" />
-    <Compile Include="Code\Packets\Packet4CSPlayerMovementFlags.cs" />
-    <Compile Include="Code\Packets\Packet5CSPlayerMovementFlagsAndAim.cs" />
-    <Compile Include="Code\Server\NetworkPlayer.cs" />
+    <None Include="Code\Server\NetworkPlayer.cs0" />
     <Compile Include="Code\PlayerController.cs" />
-    <Compile Include="Code\Server\GameServer.cs" />
+    <None Include="Code\Server\GameServer.cs0" />
     <Compile Include="Code\Structs\AnimationControlPoint.cs" />
-    <Compile Include="Code\Structs\AABB.cs" />
     <Compile Include="Code\Structs\BlockConnection.cs" />
     <Compile Include="Code\Structs\ItemRecipe.cs" />
     <Compile Include="Code\Interfaces\Interface.cs" />
@@ -194,11 +177,10 @@
     <Compile Include="Code\Managers\ClientNetworkManager.cs" />
     <Compile Include="Code\Managers\SaveGameManager.cs" />
     <Compile Include="Code\Managers\SoundManager.cs" />
-    <Compile Include="Code\Server\ServerNetworkManager.cs" />
+    <None Include="Code\Server\ServerNetworkManager.cs0" />
     <Compile Include="Code\Structs\BoundPacket.cs" />
     <Compile Include="Code\Structs\KeyValue.cs" />
     <Compile Include="Code\Structs\LogText.cs" />
-    <Compile Include="Code\Structs\Packet.cs" />
     <Compile Include="Code\Structs\TimedText.cs" />
     <Compile Include="Code\Interfaces\Console.cs" />
     <Compile Include="Code\Entities\Emitter.cs" />
@@ -291,6 +273,10 @@
     <Content Include="GameThumbnail.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\MiningGameserver\MiningGameserver.csproj">
+      <Project>{70DD389A-8498-49BD-BCD7-CD7D33A1A4FD}</Project>
+      <Name>MiningGameserver</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WindowsGame2Content\MiningGameContent.contentproj">
       <Name>MiningGameContent %28Content%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>
@@ -326,6 +312,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Code\Blocks\BlockCoal.csO" />
+    <None Include="Code\Blocks\BlockGrass.csO" />
+    <None Include="Code\Blocks\BlockIron.csO" />
+    <None Include="Code\Blocks\BlockLadder.csO" />
+    <None Include="Code\Blocks\BlockRock.csO" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

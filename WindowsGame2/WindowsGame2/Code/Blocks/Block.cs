@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using System.Reflection;
 using Microsoft.Xna.Framework;
-using MiningGame.Code.Server;
+using MiningGameServer;
 
 namespace MiningGame.Code.Blocks
 {
@@ -93,7 +92,7 @@ namespace MiningGame.Code.Blocks
 
         private void BlockRemoved(int x, int y)
         {
-            GameServer.UnscheduleUpdate(x, y);
+            //GameServer.UnscheduleUpdate(x, y);
             /*if (GetBlockLightLevel() >= 1)
             {
                 GameWorld.lightUpAroundRadius(x, y, GetBlockLightLevel(), 0, -1);

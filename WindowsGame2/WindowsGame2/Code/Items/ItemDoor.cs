@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using MiningGame.Code.Entities;
-using MiningGame.Code.Server;
-using Microsoft.Xna.Framework.Graphics;
+﻿using MiningGameServer;
+
 namespace MiningGame.Code.Items
 {
     public class ItemDoor : Item

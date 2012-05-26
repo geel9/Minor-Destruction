@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using MiningGame.Code.Entities;
-using MiningGame.Code.Server;
-using Microsoft.Xna.Framework.Graphics;
-namespace MiningGame.Code.Items
+﻿namespace MiningGame.Code.Items
 {
     public class ItemDino : Item
     {

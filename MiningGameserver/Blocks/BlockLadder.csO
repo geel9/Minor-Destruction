@@ -1,0 +1,41 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using RatingTDS.Code.Managers;
+
+namespace RatingTDS.Code.Blocks
+{
+    public class BlockLadder : Block
+    {
+        public BlockLadder() : base()
+        {
+        }
+
+        public override byte getItemDrop()
+        {
+            return (byte)0;
+        }
+
+        public override int getItemDropNum()
+        {
+            return 0;
+        }
+
+        public override void blockPlaced(int x, int y, bool notify = true)
+        {
+            if (!notify) return;
+            for (int y2 = y + 1; y < GameWorld.worldSizeY; y2++)
+            {
+                if (GameWorld.getBlockIDAt(x, y2) != 0) break;
+                GameWorld.setBlock(x, y2, getBlockID(), false);
+            }
+        }
+
+        public override Microsoft.Xna.Framework.Graphics.Texture2D renderBlock()
+        {
+            return AssetManager.GetTexture("ladder");
+            //return base.renderBlock();
+        }
+    }
+}
