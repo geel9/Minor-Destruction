@@ -78,7 +78,7 @@ namespace MiningGame.Code.Structs
         {
         }
 
-        public Vector2 AxisCollide(AABB bound2)
+        public AABBResult AxisCollide(AABB bound2)
         {
             AABB bound1 = this;
 
@@ -98,7 +98,6 @@ namespace MiningGame.Code.Structs
             {
                 xMove = bound2HalfWidths[0].X - bound1HalfWidths[0].X;
             }
-            if (xMove < 0) return Vector2.Zero;
 
             if (bound1.Center.Y < bound2.Center.Y)
             {
@@ -109,13 +108,13 @@ namespace MiningGame.Code.Structs
                 yMove = bound2HalfWidths[1].Y - bound1HalfWidths[1].Y;
             }
 
-            //Not colliding.
-            //if (yMove < 0) return Vector2.Zero;
+            //Not colliding. SAT.
+            if (yMove <= 0 || xMove <= 0) return new AABBResult(0, 0, false, false);
 
-            if (yMove < xMove && yMove > 0) xMove = 0;
-            else if (xMove < yMove && xMove > 0) yMove = 0;
+            //if (yMove < xMove && yMove > 0) xMove = 0;
+            //else if (xMove < yMove && xMove > 0) yMove = 0;
 
-            return new Vector2(xMove * multX, yMove * multY);
+            return new AABBResult((int) (xMove * multX), (int) (yMove * multY), xMove < yMove, true);
         }
 
         public static Vector2 RotateAroundOrigin(Vector2 point, Vector2 origin, double angle)
@@ -145,7 +144,7 @@ namespace MiningGame.Code.Structs
 
         public bool Intersects(AABB boundBox)
         {
-            return AxisCollide(boundBox) != Vector2.Zero;
+            return AxisCollide(boundBox).IsIntersecting;
         }
 
         public bool Contains(AABB boundBox)
@@ -160,6 +159,19 @@ namespace MiningGame.Code.Structs
         public Rectangle ToRectangle()
         {
             return new Rectangle(Left, Top, Width, Height);
+        }
+    }
+    public struct AABBResult
+    {
+        public int X, Y;
+        public bool XSmaller;
+        public bool IsIntersecting;
+        public AABBResult(int X, int Y, bool XSmaller, bool intersecting)
+        {
+            this.X = X;
+            this.Y = Y;
+            this.XSmaller = XSmaller;
+            IsIntersecting = intersecting;
         }
     }
 }

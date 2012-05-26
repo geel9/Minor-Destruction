@@ -26,8 +26,8 @@ namespace MiningGame.Code.Entities
             Vector2 rectCenter = rect.Center;
 
             Vector2 topLeftHit = GameWorld.AbsoluteToTile(new Vector2(rect.Left, rect.Top));
-            topLeftHit.X = (topLeftHit.X > 0) ? topLeftHit.X - 1 : topLeftHit.X;
-            topLeftHit.Y = (topLeftHit.Y > 0) ? topLeftHit.Y - 1 : topLeftHit.Y;
+            //topLeftHit.X = (topLeftHit.X > 0) ? topLeftHit.X - 1 : topLeftHit.X;
+           // topLeftHit.Y = (topLeftHit.Y > 0) ? topLeftHit.Y - 1 : topLeftHit.Y;
 
             Vector2 bottomRightHit = GameWorld.AbsoluteToTile(new Vector2(rect.Right - 2, rect.Bottom - 2));
             bottomRightHit.X = (bottomRightHit.X < GameWorld.WorldSizeX) ? bottomRightHit.X + 1 : bottomRightHit.X;
@@ -48,7 +48,7 @@ namespace MiningGame.Code.Entities
             return new Vector2(BoundBox.Center.X / GameWorld.BlockWidth, (BoundBox.Bottom - 1) / GameWorld.BlockHeight);
         }
 
-        public void EntityMovement()
+        public virtual void EntityMovement()
         {
             if (BoundBox.Left < 0) EntityPosition.X = BoundBox.Width / 2 + 1;
             if (BoundBox.Top < 0) EntityPosition.Y = BoundBox.Height / 2 + 1;
@@ -58,10 +58,7 @@ namespace MiningGame.Code.Entities
 
             //Didn't want to make a new BoundBox so this'll do. Gets the tiles the player will be in with his velocity.
             EntityPosition += EntityVelocity;
-            Vector2 newEntityPosition = EntityPosition;
-            AABB newRectTest = BoundBox;
-            List<Vector2> newTilesHitting = RectangleHitsTiles(newRectTest);
-            EntityPosition -= EntityVelocity;
+            List<Vector2> newTilesHitting = RectangleHitsTiles(BoundBox);
 
             //The amount of tiles the player will be entering with his new position.
             List<Vector2> newTiles = newTilesHitting;
@@ -84,27 +81,30 @@ namespace MiningGame.Code.Entities
                 //A wall
                 Rectangle blockBB = block.GetBlockBoundBox((int)newTile.X, (int)newTile.Y);
 
-                AABB thisAABB = newRectTest;
+                AABB thisAABB = BoundBox;
                 AABB blockAABB = new AABB(blockBB);
-                Vector2 collide = thisAABB.AxisCollide(blockAABB);
-                if (collide.X != 0)
+                AABBResult collide = thisAABB.AxisCollide(blockAABB);
+
+                if (!collide.IsIntersecting) continue;
+
+                if (collide.XSmaller)
                 {
                     bool right = (collide.X < 0);
                     if (!walkThrough)
                     {
                         EntityVelocity.X = 0;
-                        EntityPosition.X = (newEntityPosition.X + collide.X);
+                        EntityPosition.X += collide.X;
                     }
                     block.OnBlockTouched((int)newTile.X, (int)newTile.Y, right ? 3 : 1, this);
                 }
-                if (collide.Y != 0 && newTile.Y >= highestY)
+                else
                 {
                     bool up = (collide.Y > 0);
-                    if (up && EntityVelocity.Y < 0) continue;
+                    //if (up && EntityVelocity.Y < 0) continue;
                     if (!walkThrough)
                     {
                         EntityVelocity.Y = 0;
-                        EntityPosition.Y = (newEntityPosition.Y + collide.Y);
+                        EntityPosition.Y += collide.Y;
                         if (!up)
                         {
                             TimeFalling = 0;
@@ -114,7 +114,7 @@ namespace MiningGame.Code.Entities
                     block.OnBlockTouched((int)newTile.X, (int)newTile.Y, up ? 2 : 0, this);
                 }
             }
-            EntityPosition += EntityVelocity;
+            //EntityPosition += EntityVelocity;
 
             //Ropes
             byte blockID2 = GameWorld.GetBlockIDAt(GetEntityTile().X, GetEntityTile().Y);

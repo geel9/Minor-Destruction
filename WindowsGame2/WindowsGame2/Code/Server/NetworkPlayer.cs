@@ -158,7 +158,7 @@ namespace MiningGame.Code.Server
                     if (_attackTimer <= 0)
                     {
                         if (TimeHeldAttack == 0) TimeHeldAttack = 1;
-                        _attackTimer = 50;
+                        _attackTimer = 1;
                         int nextslot = GameServer.GetFreeProjectileSlot();
                         if (nextslot != -1)
                         {

@@ -102,8 +102,10 @@ namespace MiningGame.Code.Entities
 
                 AABB thisAABB = newRectTest;
                 AABB blockAABB = new AABB(blockBB);
-                Vector2 collide = thisAABB.AxisCollide(blockAABB);
-                if (collide.X != 0)
+                AABBResult collide = thisAABB.AxisCollide(blockAABB);
+                if (!collide.IsIntersecting) continue;
+
+                if (collide.XSmaller)
                 {
                     bool right = (collide.X < 0);
                     if (!walkThrough)
@@ -116,7 +118,7 @@ namespace MiningGame.Code.Entities
                         break;
                     }
                 }
-                if (collide.Y != 0 && newTile.Y >= highestY)
+                else
                 {
                     bool up = (collide.Y > 0);
 
