@@ -190,9 +190,12 @@ namespace MiningGame.Code.Managers
         public void PlayerUpdating(Packet p)
         {
             int numToUpdate = p.readByte();
+            List<byte> playersUpdated = new List<byte>();
+            List<byte> allPlayers = GameWorld.OtherPlayers.Select(pl => pl.PlayerID).ToList();
             for (int i = 0; i < numToUpdate; i++)
             {
                 int playerID = p.readByte();
+                playersUpdated.Add((byte)playerID);
                 PlayerEntity player;
                 if (playerID == GameWorld.ThePlayer.PlayerEntity.PlayerID)
                     player = GameWorld.ThePlayer.PlayerEntity;
@@ -242,6 +245,26 @@ namespace MiningGame.Code.Managers
                 }
                 //player.FacingLeft = (updateMask & (int)PlayerUpdateFlags.Player_Facing_Left) != 0;
             }
+
+            //Hide all non-updated players from view so that we don't get issues regarding position.
+            //For instance, if a player goes outside the view, their last known position on the client
+            //Will NOT be their current position. So if the client can see where they last were known to be
+            //But not where they currently are, they will seem to be in the wrong position.
+            //And yes, this is hacky as hell.
+            List<byte> nonUpdatedPlayers = allPlayers.Except(playersUpdated).ToList();
+            /*foreach(byte playerID in nonUpdatedPlayers)
+            {
+                PlayerEntity player;
+                if (playerID == GameWorld.ThePlayer.PlayerEntity.PlayerID)
+                    player = GameWorld.ThePlayer.PlayerEntity;
+                else
+                {
+                    player = GameWorld.OtherPlayers.Where(pl => pl.PlayerID == playerID).FirstOrDefault();
+                }
+                if (player == null) continue;
+                player.EntityPosition.X = -100;
+                player.EntityPosition.Y = -100;
+            }*/
         }
     }
 }

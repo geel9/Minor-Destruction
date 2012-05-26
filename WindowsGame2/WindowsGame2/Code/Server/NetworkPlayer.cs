@@ -60,8 +60,8 @@ namespace MiningGame.Code.Server
 
             short startX = (short)MathHelper.Clamp((int)blockPos.X - (800 / 16) - 1, 0, GameWorld.WorldSizeX);
             short startY = (short)MathHelper.Clamp((int)blockPos.Y - (500 / 16) - 1, 0, GameWorld.WorldSizeY);
-            short endX = (short)MathHelper.Clamp((int)blockPos.X + (500 / 16) + 1, 0, GameWorld.WorldSizeX);
-            short endY = (short)MathHelper.Clamp((int)blockPos.Y + (800 / 16) + 1, 0, GameWorld.WorldSizeY);
+            short endX = (short)MathHelper.Clamp((int)blockPos.X + (800 / 16) + 1, 0, GameWorld.WorldSizeX);
+            short endY = (short)MathHelper.Clamp((int)blockPos.Y + (500 / 16) + 1, 0, GameWorld.WorldSizeY);
 
             Packet packet = new Packet();
             short numSending = 0;
