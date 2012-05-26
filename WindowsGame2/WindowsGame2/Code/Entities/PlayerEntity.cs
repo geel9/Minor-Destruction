@@ -80,7 +80,7 @@ namespace MiningGame.Code.Entities
             byte blockID = GameWorld.GetBlockIDAt(aimingAt.X, aimingAt.Y);
 
             Rectangle drawBB = new Rectangle((int)aimingAt.X * GameWorld.BlockWidth, (int)aimingAt.Y * GameWorld.BlockHeight, GameWorld.BlockWidth, GameWorld.BlockHeight);
-            DrawManager.Draw_Outline(ConversionManager.PToV(drawBB.Center) - CameraManager.cameraPosition, drawBB.Width, drawBB.Height, Color.White, sb);
+            //DrawManager.Draw_Outline(ConversionManager.PToV(drawBB.Center) - CameraManager.cameraPosition, drawBB.Width, drawBB.Height, Color.White, sb);
 
             sb.DrawString(AssetManager.GetFont("Console"), PlayerName, EntityPosition - new Vector2(30, 30) - CameraManager.cameraPosition, Color.White);
             base.Draw(sb);
