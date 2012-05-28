@@ -154,9 +154,7 @@
     <Compile Include="Code\Managers\InterfaceManager.cs" />
     <Compile Include="Code\Managers\JSONManager.cs" />
     <Compile Include="Code\Managers\PlayerBindManager.cs" />
-    <None Include="Code\Server\NetworkPlayer.cs0" />
     <Compile Include="Code\PlayerController.cs" />
-    <None Include="Code\Server\GameServer.cs0" />
     <Compile Include="Code\Structs\AnimationControlPoint.cs" />
     <Compile Include="Code\Structs\BlockConnection.cs" />
     <Compile Include="Code\Structs\ItemRecipe.cs" />
@@ -177,7 +175,6 @@
     <Compile Include="Code\Managers\ClientNetworkManager.cs" />
     <Compile Include="Code\Managers\SaveGameManager.cs" />
     <Compile Include="Code\Managers\SoundManager.cs" />
-    <None Include="Code\Server\ServerNetworkManager.cs0" />
     <Compile Include="Code\Structs\BoundPacket.cs" />
     <Compile Include="Code\Structs\KeyValue.cs" />
     <Compile Include="Code\Structs\LogText.cs" />
@@ -194,6 +191,7 @@
     <Compile Include="Code\Structs\ConCommand.cs" />
     <Compile Include="Code\Structs\Convar.cs" />
     <Compile Include="Code\Structs\EmitRules.cs" />
+    <Compile Include="ExtensionMethods\ExtensionMethods.cs" />
     <Compile Include="fastJSON\Getters.cs" />
     <Compile Include="fastJSON\JSON.cs" />
     <Compile Include="fastJSON\JsonParser.cs" />

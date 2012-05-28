@@ -19,6 +19,5 @@ namespace MiningGame.Code.Structs
             this.name = name;
             this.flags = flags;
         }
-
     }
 }

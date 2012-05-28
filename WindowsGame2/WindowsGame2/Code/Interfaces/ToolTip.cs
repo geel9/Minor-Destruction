@@ -5,6 +5,7 @@ using System.Text;
 using MiningGame.Code.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MiningGame.ExtensionMethods;
 using YogUILibrary.UIComponents;
 using YogUILibrary.Managers;
 namespace MiningGame.Code.Interfaces
@@ -28,7 +29,7 @@ namespace MiningGame.Code.Interfaces
         {
             this.text = text;
             this.displayBounds = bounds;
-            Vector2 mousePos = ConversionManager.PToV(InputManager.GetMousePos());
+            Vector2 mousePos = InputManager.GetMousePos().ToVector2();
             tipText = new TextDrawer(AssetManager.GetFont("Console"), text, mousePos, Color.White, TextAlign.Center);
         }
 
@@ -44,7 +45,7 @@ namespace MiningGame.Code.Interfaces
 
         public override void Draw(SpriteBatch sb)
         {
-            Vector2 center = ConversionManager.PToV(InputManager.GetMousePos());
+            Vector2 center = InputManager.GetMousePos().ToVector2();
             center.Y -= BoundBox.Height / 2;
             DrawManager.Draw_Box(center, BoundBox.Width + (widthAdd / 2), BoundBox.Height, Color.Black, sb, 0f, 200);
             DrawManager.Draw_Outline(center, BoundBox.Width + (widthAdd / 2), BoundBox.Height, Color.White, sb, 255);

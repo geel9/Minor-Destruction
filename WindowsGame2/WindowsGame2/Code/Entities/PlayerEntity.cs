@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using MiningGame.Code.Blocks;
 using MiningGame.Code.Managers;
 using Microsoft.Xna.Framework.Graphics;
+using MiningGame.ExtensionMethods;
 using MiningGameServer.Structs;
 using YogUILibrary.Managers;
 using MiningGame.Code.Structs;
@@ -82,7 +83,7 @@ namespace MiningGame.Code.Entities
             byte blockID = GameWorld.GetBlockIDAt(aimingAt.X, aimingAt.Y);
 
             Rectangle drawBB = new Rectangle((int)aimingAt.X * GameWorld.BlockWidth, (int)aimingAt.Y * GameWorld.BlockHeight, GameWorld.BlockWidth, GameWorld.BlockHeight);
-            DrawManager.Draw_Outline(ConversionManager.PToV(drawBB.Center) - CameraManager.cameraPosition, drawBB.Width, drawBB.Height, Color.White, sb);
+            DrawManager.Draw_Outline(drawBB.Center.ToVector2() - CameraManager.cameraPosition, drawBB.Width, drawBB.Height, Color.White, sb);
 
             ConsoleManager.setVariableValue("window_title", (int)aimingAt.X + ", " + (int)aimingAt.Y);
 
@@ -94,7 +95,7 @@ namespace MiningGame.Code.Entities
         {
             Vector2 aim = InputManager.GetMousePosV() + CameraManager.cameraPosition;
             aim -= EntityPosition;
-            return (short)ConversionManager.RadianToDegrees(Math.Atan2(aim.Y, aim.X));
+            return (short)Math.Atan2(aim.Y, aim.X).RToD();
         }
 
         public Vector2 GetBlockAimingAt()

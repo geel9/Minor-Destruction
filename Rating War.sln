@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiningGameContent", "Window
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiningGameserver", "MiningGameserver\MiningGameserver.csproj", "{70DD389A-8498-49BD-BCD7-CD7D33A1A4FD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiningGameDedicatedServer", "MiningGameDedicatedServer\MiningGameDedicatedServer.csproj", "{A53AE9EB-F5AD-4DD2-A0D5-4F3C30DCE692}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,16 @@ Global
 		{70DD389A-8498-49BD-BCD7-CD7D33A1A4FD}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{70DD389A-8498-49BD-BCD7-CD7D33A1A4FD}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{70DD389A-8498-49BD-BCD7-CD7D33A1A4FD}.Release|x86.ActiveCfg = Release|Any CPU
+		{A53AE9EB-F5AD-4DD2-A0D5-4F3C30DCE692}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{A53AE9EB-F5AD-4DD2-A0D5-4F3C30DCE692}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{A53AE9EB-F5AD-4DD2-A0D5-4F3C30DCE692}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{A53AE9EB-F5AD-4DD2-A0D5-4F3C30DCE692}.Debug|x86.ActiveCfg = Debug|x86
+		{A53AE9EB-F5AD-4DD2-A0D5-4F3C30DCE692}.Debug|x86.Build.0 = Debug|x86
+		{A53AE9EB-F5AD-4DD2-A0D5-4F3C30DCE692}.Release|Any CPU.ActiveCfg = Release|x86
+		{A53AE9EB-F5AD-4DD2-A0D5-4F3C30DCE692}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{A53AE9EB-F5AD-4DD2-A0D5-4F3C30DCE692}.Release|Mixed Platforms.Build.0 = Release|x86
+		{A53AE9EB-F5AD-4DD2-A0D5-4F3C30DCE692}.Release|x86.ActiveCfg = Release|x86
+		{A53AE9EB-F5AD-4DD2-A0D5-4F3C30DCE692}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

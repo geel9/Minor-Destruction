@@ -44,7 +44,7 @@ namespace MiningGame.Code.Entities
 
         public AnimationControlPointUI(Vector2 position, string name, float scale)
         {
-            curColor = new Color(Main.r.Next(0, 256), Main.r.Next(0, 255), Main.r.Next(0, 254));
+            curColor = new Color(Main.R.Next(0, 256), Main.R.Next(0, 255), Main.R.Next(0, 254));
             selected = false;
             dragging = false;
             this.scale = scale;

@@ -5,8 +5,10 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using MiningGameServer.Blocks;
 using MiningGameServer.Packets;
+using MiningGameserver;
 using MiningGameserver.Entities;
 using MiningGameserver.Items;
+using MiningGameserver.ServerCommands;
 
 namespace MiningGameServer
 {
@@ -32,10 +34,19 @@ namespace MiningGameServer
 
         public GameServer(int port)
         {
-            GenerateWorld();
             ServerNetworkManager = new ServerNetworkManager();
-            ServerNetworkManager.Host(port);
-            ServerItem.MakeItems();
+            if(ServerNetworkManager.Host(port))
+            {
+                GenerateWorld();
+                ServerItem.MakeItems();
+                ServerCommands.Initialize();
+                ServerConsole.Log("Hosted successfully on port " + port);
+            }
+            else
+            {
+                ServerNetworkManager = null;
+                throw new Exception("Could not host on port " + port);
+            }
         }
 
         public void GenerateTree(int x, int y)
@@ -474,6 +485,9 @@ namespace MiningGameServer
                 case GameEvents.Player_Chat:
                     bool teamChat = p.readBool();
                     string chatText = p.readString();
+
+                    ServerConsole.Log(player.PlayerName + ": " + chatText);
+
                     Packet1SCGameEvent pack = new Packet1SCGameEvent(GameEvents.Player_Chat, (byte)player.PlayerID, (bool)teamChat, chatText);
                     ServerNetworkManager.SendPacket(pack);
                     break;

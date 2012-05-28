@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MiningGame.Code.Managers;
 using MiningGame.Code.CInterfaces;
 using MiningGame.Code.Structs;
+using MiningGame.ExtensionMethods;
 using MiningGameServer.Structs;
 using YogUILibrary.Managers;
 namespace MiningGame.Code.Entities
@@ -79,7 +80,7 @@ namespace MiningGame.Code.Entities
 
         public void RotateToPoint(Point point)
         {
-            RotateToPoint(ConversionManager.PToV(point));
+            RotateToPoint(point.ToVector2());
         }
 
         public void RotateToPoint(Vector2 point)
@@ -89,30 +90,10 @@ namespace MiningGame.Code.Entities
             this.Rotation = rotation;
         }
 
-        public void RotateToPoint(Vector2 point, int maxDegrees)
-        {
-            maxDegrees = Math.Abs(maxDegrees);
-            Vector2 dist = EntityPosition - point;
-            //   dist = point - point;
-            float rotation = (float)Math.Atan2(dist.Y, dist.X);
-            float rotDeg = (float)ConversionManager.RadianToDegrees(rotation);
-            rotDeg = (float)ConversionManager.circleTo360((double)rotDeg);
-            float curRotDeg = (float)ConversionManager.circleTo360(ConversionManager.RadianToDegrees((double)this.Rotation));
-            float rotDiff = curRotDeg - rotDeg;
-            ConsoleManager.setVariableValue("window_title", "Rot: " + rotDeg);
-            //if (rotDeg)
-            //{
-            //  rotDiff = this.rotation - rotation;
-            //}
-            float maxRadians = (float)ConversionManager.DegreeToRadians(maxDegrees);
-            rotDiff = MathHelper.Clamp(rotDiff, -maxRadians, maxRadians);
-            //     this.rotation += rotDiff;
-            this.Rotation = (float)ConversionManager.DegreeToRadians(40);
-        }
 
         public void MoveTowardsPoint(Point point, float speed)
         {
-            Vector2 realPoint = ConversionManager.PToV(point);
+            Vector2 realPoint = point.ToVector2();
             MoveTowardsPoint(realPoint, speed);
         }
 

@@ -2,47 +2,44 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MiningGame.Code.Structs;
-using MiningGame.Code.Entities;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
-namespace MiningGame.Code.Managers
+namespace MiningGameserver
 {
-    public static class ConsoleManager
+    public static class ServerConsole
     {
         const long FLAG_CHEATS = 1;
         const long FLAG_HIDDEN = 2;
         const long FLAG_LOCKED = 4;
 
+        public static Action<string> OnConsoleOutput = s =>
+                                                           {
+                                                               Console.WriteLine(s);
+                                                           };
+
         public static List<ConCommand> commands = new List<ConCommand>();
         public static List<Convar> variables = new List<Convar>();
-        public static List<LogText> logs = new List<LogText>();
 
-
-        public static string output = "";
-        public static int lines = 10;
-        public static int offset = 0;
-        public static int logNum = 0;
-
-        public static void addConCommand(string name, string description, Action<string[]> lambda, long flags = 0)
+        public static void AddConCommand(string name, string description, Action<string[]> lambda, long flags = 0)
         {
-            if (!isCommand(name))
+            if (!IsCommand(name))
             {
                 ConCommand cc = new ConCommand(lambda, description, name, flags);
                 commands.Add(cc);
             }
         }
 
-        public static void addConVar(string name, string description, string DefaultValue, Action<string[]> lambda = null, long flags = 0)
+        public static void AddConVar(string name, string description, string DefaultValue, Action<string[]> lambda = null, long flags = 0)
         {
-            if (!isVariable(name))
+            if (!IsVariable(name))
             {
                 Convar cv = new Convar(lambda, description, DefaultValue, name, flags);
                 variables.Add(cv);
             }
         }
 
-        public static bool isCommand(string command)
+        public static bool IsCommand(string command)
         {
             foreach (ConCommand c in commands)
             {
@@ -52,7 +49,7 @@ namespace MiningGame.Code.Managers
             return false;
         }
 
-        public static bool isVariable(string var)
+        public static bool IsVariable(string var)
         {
             foreach (Convar c in variables)
             {
@@ -62,13 +59,13 @@ namespace MiningGame.Code.Managers
             return false;
         }
 
-        public static void executeCommand(string name, string[] arguments)
+        public static void ExecuteCommand(string name, string[] arguments)
         {
-            bool cheats = getVariableBool("sv_cheats");
-            bool needsCheats = (getFlags(name) & FLAG_CHEATS) > 0;
+            bool cheats = GetVariableBool("sv_cheats");
+            bool needsCheats = (GetFlags(name) & FLAG_CHEATS) > 0;
             if ((!needsCheats && !cheats) || cheats)
             {
-                getCommand(name).lambda(arguments);
+                GetCommand(name).lambda(arguments);
             }
             else
             {
@@ -76,16 +73,16 @@ namespace MiningGame.Code.Managers
             }
         }
 
-        public static void executeVariable(string name, string[] arguments)
+        public static void ExecuteVariable(string name, string[] arguments)
         {
-            bool cheats = getVariableBool("sv_cheats");
-            bool needsCheats = (getFlags(name) & FLAG_CHEATS) > 0;
-            Convar c = variables[variables.IndexOf(getVariable(name))];
+            bool cheats = GetVariableBool("sv_cheats");
+            bool needsCheats = (GetFlags(name) & FLAG_CHEATS) > 0;
+            Convar c = variables[variables.IndexOf(GetVariable(name))];
             if (arguments.Length > 0)
             {
                 if ((!needsCheats && !cheats) || cheats)
                 {
-                    setVariableValue(name, ListToString(arguments, " "));
+                    SetVariableValue(name, ListToString(arguments, " "));
                     if (c.lambda != null)
                         c.lambda(arguments);
                 }
@@ -100,34 +97,34 @@ namespace MiningGame.Code.Managers
             }
         }
 
-        public static string getVariableValue(string name)
+        public static string GetVariableValue(string name)
         {
-            return getVariable(name).value;
+            return GetVariable(name).value;
         }
 
-        public static bool getVariableBool(string name)
+        public static bool GetVariableBool(string name)
         {
-            return getVariable(name).value.Replace(" ", "") == "1" ? true : false;
+            return GetVariable(name).value.Replace(" ", "") == "1" ? true : false;
         }
 
-        public static float getVariableFloat(string name)
+        public static float GetVariableFloat(string name)
         {
-            return (float)Convert.ToDouble(getVariable(name).value);
+            return (float)Convert.ToDouble(GetVariable(name).value);
         }
 
-        public static double getVariableDouble(string name)
+        public static double GetVariableDouble(string name)
         {
-            return Convert.ToDouble(getVariable(name).value);
+            return Convert.ToDouble(GetVariable(name).value);
         }
 
-        public static int getVariableInt(string name)
+        public static int GetVariableInt(string name)
         {
-            return Convert.ToInt32(getVariable(name).value);
+            return Convert.ToInt32(GetVariable(name).value);
         }
 
-        public static string getFlagString(string name)
+        public static string GetFlagString(string name)
         {
-            long flags = getFlags(name);
+            long flags = GetFlags(name);
             string ret = "";
 
             ret += (flags & FLAG_CHEATS) > 0 ? "FLAG_CHEATS " : "";
@@ -137,30 +134,30 @@ namespace MiningGame.Code.Managers
             return ret;
         }
 
-        public static long getFlags(string name)
+        public static long GetFlags(string name)
         {
-            if (isVariable(name))
+            if (IsVariable(name))
             {
-                return getVariable(name).flags;
+                return GetVariable(name).flags;
             }
-            else if (isCommand(name))
+            else if (IsCommand(name))
             {
-                return getCommand(name).flags;
+                return GetCommand(name).flags;
             }
             else
                 return 0;
         }
 
-        public static void setVariableValue(string name, string value)
+        public static void SetVariableValue(string name, string value)
         {
-            Convar c = getVariable(name);
+            Convar c = GetVariable(name);
             Convar c2 = c;
             c2.value = value;
             variables.Add(c2);
             variables.Remove(c);
         }
 
-        public static ConCommand getCommand(string name)
+        public static ConCommand GetCommand(string name)
         {
             foreach (ConCommand c in commands)
             {
@@ -172,7 +169,7 @@ namespace MiningGame.Code.Managers
             return new ConCommand((string[] l) => { }, "", "");
         }
 
-        public static Convar getVariable(string name)
+        public static Convar GetVariable(string name)
         {
             try
             {
@@ -205,22 +202,7 @@ namespace MiningGame.Code.Managers
             return ret;
         }
 
-        public static List<LogText> GetLog()
-        {
-            List<LogText> ll = new List<LogText>();
-            for (int i = 0; i < lines; i++)
-            {
-                //Get the lines according to the offset; we'd get the first 4 lines here if offset = 0, but if offset = 1, we'd get lines 2-5.
-                if ((i + offset) < logs.Count)
-                {
-                    ll.Add(logs[i + offset]);
-                }
-            }
-
-            return ll;
-        }
-
-        public static string[] removeFromList(string[] list, string remove)
+        public static string[] RemoveFromList(string[] list, string remove)
         {
             List<string> ret = new List<string>();
             foreach (string s in list)
@@ -251,33 +233,11 @@ namespace MiningGame.Code.Managers
 
         public static void Log(string log)
         {
-            Log(log, new Color(200, 200, 200));
+            OnConsoleOutput(log);
         }
 
-        public static void Log(string log, Color color)
-        {
-            int numAllowed = ((Main.graphics.PreferredBackBufferWidth - 5) / 8);
-            int size = log.Length;
-            if (size > numAllowed)
-            {
-                string first = log.Substring(0, numAllowed - 1);
-                string second = log.Substring(numAllowed - 1);
-                Log(first + "-", color);
-                Log("-" + second, color);
-            }
-            else
-            {
-                logNum++;
-                logs.Add(new LogText(log, color));
-                if (logNum - lines > offset)
-                    offset++;
-            }
-            if (Main.console != null)
-                Main.console.UpdateConsole();
 
-        }
-
-        public static string[] splitConsoleInput_Semicolons(string input)
+        public static string[] SplitConsoleInputSemicolons(string input)
         {
             List<string> ret = new List<string>();
             string curCommand = "";
@@ -317,7 +277,7 @@ namespace MiningGame.Code.Managers
             return ret.ToArray();
         }
 
-        public static string[] splitConsoleInput_Arguments(string input)
+        public static string[] SplitConsoleInputArguments(string input)
         {
             List<string> ret = new List<string>();
             string curCommand = "";
@@ -326,7 +286,7 @@ namespace MiningGame.Code.Managers
             foreach (char c in input)
             {
                 bool addChar = true;
-                if (c == '"' || c == '\'')
+                if (c == '"')
                 {
                     if (stringChar != 's')
                     {
@@ -348,7 +308,7 @@ namespace MiningGame.Code.Managers
                     ret.Add(curCommand.Trim());
                     curCommand = "";
                 }
-                if(addChar)
+                if (addChar)
                 {
                     curCommand += c;
                 }
@@ -364,24 +324,59 @@ namespace MiningGame.Code.Managers
 
         public static void ConsoleInput(string input2, bool silent = false)
         {
-            string[] cons = splitConsoleInput_Semicolons(input2);
+            string[] cons = SplitConsoleInputSemicolons(input2);
             foreach (string input in cons)
             {
-                string[] inputs = splitConsoleInput_Arguments(input);
-                inputs = removeFromList(inputs, " ");
+                string[] inputs = SplitConsoleInputArguments(input);
+                inputs = RemoveFromList(inputs, " ");
                 string command = inputs[0];
-                
+
                 if (!silent)
                     Log(">" + input);
-                if (isCommand(command))
+                if (IsCommand(command))
                 {
-                    executeCommand(command, inputs.Skip(1).ToArray<string>());
+                    ExecuteCommand(command, inputs.Skip(1).ToArray<string>());
                 }
-                else if (isVariable(command))
+                else if (IsVariable(command))
                 {
-                    executeVariable(command, inputs.Skip(1).ToArray<string>());
+                    ExecuteVariable(command, inputs.Skip(1).ToArray<string>());
                 }
             }
         }
+    }
+
+    public struct ConCommand
+    {
+        public Action<string[]> lambda;
+        public string description;
+        public string name;
+        public long flags;
+
+        public ConCommand(Action<string[]> lambda, string description, string name, long flags = 0)
+        {
+            this.lambda = lambda;
+            this.description = description;
+            this.name = name;
+            this.flags = flags;
+        }
+    }
+
+    public struct Convar
+    {
+        public Action<string[]> lambda;
+        public string description;
+        public string value;
+        public string name;
+        public long flags;
+
+        public Convar(Action<string[]> lambda, string description, string defaultValue, string name, long flags = 0)
+        {
+            this.lambda = lambda;
+            this.description = description;
+            this.value = defaultValue;
+            this.name = name;
+            this.flags = flags;
+        }
+
     }
 }

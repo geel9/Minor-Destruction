@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
+using MiningGameServer.ExtensionMethods;
 using MiningGameServer.Packets;
 using MiningGameserver;
 
@@ -17,12 +18,20 @@ namespace MiningGameServer
 
         }
 
-        public void Host(int port)
+        public bool Host(int port)
         {
-            NetPeerConfiguration np = new NetPeerConfiguration("MinorDestruction");
-            np.Port = port;
-            NetServer = new NetServer(np);
-            NetServer.Start();
+            try
+            {
+                NetPeerConfiguration np = new NetPeerConfiguration("MinorDestruction");
+                np.Port = port;
+                NetServer = new NetServer(np);
+                NetServer.Start();
+            }
+            catch (NetException e)
+            {
+                return false;
+            }
+            return true;
         }
         public void Update()
         {
@@ -44,8 +53,7 @@ namespace MiningGameServer
                             //
                             // A new player just connected!
                             //
-
-                            NetworkPlayer player = new NetworkPlayer((byte)NumNetworkPlayers++, msg.SenderConnection, new Vector2(100, 70), "");
+                            NetworkPlayer player = new NetworkPlayer((byte)++NumNetworkPlayers, msg.SenderConnection, new Vector2(100, 70), "");
                             GameServer.NetworkPlayers.Add(player);
                             HandleClient(player);
                         }
@@ -58,6 +66,8 @@ namespace MiningGameServer
                             SendPacket(p2);
                             Packet1SCGameEvent p3 = new Packet1SCGameEvent(GameServer.GameEvents.Player_Chat, (byte)0, false, "Player " + pl2.PlayerName + " has left the game.");
                             SendPacket(p3);
+
+                            ServerConsole.Log("Player " + pl2.PlayerName + " has disconnected.");
                         }
 
                         break;
@@ -119,6 +129,7 @@ namespace MiningGameServer
                                                             player.PlayerID, player.EntityPosition);
                         SendPacket(packet, pl.NetConnection);
                     }
+                    ServerConsole.Log("New player \"" + name + "\" connected.");
                     break;
                 //A game event, JC!
                 case 1:
@@ -144,7 +155,7 @@ namespace MiningGameServer
 
                 case 5:
                     flags = p.readByte();
-                    float angle = (float)ConversionManager.DegreeToRadians(p.readShort());
+                    float angle = p.readShort().DToR();
                     if (player.MovementFlags != flags || angle != player.PlayerAimAngle)
                     {
                         player.UpdateMask |= (int)PlayerUpdateFlags.Player_Update;

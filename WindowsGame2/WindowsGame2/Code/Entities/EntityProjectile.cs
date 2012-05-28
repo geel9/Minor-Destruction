@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MiningGame.Code.Blocks;
+using MiningGame.ExtensionMethods;
 using MiningGameServer.Structs;
 using YogUILibrary.Managers;
 
@@ -148,7 +149,7 @@ namespace MiningGame.Code.Entities
         {
             EntityMovement();
             Rotation = (float)((float)Math.Atan2(EntityPosition.Y - LastPosition.Y, EntityPosition.X - LastPosition.X) +
-                    ConversionManager.DegreeToRadians(90));
+                    90.DToR());
 
             LastPosition = EntityPosition;
 

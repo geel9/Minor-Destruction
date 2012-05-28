@@ -14,8 +14,11 @@ using System.Text.RegularExpressions;
 using System.Diagnostics;
 using MiningGameServer;
 using MiningGameServer.Packets;
+using MiningGameserver;
 using YogUILibrary;
 using YogUILibrary.Managers;
+using ConCommand = MiningGame.Code.Structs.ConCommand;
+using Convar = MiningGame.Code.Structs.Convar;
 
 namespace MiningGame.Code
 {
@@ -52,7 +55,7 @@ namespace MiningGame.Code
         public static Color BackColor = Color.SkyBlue;
         public static bool isActive = false;
 
-        public static Random r = new Random();
+        public static Random R = new Random();
 
         public bool InGame = false;
 
@@ -70,6 +73,7 @@ namespace MiningGame.Code
             graphics.PreferredBackBufferHeight = 500;
             graphics.PreferredBackBufferWidth = 800;
             isActive = IsActive;
+            ServerConsole.OnConsoleOutput = s => ConsoleManager.Log("Server: " + s, Color.LightBlue);
         }
 
         protected override void Initialize()
@@ -91,7 +95,7 @@ namespace MiningGame.Code
 
             ConsoleManager.addConCommand("disconnect", "Disconnect from the server", (string[] ls) => clientNetworkManager.Disconnect());
 
-            ConsoleManager.addConVar("player_name", "Your name in a server", "Player_" + Main.r.Next(0, 1000), l =>
+            ConsoleManager.addConVar("player_name", "Your name in a server", "Player_" + Main.R.Next(0, 1000), l =>
             {
                 if (clientNetworkManager.isConnected())
                 {

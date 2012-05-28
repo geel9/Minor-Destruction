@@ -68,9 +68,9 @@ namespace MiningGame.Code.Entities
             Item i = Item.GetItem(itemid);
             EntityPosition = new Vector2(x, y);
             SpriteTexture = AssetManager.GetTexture(i.GetAsset());
-            EntityVelocity.Y = -5 - Main.r.Next(0, 3);
-            EntityVelocity.X = Main.r.Next(1, 7);
-            EntityVelocity.X *= (Main.r.Next(0, 2) == 1) ? 1 : -1;
+            EntityVelocity.Y = -5 - Main.R.Next(0, 3);
+            EntityVelocity.X = Main.R.Next(1, 7);
+            EntityVelocity.X *= (Main.R.Next(0, 2) == 1) ? 1 : -1;
             _itemID = itemid;
         }
 

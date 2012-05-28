@@ -6,6 +6,7 @@ using MiningGame.Code.Managers;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using MiningGame.Code.Entities;
+using MiningGame.ExtensionMethods;
 using MiningGameServer;
 using MiningGameServer.Packets;
 using YogUILibrary.Managers;
@@ -91,7 +92,7 @@ namespace MiningGame.Code
 
             InputManager.BindMouse(() =>
                                        {
-                                           short angle = (short)ConversionManager.RadianToDegrees(PlayerAimAngle);
+                                           short angle = (short) ((float) PlayerAimAngle).RToD();
                                            if(angle != PlayerAimAngle)
                                                SendMovementFlags();
                                        }, MouseButton.Movement, true, true);

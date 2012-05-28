@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using MiningGameServer.Blocks;
+using MiningGameServer.ExtensionMethods;
 using MiningGameServer.Structs;
 using MiningGameServer;
 
@@ -145,7 +146,7 @@ namespace MiningGameserver.Entities
 
             EntityMovement();
             Rotation = (float)((float)Math.Atan2(EntityPosition.Y - LastPosition.Y, EntityPosition.X - LastPosition.X) +
-                                ConversionManager.DegreeToRadians(90));
+                                90f.DToR());
             LastPosition = EntityPosition;
         }
 

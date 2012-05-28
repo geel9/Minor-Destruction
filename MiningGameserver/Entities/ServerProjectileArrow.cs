@@ -115,6 +115,7 @@ namespace MiningGameserver.Entities
                 if (p.BoundBox.Intersects(newRectTest))
                 {
                     ShouldDestroy = true;
+                    p.EntityVelocity += EntityVelocity/5;
                     p.PlayerHealth--;
                     if (p.PlayerHealth <= 0)
                     {

@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using MiningGame.Code.Managers;
+using MiningGame.ExtensionMethods;
 using YogUILibrary.Managers;
 namespace MiningGame.Code.Entities
 {
@@ -41,7 +42,7 @@ namespace MiningGame.Code.Entities
             if (active && !Main.PauseManager.Paused)
             {
                 lifetime--;
-                double Radians = ConversionManager.DegreeToRadians(degrees);
+                double Radians = degrees.DToR();
                 base.Rotation = (float)Radians;
                 float X = speed * (float)Math.Sin(Radians);
                 float Y = speed * (float)Math.Cos(Radians);

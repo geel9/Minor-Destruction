@@ -5,6 +5,8 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MiningGame.Code.Managers;
+using MiningGameServer;
+using MiningGameServer.Packets;
 using YogUILibrary.UIComponents;
 namespace MiningGame.Code.Interfaces
 {
@@ -21,7 +23,10 @@ namespace MiningGame.Code.Interfaces
             {
                 if (!ChatEntryMode) return;
                 if (text.Length > 0)
-                    ConsoleManager.ConsoleInput("say \"" + text + "\"", true);
+                {
+                    Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_Chat, false, text);
+                    Main.clientNetworkManager.SendPacket(pack);
+                }
                 chatEntryField.SetText("");
                 ConsoleManager.ConsoleInput("hidechat", true);
             });
