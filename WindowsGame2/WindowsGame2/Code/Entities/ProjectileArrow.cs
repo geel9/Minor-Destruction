@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MiningGame.Code.Blocks;
 using MiningGame.Code.Managers;
+using MiningGame.ExtensionMethods;
 using MiningGameServer;
 using MiningGameServer.Structs;
 
@@ -102,12 +103,13 @@ namespace MiningGame.Code.Entities
         }
 
 
-        public ProjectileArrow(Vector2 Position, float angle, byte owner, int strength = 10)
+        public ProjectileArrow(Vector2 Position, short angle, byte owner, int strength = 10)
             : base()
         {
+            float angle2 = (float) angle.DToR();
             EntityPosition = Position;
-            float strengthX = (float)(strength * Math.Cos(angle));
-            float strengthY = (float)(strength * Math.Sin(angle));
+            float strengthX = (float)(strength * Math.Cos(angle2));
+            float strengthY = (float)(strength * Math.Sin(angle2));
 
             EntityVelocity = new Vector2(strengthX, strengthY);
             LastPosition = Position - EntityVelocity;

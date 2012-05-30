@@ -312,9 +312,9 @@
     <None Include="app.config" />
     <None Include="Code\Blocks\BlockCoal.csO" />
     <None Include="Code\Blocks\BlockGrass.csO" />
-    <None Include="Code\Blocks\BlockIron.csO" />
+    <Compile Include="Code\Blocks\BlockIron.cs" />
     <None Include="Code\Blocks\BlockLadder.csO" />
-    <None Include="Code\Blocks\BlockRock.csO" />
+    <Compile Include="Code\Blocks\BlockRock.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

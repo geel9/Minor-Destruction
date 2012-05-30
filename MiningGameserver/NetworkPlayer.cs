@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Lidgren.Network;
 using MiningGameServer.Blocks;
+using MiningGameServer.ExtensionMethods;
 using MiningGameServer.Packets;
 using MiningGameServer.Structs;
 using MiningGameserver.Entities;
@@ -180,18 +181,19 @@ namespace MiningGameServer
                         int nextslot = GameServer.GetFreeProjectileSlot();
                         if (nextslot != -1)
                         {
+                            short angle = (short) PlayerAimAngle.RToD();
 
                             var packet = new Packet2SCCreateProjectile((byte)nextslot, 1,
                                                                        (short)EntityPosition.X,
                                                                        (short)
                                                                        ((short)EntityPosition.Y - 10),
-                                                                       PlayerAimAngle, (byte)((_timeHeldAttack / 5) + 10),
+                                                                       angle, (byte)((_timeHeldAttack / 5) + 10),
                                                                        PlayerID);
                             GameServer.ServerNetworkManager.SendPacket(packet);
 
                             GameServer.GameProjectiles[nextslot] =
                                 new ServerProjectileArrow(new Vector2(EntityPosition.X,
-                                                                EntityPosition.Y - 10), PlayerAimAngle,
+                                                                EntityPosition.Y - 10), angle,
                                                     PlayerID, (_timeHeldAttack / 5) + 10) { ProjectileID = (byte)nextslot };
 
                         }

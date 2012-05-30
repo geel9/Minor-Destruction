@@ -8,6 +8,7 @@ using MiningGame.Code.Interfaces;
 using MiningGame.Code.Entities;
 using Microsoft.Xna.Framework;
 using Lidgren.Network;
+using MiningGame.ExtensionMethods;
 using MiningGameServer.Packets;
 
 namespace MiningGame.Code.Managers
@@ -93,7 +94,7 @@ namespace MiningGame.Code.Managers
                 byte ID = p.readByte();
                 short X = p.readShort();
                 short Y = p.readShort();
-                float angle = p.readFloat();
+                short angle = p.readShort();
                 byte strength = p.readByte();
                 byte owner = p.readByte();
                 GameWorld.GameProjectiles.Add(new ProjectileArrow(new Vector2(X, Y), angle, owner, strength) { ProjectileID = ID });

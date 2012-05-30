@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using MiningGameServer;
 using MiningGameServer.Blocks;
+using MiningGameServer.ExtensionMethods;
 using MiningGameServer.Structs;
 
 namespace MiningGameserver.Entities
@@ -153,12 +154,13 @@ namespace MiningGameserver.Entities
         }
 
 
-        public ServerProjectileArrow(Vector2 Position, float angle, byte owner, int strength = 10)
+        public ServerProjectileArrow(Vector2 Position, short angle, byte owner, int strength = 10)
             : base()
         {
+            float angle2 = angle.DToR();
             EntityPosition = Position;
-            float strengthX = (float)(strength * Math.Cos(angle));
-            float strengthY = (float)(strength * Math.Sin(angle));
+            float strengthX = (float)(strength * Math.Cos(angle2));
+            float strengthY = (float)(strength * Math.Sin(angle2));
 
             EntityVelocity = new Vector2(strengthX, strengthY);
             LastPosition = Position - EntityVelocity;
