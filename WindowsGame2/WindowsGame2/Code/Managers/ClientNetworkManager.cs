@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using MiningGame.Code.Structs;
 using System.Net;
 using MiningGame.Code.Interfaces;
@@ -144,6 +145,13 @@ namespace MiningGame.Code.Managers
 
         public void Connect(string ip, int port)
         {
+            Regex regex = new Regex("\\d+?\\.\\d+?\\.\\d+?\\.\\d+?");
+            if(!regex.IsMatch(ip))
+            {
+                IPHostEntry entry = Dns.GetHostEntry(ip);
+                if (entry.AddressList.Length > 0)
+                    ip = entry.AddressList[0].ToString();
+            }
             netClient = new NetClient(new NetPeerConfiguration("MinorDestruction"));
             netClient.Start();
             ConsoleManager.Log("Connecting to " + ip + ":" + port);
