@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Blocks\Block.cs" />
     <Compile Include="Blocks\BlockDirt.cs" />
+    <Compile Include="Blocks\BlockDoor.cs" />
     <Compile Include="ConversionManager.cs" />
     <Compile Include="Entities\ServerEntity.cs" />
     <Compile Include="Entities\ServerEntityMoveable.cs" />

@@ -1,19 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using GeeUI.Managers;
+using GeeUI.Views;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 using MiningGame.Code.Managers;
-using MiningGame.Code.CInterfaces;
-using MiningGame.Code.Structs;
-using YogUILibrary.Managers;
-using YogUILibrary.UIComponents;
 
 namespace MiningGame.Code.Entities
 {
@@ -32,7 +21,7 @@ namespace MiningGame.Code.Entities
         private const int radius = 5;
         public bool selected;
         private bool dragging;
-        public TextField tf;
+        public TextFieldView tf;
         private bool mouseInsideCircle
         {
             get
@@ -50,9 +39,14 @@ namespace MiningGame.Code.Entities
             this.scale = scale;
             this.position = position / scale;
             Color transparent = new Color(0, 0, 0, 0);
-            tf = new TextField(position - new Vector2(50, radius + 12), 100, 15, Color.Black, AssetManager.GetFont("TinyText"), null);
-            tf.SetText(name);
-            tf.placeHolderText = "Control point name";
+            tf = new TextFieldView(GeeUI.GeeUI.RootView, position - new Vector2(50, radius + 12),
+                                   AssetManager.GetFont("TinyText"))
+                     {
+                         Width = 100,
+                         Height = 15
+                     };
+            tf.Text = name;
+            //tf.placeHolderText = "Control point name";
             InputManager.BindMouse(() => { if (mouseInsideCircle) { selected = true; dragging = true; } else { selected = false; } }, MouseButton.Left);
             InputManager.BindMouse(() => { if (dragging) {
                // this.position = (InputManager.GetMousePosV() - Main.center) / scale;
@@ -63,7 +57,7 @@ namespace MiningGame.Code.Entities
 
         public void Update(GameTime theTime)
         {
-            tf.Update(theTime);
+            //tf.Update(theTime);
         }
 
         public void Draw(SpriteBatch sb)
@@ -72,8 +66,8 @@ namespace MiningGame.Code.Entities
             curColor.R++;
             curColor.G++;
             tf.Position = absPos - new Vector2(50, radius + 15);
-            tf.Draw(sb);
-            DrawManager.Draw_Circle(absPos, radius, curColor, Color.Black, sb);
+            //tf.Draw(sb);
+            DrawManager.DrawCircle(absPos, radius, curColor, Color.Black, sb);
         }
     }
 }

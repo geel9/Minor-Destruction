@@ -18,6 +18,4 @@ namespace MiningGame.Code.Blocks
             return AssetManager.GetTexture("rock");
         }
     }
-
-
 }

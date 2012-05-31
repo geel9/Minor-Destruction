@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using GeeUI.Managers;
 using MiningGame.Code.CInterfaces;
 using MiningGame.Code.Items;
 using MiningGame.Code.Managers;
@@ -9,7 +10,7 @@ using MiningGame.Code.Entities;
 using MiningGame.ExtensionMethods;
 using MiningGameServer;
 using MiningGameServer.Packets;
-using YogUILibrary.Managers;
+
 namespace MiningGame.Code
 {
     public class PlayerController : UpdatableAndDrawable
@@ -146,7 +147,7 @@ namespace MiningGame.Code
 
             InputManager.BindMouse(() =>
             {
-                if (InterfaceManager.blocking) return;
+                if (InterfaceManager.blocking || InputManager.GetMousePos().Y <= 50) return;
                 attackPressed = true;
                 SendMovementFlags();
             }, MouseButton.Left);
@@ -159,11 +160,11 @@ namespace MiningGame.Code
 
             InputManager.BindMouse(() =>
             {
-                if (InterfaceManager.blocking) return;
+                if (InterfaceManager.blocking || InputManager.GetMousePos().Y <= 50) return;
                 Item i = GetPlayerItemInHand();
                 if (i == null) return;
                 Vector2 aim = PlayerEntity.GetBlockAimingAt();
-                Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_Use_Item, (int)aim.X, (int)aim.Y);
+                Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_Use_Item, (short)aim.X, (short)aim.Y);
                 Main.clientNetworkManager.SendPacket(pack);
             }, MouseButton.Right);
 
@@ -174,7 +175,7 @@ namespace MiningGame.Code
                 byte id = GameWorld.GetBlockIDAt(aim.X, aim.Y);
                 if (id != 0)
                 {
-                    Packet1CSGameEvent p = new Packet1CSGameEvent(GameServer.GameEvents.Player_Use_Block, (int)aim.X, (int)aim.Y);
+                    Packet1CSGameEvent p = new Packet1CSGameEvent(GameServer.GameEvents.Player_Use_Block, (short)aim.X, (short)aim.Y);
                     Main.clientNetworkManager.SendPacket(p);
                 }
             }, Keys.E, false);

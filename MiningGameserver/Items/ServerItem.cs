@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using MiningGameServer;
 using MiningGameServer.Items;
 
 namespace MiningGameserver.Items
@@ -81,7 +82,14 @@ namespace MiningGameserver.Items
             return _itemID;
         }
 
-        public abstract void OnItemUsed(int x, int y);
+        public virtual void OnItemUsed(int x, int y)
+        {
+            byte block = GameServer.GetBlockIDAt(x, y);
+            if(block == 0 && _blockID != 0)
+            {
+                GameServer.SetBlock(x, y, _blockID);
+            }
+        }
 
         public byte GetBlockID()
         {

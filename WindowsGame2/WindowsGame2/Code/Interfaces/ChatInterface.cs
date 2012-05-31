@@ -2,40 +2,32 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GeeUI.Views;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MiningGame.Code.Managers;
 using MiningGameServer;
 using MiningGameServer.Packets;
-using YogUILibrary.UIComponents;
 namespace MiningGame.Code.Interfaces
 {
     public class ChatInterface : Interface
     {
         public static List<ChatEntry> chatEntries = new List<ChatEntry>();
-        public TextField chatEntryField = null;
+        public TextFieldView chatEntryField = null;
         public static bool ChatEntryMode = false;
+
+        public View MainView;
 
         public ChatInterface()
         {
             base.initialize(10000);
-            chatEntryField = new TextField(new Vector2(10, Main.graphics.PreferredBackBufferHeight - 40), 290, 20, Color.Black, AssetManager.GetFont("Console"), (string text) =>
-            {
-                if (!ChatEntryMode) return;
-                if (text.Length > 0)
-                {
-                    Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_Chat, false, text);
-                    Main.clientNetworkManager.SendPacket(pack);
-                }
-                chatEntryField.SetText("");
-                ConsoleManager.ConsoleInput("hidechat", true);
-            });
-            
+            MainView = new View(GeeUI.GeeUI.RootView) { Width = 290, Height = 200, X = 10, Y = 500 - 240 };
+            chatEntryField = new TextFieldView(MainView, new Vector2(0, 180), AssetManager.GetFont("Console")) { Width = 290, Height = 20 };
+
         }
 
         public override void Draw(SpriteBatch sb)
         {
-            if (ChatEntryMode) chatEntryField.Draw(sb);
             Vector2 startDraw = new Vector2(10, Main.graphics.PreferredBackBufferHeight - 40);
             foreach (ChatEntry ce in chatEntries.Where(cel => cel.framesUntilDeath-- > 0 || ChatEntryMode).OrderByDescending(cel => cel.framesUntilDeath))
             {
@@ -51,12 +43,7 @@ namespace MiningGame.Code.Interfaces
 
         public override void Update(GameTime time)
         {
-            chatEntryField.SetSelected(ChatEntryMode);
-            if (ChatEntryMode)
-            {
-                chatEntryField.Update(time);
-                chatEntryField.SetSelected(true);
-            }
+            MainView.Active = ChatEntryMode;
             blocking = ChatEntryMode;
             base.Update(time);
         }

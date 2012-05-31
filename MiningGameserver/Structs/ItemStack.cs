@@ -10,10 +10,10 @@ namespace MiningGameserver.Structs
         public int NumberItems;
         public byte ItemID;
 
-        public ItemStack(int n = 0, byte b = 0)
+        public ItemStack(int number = 0, byte id = 0)
         {
-            NumberItems = n;
-            ItemID = b;
+            NumberItems = number;
+            ItemID = id;
         }
     }
 }

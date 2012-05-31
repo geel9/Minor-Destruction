@@ -10,10 +10,5 @@ namespace MiningGameServer.Items
         public ServerItemCoal() : base(){
             SetName("Coal").SetDescription("Useful to those who like fire.").SetID(3).SetValue(7).SetBlockID(4);
         }
-
-        public override void OnItemUsed(int x, int y)
-        {
-            //throw new NotImplementedException();
-        }
     }
 }

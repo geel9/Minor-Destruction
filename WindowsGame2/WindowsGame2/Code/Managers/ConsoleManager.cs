@@ -5,6 +5,7 @@ using System.Text;
 using MiningGame.Code.Structs;
 using MiningGame.Code.Entities;
 using Microsoft.Xna.Framework;
+using Console = MiningGame.Code.Entities.Console;
 
 namespace MiningGame.Code.Managers
 {
@@ -251,12 +252,13 @@ namespace MiningGame.Code.Managers
 
         public static void Log(string log)
         {
-            Log(log, new Color(200, 200, 200));
+            Console.Write(log);
         }
 
         public static void Log(string log, Color color)
         {
-            int numAllowed = ((Main.graphics.PreferredBackBufferWidth - 5) / 8);
+            Log(log);
+            /*int numAllowed = ((Main.graphics.PreferredBackBufferWidth - 5) / 8);
             int size = log.Length;
             if (size > numAllowed)
             {
@@ -273,7 +275,7 @@ namespace MiningGame.Code.Managers
                     offset++;
             }
             if (Main.console != null)
-                Main.console.UpdateConsole();
+                Main.console.UpdateConsole();*/
 
         }
 

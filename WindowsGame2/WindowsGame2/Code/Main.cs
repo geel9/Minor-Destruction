@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GeeUI.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.IO;
@@ -15,8 +16,7 @@ using System.Diagnostics;
 using MiningGameServer;
 using MiningGameServer.Packets;
 using MiningGameserver;
-using YogUILibrary;
-using YogUILibrary.Managers;
+using GeeUI.Views;
 using ConCommand = MiningGame.Code.Structs.ConCommand;
 using Convar = MiningGame.Code.Structs.Convar;
 
@@ -311,11 +311,8 @@ namespace MiningGame.Code
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            YogUI.YogUI_LoadContent(this);
+            GeeUI.GeeUI.Initialize(this);
             LoadTextures();
-
-            YogUI.btn_normal.LoadFromTexture(AssetManager.GetTexture("btn_default_normal_holo.9"));
-            YogUI.btn_hover.LoadFromTexture(AssetManager.GetTexture("btn_default_focused_holo.9"));
 
             AssetManager.LoadAsset<SpriteFont>("Console", "Console", Content);
             AssetManager.LoadAsset<SpriteFont>("default", "default", Content);
@@ -383,7 +380,7 @@ namespace MiningGame.Code
             byte MD = GameWorld.GetBlockMDAt(tileX, tileY);
             byte bid = GameWorld.GetBlockIDAt(tileX, tileY);
             //Window.Title = "Tile X: " + tileX + " y: " + tileY + " ID: " + bid + " MD: " + MD + " update scheduled: " + GameServer.updateScheduled(tileX, tileY);
-            YogUI.YogUI_Update(gameTime);
+            GeeUI.GeeUI.Update(gameTime);
             clientNetworkManager.Update(gameTime);
 
             if (GameServer != null)
@@ -424,10 +421,8 @@ namespace MiningGame.Code
                 if (drawables[i].inCamera() && drawables[i] != null)
                     drawables[i].Draw(spriteBatch);
             }
-            foreach (Interface i in interfaces.OrderBy(x => x.depth))
-            {
-                i.Draw(spriteBatch);
-            }
+            
+            GeeUI.GeeUI.Draw(spriteBatch);
 
             spriteBatch.End();
 

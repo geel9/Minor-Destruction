@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GeeUI.Managers;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using YogUILibrary.UIComponents;
-using YogUILibrary.Managers;
+
 namespace MiningGame.Code.Managers
 {
     public class PauseManager : Manager
@@ -9,17 +9,17 @@ namespace MiningGame.Code.Managers
 
         public bool Paused;
 
-        public static TextDrawer PauseText;
+        //public static TextDrawer PauseText;
 
         public PauseManager()
         {
-            PauseText = new TextDrawer(AssetManager.GetFont("Console"), "- PAUSED -", Vector2.Zero, Color.Black, TextAlign.Center);
-            InputManager.BindKey(
-                () =>
-                {
+            //PauseText = new TextDrawer(AssetManager.GetFont("Console"), "- PAUSED -", Vector2.Zero, Color.Black, TextAlign.Center);
+            //InputManager.BindKey(
+             //   () =>
+              //  {
                     //TogglePaused();
-                }, Microsoft.Xna.Framework.Input.Keys.P);
-            AddToList();
+              //  }, Microsoft.Xna.Framework.Input.Keys.P);
+           // AddToList();
         }
 
         public void TogglePaused()
@@ -29,14 +29,14 @@ namespace MiningGame.Code.Managers
 
         public override void Update(GameTime time)
         {
-            PauseText.text = "";
+            /*PauseText.text = "";
             if (Paused)
                 PauseText.text = "- PAUSED -";
             SpriteFont s = AssetManager.GetFont("Console");
             Vector2 center = new Vector2(Main.graphics.PreferredBackBufferWidth / 2, Main.graphics.PreferredBackBufferHeight / 2);
             PauseText.Position = center;
             PauseText.font = s;
-            base.Update(time);
+            base.Update(time);*/
         }
 
 

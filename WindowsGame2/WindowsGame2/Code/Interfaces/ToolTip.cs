@@ -6,12 +6,11 @@ using MiningGame.Code.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MiningGame.ExtensionMethods;
-using YogUILibrary.UIComponents;
-using YogUILibrary.Managers;
 namespace MiningGame.Code.Interfaces
 {
     public class ToolTip : Interface
     {
+        /*
         private const int widthAdd = 10;
         private const int heightAdd = 10;
         private string text = "";
@@ -63,6 +62,6 @@ namespace MiningGame.Code.Interfaces
         public string GetText()
         {
             return text;
-        }
+        }*/
     }
 }

@@ -35,10 +35,11 @@ namespace MiningGameServer
         public GameServer(int port)
         {
             ServerNetworkManager = new ServerNetworkManager();
-            if(ServerNetworkManager.Host(port))
+            if (ServerNetworkManager.Host(port))
             {
                 GenerateWorld();
                 ServerItem.MakeItems();
+                Block.GenerateBlocks();
                 ServerCommands.Initialize();
                 ServerConsole.Log("Hosted successfully on port " + port);
             }
@@ -184,9 +185,11 @@ namespace MiningGameServer
         {
             if (x < WorldSizeX && y < WorldSizeY && blockID >= 0)
             {
-                if (blockID != GetBlockIDAt(x, y) && GetBlockIDAt(x, y) != 0) Block.GetBlock(GetBlockIDAt(x, y)).OnBlockRemoved(x, y);
-                WorldBlocksMetaData[x, y] = metaData;
+                Block block = Block.GetBlock(GetBlockIDAt(x, y));
                 WorldBlocks[x, y] = blockID;
+                if (blockID != block.GetBlockID())
+                    block.OnBlockRemoved(x, y);
+                WorldBlocksMetaData[x, y] = metaData;
                 if (blockID != 0) Block.GetBlock(blockID).OnBlockPlaced(x, y, notify);
 
                 //Packet1SCGameEvent pack = new Packet1SCGameEvent((byte)GameEvents.Block_Set, x, y, blockID, metaData);
@@ -478,6 +481,21 @@ namespace MiningGameServer
                     bool isPressing = p.readBool();
                     break;
 
+                case GameEvents.Player_Use_Item:
+                    short x = p.readShort();
+                    short y = p.readShort();
+                    ServerItem itemInHand = player.GetPlayerItemInHand();
+                    if (itemInHand == null) break;
+                    itemInHand.OnItemUsed(x, y);
+                    break;
+
+                case GameEvents.Player_Use_Block:
+                    x = p.readShort();
+                    y = p.readShort();
+                    Block b = Block.GetBlock(GetBlockIDAt(x, y));
+                    b.OnBlockUsed(x, y);
+                    break;
+
                 case GameEvents.Player_Inventory_Selection_Change:
                     player.PlayerInventorySelected = p.readByte();
                     break;
@@ -492,9 +510,9 @@ namespace MiningGameServer
                     ServerNetworkManager.SendPacket(pack);
                     break;
 
-                    case GameEvents.Player_Change_Name:
+                case GameEvents.Player_Change_Name:
                     string newName = p.readString();
-                    if(newName.Length > 0)
+                    if (newName.Length > 0)
                     {
                         player.PlayerName = newName;
                         pack = new Packet1SCGameEvent(GameEvents.Player_Change_Name, (byte)player.PlayerID, newName);

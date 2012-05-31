@@ -4,36 +4,35 @@ using MiningGame.Code.Managers;
 using MiningGame.Code.Structs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using YogUILibrary.UIComponents;
-using YogUILibrary.Managers;
+using GeeUI.Views;
 using MiningGame.Code.Entities;
 namespace MiningGame.Code.Interfaces
 {
     class AnimationEditorInterface : Interface
     {
-        public List<AnimationControlPointUI> controlPoints = new List<AnimationControlPointUI>();
+        /*public List<AnimationControlPointUI> controlPoints = new List<AnimationControlPointUI>();
 
         public Animateable curAnimateable;
 
-        public Button newAnimationButton;
-        public Button openAnimationButton;
-        public Button saveAnimationButton;
-        public Button backButton;
-        public Button startLoopingButton;
-        public Button stopLoopingButton;
+        public ButtonView newAnimationButton;
+        public ButtonView openAnimationButton;
+        public ButtonView saveAnimationButton;
+        public ButtonView backButton;
+        public ButtonView startLoopingButton;
+        public ButtonView stopLoopingButton;
 
         public ListBox framesListBox;
-        public Button addFrameButton;
-        public Button delFrameButton;
+        public ButtonView addFrameButton;
+        public ButtonView delFrameButton;
 
-        public TextField textFieldframeName;
-        public TextField textFieldFrameAsset;
-        public TextField textFieldStartLooping;
-        public TextField textFieldEndLooping;
-        public TextField textFieldFrameDelay;
+        public TextFieldView textFieldframeName;
+        public TextFieldView textFieldFrameAsset;
+        public TextFieldView textFieldStartLooping;
+        public TextFieldView textFieldEndLooping;
+        public TextFieldView textFieldFrameDelay;
 
-        public Button moveUpButton;
-        public Button moveDownButton;
+        public ButtonView moveUpButton;
+        public ButtonView moveDownButton;
 
         private float imgScale = 1;
 
@@ -417,6 +416,6 @@ namespace MiningGame.Code.Interfaces
             string save = JSONManager.Serialize(curAnimateable.CurAnimation);
             FileWriterManager.WriteFile(savePath, save.TrimEnd('\n'));
             ConsoleManager.ConsoleInput("reset_textures", true);
-        }
+        }*/
     }
 }

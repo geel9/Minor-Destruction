@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using GeeUI.Managers;
 using MiningGame.Code.CInterfaces;
 using MiningGame.Code.Items;
 using MiningGame.Code.Managers;
@@ -9,13 +9,9 @@ using Microsoft.Xna.Framework;
 using MiningGame.Code.Blocks;
 using Microsoft.Xna.Framework.Graphics;
 using MiningGame.Code.Entities;
-using System.IO;
 using MiningGame.Code.Interfaces;
-using MiningGame.Code.Structs;
-using Microsoft.Xna.Framework.Input;
 using MiningGameServer;
 using MiningGameServer.Packets;
-using YogUILibrary.Managers;
 
 namespace MiningGame.Code
 {
@@ -191,7 +187,7 @@ namespace MiningGame.Code
                     if (render > 0)
                     {
                         if (y < 10)
-                            DrawManager.Draw_Box(drawPos, BlockWidth, BlockHeight, backColor, sb);
+                            DrawManager.DrawBox(drawPos, BlockWidth, BlockHeight, backColor, sb);
                         else
                         {
                             sb.Draw(backTexture, drawPos - new Vector2(BlockWidth / 2, BlockHeight / 2), Color.White);
@@ -219,7 +215,7 @@ namespace MiningGame.Code
                     else
                     {
                         //if (blockID != 0)
-                        DrawManager.Draw_Box(drawPos, BlockWidth, BlockHeight, Color.Black, sb, 0f);
+                        DrawManager.DrawBox(drawPos, BlockWidth, BlockHeight, Color.Black, sb, 0f);
                     }
                 }
             }

@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using MiningGame.Code.Managers;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MiningGame.Code.Blocks;
-using MiningGame.Code.Structs;
 using MiningGameServer.Structs;
-using YogUILibrary.Managers;
 
 namespace MiningGame.Code.Entities
 {

@@ -11,9 +11,5 @@ namespace MiningGameServer.Items
         {
             SetName("Rock").SetDescription("UGH BLUGH.").SetID(2).SetValue(2).SetBlockID(3);
         }
-        public override void OnItemUsed(int x, int y)
-        {
-            //throw new NotImplementedException();
-        }
     }
 }

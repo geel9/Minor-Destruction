@@ -13,12 +13,12 @@
             byte blockDownID = GameServer.GetBlockIDAt(x, y + 1);
             if (blockID != 0) return;
 
-            if (blockUpID != 0 && blockDownID == 0)
+            if (blockUpID != 0 && blockUpID != 11 && blockDownID == 0)
             {
                 GameServer.SetBlock(x, y, 11);
                 GameServer.SetBlock(x, y + 1, 11);
             }
-            if (blockDownID != 0 && blockUpID == 0)
+            if (blockDownID != 0 && blockDownID != 11 && blockUpID == 0)
             {
                 GameServer.SetBlock(x, y, 11);
                 GameServer.SetBlock(x, y - 1, 11);

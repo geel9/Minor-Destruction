@@ -1,12 +1,12 @@
 ﻿using System;
+using GeeUI.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MiningGame.Code.Managers;
 using MiningGame.Code.CInterfaces;
-using MiningGame.Code.Structs;
 using MiningGame.ExtensionMethods;
 using MiningGameServer.Structs;
-using YogUILibrary.Managers;
+
 namespace MiningGame.Code.Entities
 {
     public class Entity : Animateable, UpdatableAndDrawable
@@ -112,7 +112,7 @@ namespace MiningGame.Code.Entities
             white.A = Alpha;
             if (ConsoleManager.getVariableBool("draw_hitboxes"))
             {
-                DrawManager.Draw_Outline(EntityPosition - (CameraManager.cameraPosition), BoundBox.Width, BoundBox.Height, Color.Yellow, sb);
+                DrawManager.DrawOutline(EntityPosition - (CameraManager.cameraPosition), BoundBox.Width, BoundBox.Height, Color.Yellow, sb);
             }
            // sb.DrawString(AssetManager.GetFont("Console"), entityID.ToString(), entityPosition - new Vector2(0, 10) - CameraManager.cameraPosition, Color.White);
             if (SpriteTexture != null)

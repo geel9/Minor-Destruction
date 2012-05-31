@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GeeUI.Managers;
 using Microsoft.Xna.Framework.Input;
-using YogUILibrary.Managers;
 
 namespace MiningGame.Code.Managers
 {

@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using Microsoft.CSharp;
 using System.CodeDom.Compiler;
 using System.Reflection;
 using MiningGame.Code.Blocks;
-using Microsoft.Xna.Framework.Graphics;
-using YogUILibrary.Managers;
-using YogUILibrary.Structs;
-using YogUILibrary.UIComponents;
-using YogUILibrary;
+
 namespace MiningGame.Code.Managers
 {
     public static class CodeExecutorManager

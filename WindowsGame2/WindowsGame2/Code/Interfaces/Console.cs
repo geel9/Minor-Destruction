@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GeeUI.Managers;
+using GeeUI.Views;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -12,8 +14,6 @@ using Microsoft.Xna.Framework.Media;
 using MiningGame.Code.Structs;
 using MiningGame.Code.Managers;
 using MiningGame.Code.Interfaces;
-using YogUILibrary.UIComponents;
-using YogUILibrary.Managers;
 namespace MiningGame.Code.Entities
 {
     public class Console : Interface
@@ -28,24 +28,28 @@ namespace MiningGame.Code.Entities
             get;
             set;
         }
-        public static int size = 15;
+        //public static int size = 15;
         public int currentSelection = -1;
-        List<TextDrawer> tdO = new List<TextDrawer>();
-        List<TextDrawer> tdP = new List<TextDrawer>();
-        private TextField tI;
+        //List<TextView> tdO = new List<TextView>();
+        //List<TextView> tdP = new List<TextView>();
+        private TextFieldView tI;
+        private static TextFieldView output;
         public List<string> previousCommands = new List<string>();
         public List<string> possibleCommands = new List<string>();
         SpriteFont f;
 
+        public View MainView;
+
         public Console()
         {
+            MainView = new View(GeeUI.GeeUI.RootView);
             f = AssetManager.GetFont("Console");
             Color black = Color.Black;
             black.A = 200;
             active = false;
-            tI = new TextField(new Vector2(0, ((ConsoleManager.lines) * size) + 3), Main.graphics.PreferredBackBufferWidth - 1, 20, black, AssetManager.GetFont("Console"), (string s) => { Enter(); }, (string text) => { possibleCommands = getPossibleCommands(text); });
-            tI.SetActive(shown);
-            tI.SetSelected(shown);
+            output = new TextFieldView(MainView, new Vector2(0, 0), AssetManager.GetFont("Console"));
+            tI = new TextFieldView(MainView, new Vector2(0, output.Height + 1), AssetManager.GetFont("Console"));
+
             UpdateConsole();
 
             InputManager.BindKey(() =>
@@ -56,7 +60,7 @@ namespace MiningGame.Code.Entities
                 if (currentSelection > 0)
                 {
                     currentSelection--;
-                    tI.SetText(possibleCommands[currentSelection]);
+                    tI.Text = possibleCommands[currentSelection];
                 }
             }, Keys.Up);
             InputManager.BindKey(() =>
@@ -67,7 +71,7 @@ namespace MiningGame.Code.Entities
                 if (currentSelection < possibleCommands.Count - 1)
                 {
                     currentSelection++;
-                    tI.SetText(possibleCommands[currentSelection]);
+                    tI.Text = possibleCommands[currentSelection];
                 }
             }, Keys.Down);
             InputManager.BindMouse(() => { if (shown) { ConsoleManager.offset -= ConsoleManager.offset > 0 ? 1 : 0; UpdateConsole(); } }, MouseButton.Scrollup);
@@ -91,16 +95,20 @@ namespace MiningGame.Code.Entities
 
         private void Enter()
         {
-            if (shown)
-            {
-                string inp = tI.GetText();
-                tI.SetText("");
-                input = "";
-                possibleCommands = getPossibleCommands(input);
-                ConsoleManager.ConsoleInput(inp);
-                previousCommands.Add(inp);
-                TrimCommands();
-            }
+            if (!shown) return;
+            string inp = tI.Text;
+            tI.Text = "";
+            input = "";
+            possibleCommands = GetPossibleCommands(input);
+            ConsoleManager.ConsoleInput(inp);
+            previousCommands.Add(inp);
+            TrimCommands();
+        }
+
+        public static void Write(string text)
+        {
+            if (output == null) return;
+            output.AppendText(text);
         }
 
         private void TrimCommands()
@@ -118,11 +126,10 @@ namespace MiningGame.Code.Entities
         {
             shown = !shown;
             active = shown;
-            tI.SetActive(shown);
-            tI.SetSelected(shown);
+            MainView.Active = shown;
+            tI.Selected = shown;
             input = "";
-            //tI.SetText("");
-            possibleCommands = getPossibleCommands(input);
+            possibleCommands = GetPossibleCommands(input);
             while (true)
             {
                 int offset = ConsoleManager.offset;
@@ -140,22 +147,15 @@ namespace MiningGame.Code.Entities
 
         public void UpdateConsole()
         {
-            tdO.Clear();
-            int i = 0;
-            foreach (LogText t in ConsoleManager.GetLog())
-            {
-                tdO.Add(new TextDrawer(f, t.text, new Vector2(0, i * 15), t.color, TextAlign.Left));
-                i++;
-            }
         }
 
         public override void Update(GameTime time)
         {
-            input = tI.GetText();
+            input = tI.Text;
             tI.Update(time);
-            //tI.position = new Vector2(0, ((ConsoleManager.lines) * size) + 3);
-            tdP.Clear();
+            //tdP.Clear();
             int i = 0;
+            /*
             foreach (string s in possibleCommands)
             {
                 tdP.Add(new TextDrawer(AssetManager.GetFont("Console"), s, new Vector2(1, ((ConsoleManager.lines + i) * size) + 23), Color.DarkRed, TextAlign.Left));
@@ -164,12 +164,12 @@ namespace MiningGame.Code.Entities
             if (currentSelection < tdP.Count && currentSelection >= 0)
             {
                 tdP[currentSelection].color = Color.White;
-            }
+            }*/
             TrimCommands();
             base.Update(time);
         }
 
-        public List<string> getPossibleCommands(string input)
+        public List<string> GetPossibleCommands(string input)
         {
             List<string> ret = new List<string>();
             currentSelection = -1;
@@ -196,6 +196,8 @@ namespace MiningGame.Code.Entities
 
         public override void Draw(SpriteBatch sb)
         {
+            return;
+            /*
             try
             {
                 if (shown)
@@ -233,27 +235,9 @@ namespace MiningGame.Code.Entities
             catch
             {
 
-            }
+            }*/
             //base.Draw();
         }
-
-        public Vector2 GetBottomRight()
-        {
-            Vector2 ret = Vector2.Zero;
-            float width = 0;
-            float height = possibleCommands.Count * 15;
-            ret.Y = height;
-            SpriteFont f = AssetManager.GetFont("Console");
-            foreach (string s in possibleCommands)
-            {
-                float w = f.MeasureString(s).X;
-                if (w > width)
-                    width = w;
-            }
-            ret.X = width;
-            return ret;
-        }
-
 
     }
 }

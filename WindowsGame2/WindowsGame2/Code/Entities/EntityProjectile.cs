@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework;
 using MiningGame.Code.Blocks;
 using MiningGame.ExtensionMethods;
 using MiningGameServer.Structs;
-using YogUILibrary.Managers;
 
 namespace MiningGame.Code.Entities
 {
