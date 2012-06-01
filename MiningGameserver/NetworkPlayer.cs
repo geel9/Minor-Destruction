@@ -76,6 +76,7 @@ namespace MiningGameServer
             this.PlayerID = playerID;
             this.PlayerPosition = playerPos;
             this.PlayerName = name;
+            EntityVelocity.X = 3;
 
             PlayerBlockIDCache = new byte[GameServer.WorldSizeX, GameServer.WorldSizeY];
             PlayerBlockMDCache = new byte[GameServer.WorldSizeX, GameServer.WorldSizeY];
@@ -313,12 +314,10 @@ namespace MiningGameServer
 
             if (blockID2 == 6)
             {
-                if (EntityVelocity.Y > 0) EntityVelocity.Y--;
-                if (EntityVelocity.Y < 0) EntityVelocity.Y++;
+                EntityVelocity = EntityVelocity.ApproachZeroY();
             }
 
-            if (EntityVelocity.X < 0) EntityVelocity.X += 1;
-            if (EntityVelocity.X > 0) EntityVelocity.X -= 1;
+            EntityVelocity = EntityVelocity.ApproachZeroX();
 
             if (EntityVelocity.Y != 1) Falling = true;
         }

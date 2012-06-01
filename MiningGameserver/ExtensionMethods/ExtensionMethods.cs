@@ -29,16 +29,17 @@ namespace MiningGameServer.ExtensionMethods
         #endregion
 
         #region Vectors/Points
-        public static void ApproachZeroX(this Vector2 vec)
+        public static Vector2 ApproachZeroX(this Vector2 vec)
         {
             if (vec.X < 1 && vec.X > -1)
                 vec.X = 0;
-            else if (vec.X < 0)
+            if (vec.X < 0)
                 vec.X++;
-            else if (vec.X > 0)
+            if (vec.X > 0)
                 vec.X--;
+            return vec;
         }
-        public static void ApproachZeroY(this Vector2 vec)
+        public static Vector2 ApproachZeroY(this Vector2 vec)
         {
             if (vec.Y < 1 && vec.Y > -1)
                 vec.Y = 0;
@@ -46,12 +47,14 @@ namespace MiningGameServer.ExtensionMethods
                 vec.Y++;
             else if (vec.Y > 0)
                 vec.Y--;
+            return vec;
         }
 
-        public static void ApproachZero(this Vector2 vec)
+        public static Vector2 ApproachZero(this Vector2 vec)
         {
-            vec.ApproachZeroX();
-            vec.ApproachZeroY();
+            vec = vec.ApproachZeroX();
+            vec = vec.ApproachZeroY();
+            return vec;
         }
 
         public static Point ToPoint(this Vector2 vec)

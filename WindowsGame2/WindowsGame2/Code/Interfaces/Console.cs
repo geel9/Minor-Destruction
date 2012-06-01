@@ -43,12 +43,22 @@ namespace MiningGame.Code.Entities
         public Console()
         {
             MainView = new View(GeeUI.GeeUI.RootView);
+            MainView.Width = 800;
+            MainView.Height = 100;
+            MainView.Active = false;
             f = AssetManager.GetFont("Console");
             Color black = Color.Black;
             black.A = 200;
             active = false;
-            output = new TextFieldView(MainView, new Vector2(0, 0), AssetManager.GetFont("Console"));
-            tI = new TextFieldView(MainView, new Vector2(0, output.Height + 1), AssetManager.GetFont("Console"));
+            output = new TextFieldView(MainView, new Vector2(0, 0), AssetManager.GetFont("Console"))
+                         {Width = 800, Height = 80, Editable = false};
+            tI = new TextFieldView(MainView, new Vector2(0, output.Height + 1), AssetManager.GetFont("Console"))
+                     {Width = 800, Height = 20, MultiLine = false};
+
+            tI.OnEnterPressed += new View.MouseClickEventHandler((object sender, EventArgs e) =>
+                                                                     {
+                                                                         Enter();
+                                                                     });
 
             UpdateConsole();
 
@@ -97,7 +107,8 @@ namespace MiningGame.Code.Entities
         {
             if (!shown) return;
             string inp = tI.Text;
-            tI.Text = "";
+
+            tI.ClearText();
             input = "";
             possibleCommands = GetPossibleCommands(input);
             ConsoleManager.ConsoleInput(inp);
@@ -108,7 +119,10 @@ namespace MiningGame.Code.Entities
         public static void Write(string text)
         {
             if (output == null) return;
-            output.AppendText(text);
+            output.AppendText(text + "\n");
+            int then = output.TextLines.Length;
+            output._cursorY = then - 2;
+            output.ReEvaluateOffset();
         }
 
         private void TrimCommands()
