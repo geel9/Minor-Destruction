@@ -10,7 +10,7 @@ namespace MiningGameServer.Items
         public ServerItemIron() : base(){
             SetName("Iron").SetDescription("I am iron man").SetValue(7).SetID(4);
         }
-        public override void OnItemUsed(int x, int y)
+        public override void OnItemUsed(int x, int y, NetworkPlayer user)
         {
             GameServer.SetBlock(x, y, 200);
             //throw new NotImplementedException();

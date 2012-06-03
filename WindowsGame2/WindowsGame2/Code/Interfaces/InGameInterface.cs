@@ -43,7 +43,7 @@ namespace MiningGame.Code.Interfaces
                 int i1 = i;
                 b.OnMouseClick += new View.MouseClickEventHandler((object sender, EventArgs e) =>
                                                                       {
-                                                                          blockPressed(i1);
+                                                                          BlockPressed(i1);
                                                                       });
                 buttons.Add(b);
                 start.X += 70;
@@ -93,7 +93,7 @@ namespace MiningGame.Code.Interfaces
             base.Draw(sb);
         }
 
-        public void blockPressed(int i)
+        public void BlockPressed(int i)
         {
             int b = i + offset;
             GameWorld.ThePlayer.PlayerInventorySelected = b;

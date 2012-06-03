@@ -130,6 +130,8 @@
     <Compile Include="Code\Blocks\Block.cs" />
     <Compile Include="Code\Blocks\BlockDirt.cs" />
     <Compile Include="Code\Blocks\BlockDoor.cs" />
+    <Compile Include="Code\Blocks\BlockPistonArm.cs" />
+    <Compile Include="Code\Blocks\BlockPistonBase.cs" />
     <Compile Include="Code\CInterfaces\Drawable.cs" />
     <Compile Include="Code\CInterfaces\Updatable.cs" />
     <Compile Include="Code\CInterfaces\UpdatableAndDrawable.cs" />

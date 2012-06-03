@@ -78,8 +78,6 @@ namespace MiningGame.Code.Entities
 
             Vector2 aimingAt = GetBlockAimingAt();
 
-            byte blockID = GameWorld.GetBlockIDAt(aimingAt.X, aimingAt.Y);
-
             Rectangle drawBB = new Rectangle((int)aimingAt.X * GameWorld.BlockWidth, (int)aimingAt.Y * GameWorld.BlockHeight, GameWorld.BlockWidth, GameWorld.BlockHeight);
             DrawManager.DrawOutline(drawBB.Center.ToVector2() - CameraManager.cameraPosition, drawBB.Width, drawBB.Height, Color.White, sb);
 

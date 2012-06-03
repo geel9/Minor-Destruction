@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Xna.Framework;
+using MiningGameServer;
 using MiningGameserver.Entities;
 
-namespace MiningGameServer.Blocks
+namespace MiningGameserver.Blocks
 {
     public class Block
     {
         public static List<Block> AllBlocks = new List<Block>();
 
         private string _blockName;
-        private byte _blockID;
+        private short _blockID;
         private int _blockHardness;
         private bool _blockRenderSpecial;
         private bool _blockWalkThrough = false;
@@ -21,16 +22,17 @@ namespace MiningGameServer.Blocks
         private bool _blockOpaque;
         private Color _blockColor;
         private bool _hideBlock;
+        private bool _pistonable;
         private static Random _random = new Random();
 
         public static void GenerateBlocks()
         {
             Assembly a = Assembly.GetExecutingAssembly();
-            foreach(Type t in a.GetTypes())
+            foreach (Type t in a.GetTypes())
             {
-                if(t.IsSubclassOf(typeof(Block)) || t == typeof(Block))
+                if (t.IsSubclassOf(typeof(Block)) || t == typeof(Block))
                 {
-                    Block b = (Block) Activator.CreateInstance(t);
+                    Block b = (Block)Activator.CreateInstance(t);
                     b.FinalizeBlock();
                 }
             }
@@ -47,18 +49,9 @@ namespace MiningGameServer.Blocks
             _blockOpaque = false;
             _blockColor = Color.White;
             _numConnectionsAllowed = 0;
+            _pistonable = true;
 
             _hideBlock = false;
-            /*_renderBlock = (x, y, sb) => { return null; };
-            _onBlockUpdated = (x, y) => { return -1; };
-            _onBlockUsed = (x, y) => { };
-            _onBlockPlaced = (x, y, notify) => { };
-            _onBlockRemoved = (x, y) => { };
-            _onBlockTouched = (x, y, side, entity) => { };
-            _getBlockDrop = (int x, int y) => { return (byte)0; };
-            _getBlockDropNum = (x, y) => { return 0; };
-            _getBlockBB = (x, y) => { Vector2 pos = new Vector2(x * GameWorld.BlockWidth, y * GameWorld.BlockHeight); return new Rectangle((int)pos.X, (int)pos.Y, GameWorld.BlockWidth, GameWorld.BlockHeight); };
-*/
         }
 
         public Block FinalizeBlock()
@@ -75,7 +68,7 @@ namespace MiningGameServer.Blocks
             }
         }
 
-        public static Block GetBlock(byte blockID)
+        public static Block GetBlock(short blockID)
         {
             IEnumerable<Block> query = AllBlocks.Where(x => x._blockID == blockID);
             return (query.Count() > 0) ? query.First() : new Block();
@@ -83,23 +76,15 @@ namespace MiningGameServer.Blocks
 
         private void BlockPlaced(int x, int y, bool notify = true)
         {
-            /*if (GetBlockLightLevel() >= 1)
-            {
-                GameWorld.lightUpAroundRadius(x, y, GetBlockLightLevel(), 0);
-            }*/
         }
 
         private void BlockRemoved(int x, int y)
         {
             GameServer.UnscheduleUpdate(x, y);
-            /*if (GetBlockLightLevel() >= 1)
-            {
-                GameWorld.lightUpAroundRadius(x, y, GetBlockLightLevel(), 0, -1);
-            }*/
         }
 
 
-        public Block SetBlockID(byte id)
+        public Block SetBlockID(short id)
         {
             this._blockID = id;
             return this;
@@ -132,6 +117,12 @@ namespace MiningGameServer.Blocks
         public Block SetBlockHardness(int hardness)
         {
             this._blockHardness = hardness;
+            return this;
+        }
+
+        public Block SetBlockPistonable(bool pistonable)
+        {
+            _pistonable = pistonable;
             return this;
         }
 
@@ -168,23 +159,23 @@ namespace MiningGameServer.Blocks
 
         public virtual void OnBlockTouched(int X, int Y, int side, ServerEntityMoveable toucher)
         {
-            
+
         }
 
-        public virtual void OnBlockPlaced(int x, int y, bool notify)
+        public virtual void OnBlockPlaced(int x, int y, bool notify, NetworkPlayer placer = null)
         {
         }
 
         public virtual void OnBlockRemoved(int x, int y)
         {
-            
+
         }
 
         public virtual void OnBlockUsed(int x, int y)
         {
-            
+
         }
-        
+
         public int OnBlockUpdate(int x, int y)
         {
             return -1;
@@ -198,6 +189,11 @@ namespace MiningGameServer.Blocks
         public int GetItemDropNum(int x, int y)
         {
             return 0;
+        }
+
+        public bool GetBlockPistonable()
+        {
+            return _pistonable;
         }
 
         public bool GetBlockWalkThrough()
@@ -215,7 +211,7 @@ namespace MiningGameServer.Blocks
             return _numConnectionsAllowed;
         }
 
-        public byte GetBlockID()
+        public short GetBlockID()
         {
             return _blockID;
         }
@@ -254,6 +250,16 @@ namespace MiningGameServer.Blocks
         public override string ToString()
         {
             return _blockID + " " + _blockName;
+        }
+    }
+
+    public struct BlockData
+    {
+        public short ID;
+        public byte MetaData;
+        public Block Block
+        {
+            get { return Block.GetBlock(ID); }
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace MiningGameServer.Blocks
+﻿using MiningGameserver.Blocks;
+
+namespace MiningGameserver.Blocks
 {
     public class BlockDirt : Block
     {

@@ -54,7 +54,7 @@ namespace MiningGame.Code.Items
             return this;
         }
 
-        public Item SetBlockID(byte id)
+        public Item SetBlockID(short id)
         {
             _blockID = id;
             return this;
@@ -92,7 +92,7 @@ namespace MiningGame.Code.Items
 
         public abstract void OnItemUsed(int x, int y);
 
-        public byte GetBlockID()
+        public short GetBlockID()
         {
             return _blockID;
         }
@@ -102,7 +102,7 @@ namespace MiningGame.Code.Items
         private string _assetName;
         private string _itemDescription;
         private byte _itemID;
-        private byte _blockID = 0;
+        private short _blockID = 0;
     }
 
     public struct ItemStack

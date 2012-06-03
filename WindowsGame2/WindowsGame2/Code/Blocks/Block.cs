@@ -13,7 +13,7 @@ namespace MiningGame.Code.Blocks
         public static List<Block> AllBlocks = new List<Block>();
 
         private string _blockName;
-        private byte _blockID;
+        private short _blockID;
         private int _blockHardness;
         private bool _blockRenderSpecial;
         private bool _blockWalkThrough = false;
@@ -27,11 +27,11 @@ namespace MiningGame.Code.Blocks
         public static void GenerateBlocks()
         {
             Assembly a = Assembly.GetExecutingAssembly();
-            foreach(Type t in a.GetTypes())
+            foreach (Type t in a.GetTypes())
             {
-                if(t.IsSubclassOf(typeof(Block)) || t == typeof(Block))
+                if (t.IsSubclassOf(typeof(Block)) || t == typeof(Block))
                 {
-                    Block b = (Block) Activator.CreateInstance(t);
+                    Block b = (Block)Activator.CreateInstance(t);
                     b.FinalizeBlock();
                 }
             }
@@ -76,7 +76,7 @@ namespace MiningGame.Code.Blocks
             }
         }
 
-        public static Block GetBlock(byte blockID)
+        public static Block GetBlock(short blockID)
         {
             IEnumerable<Block> query = AllBlocks.Where(x => x._blockID == blockID);
             return (query.Count() > 0) ? query.First() : new Block();
@@ -100,7 +100,7 @@ namespace MiningGame.Code.Blocks
         }
 
 
-        public Block SetBlockID(byte id)
+        public Block SetBlockID(short id)
         {
             this._blockID = id;
             return this;
@@ -169,10 +169,10 @@ namespace MiningGame.Code.Blocks
 
         public virtual void OnBlockTouched(int X, int Y, int side, Entities.EntityMoveable toucher)
         {
-            
+
         }
 
-        public virtual Texture2D RenderBlock(int x, int y, SpriteBatch sb)
+        public virtual BlockRenderer RenderBlock(int x, int y, SpriteBatch sb)
         {
             return null;
         }
@@ -183,14 +183,14 @@ namespace MiningGame.Code.Blocks
 
         public virtual void OnBlockRemoved(int x, int y)
         {
-            
+
         }
 
         public virtual void OnBlockUsed(int x, int y)
         {
-            
+
         }
-        
+
         public int OnBlockUpdate(int x, int y)
         {
             return -1;
@@ -221,7 +221,7 @@ namespace MiningGame.Code.Blocks
             return _numConnectionsAllowed;
         }
 
-        public byte GetBlockID()
+        public short GetBlockID()
         {
             return _blockID;
         }
@@ -260,6 +260,46 @@ namespace MiningGame.Code.Blocks
         public override string ToString()
         {
             return _blockID + " " + _blockName;
+        }
+    }
+
+    public class BlockRenderer
+    {
+        public Texture2D Texture;
+        public SpriteEffects Effects = SpriteEffects.None;
+        public float Rotation = 0f;
+        public Vector2 Origin = Vector2.Zero;
+
+        public BlockRenderer(Texture2D texture)
+        {
+            this.Texture = texture;
+        }
+
+        public BlockRenderer(Texture2D texture, SpriteEffects effects)
+            :this(texture)
+        {
+            this.Effects = effects;
+        }
+
+        public BlockRenderer(Texture2D texture, float rotation)
+            :this(texture)
+        {
+            this.Rotation = rotation;
+        }
+        public BlockRenderer(Texture2D texture, SpriteEffects effects, float rotation)
+            :this(texture, effects)
+        {
+            this.Rotation = rotation;
+        }
+    }
+
+    public struct BlockData
+    {
+        public short ID;
+        public byte MetaData;
+        public Block Block
+        {
+            get { return Block.GetBlock(ID); }
         }
     }
 }

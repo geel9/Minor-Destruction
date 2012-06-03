@@ -66,11 +66,11 @@ namespace MiningGame.Code.Entities
 
             foreach (Vector2 newTile in newTiles)
             {
-                byte blockID = GameWorld.GetBlockIDAt(newTile.X, newTile.Y);
+                BlockData blockData = GameWorld.GetBlockAt(newTile.X, newTile.Y);
 
-                if (blockID == 0) continue;
+                if (blockData.ID == 0) continue;
 
-                Block block = Block.GetBlock(blockID);
+                Block block = blockData.Block;
                 bool walkThrough = block.GetBlockWalkThrough();
 
                 //A wall
@@ -112,7 +112,7 @@ namespace MiningGame.Code.Entities
             //EntityPosition += EntityVelocity;
 
             //Ropes
-            byte blockID2 = GameWorld.GetBlockIDAt(GetEntityTile().X, GetEntityTile().Y);
+            short blockID2 = GameWorld.GetBlockAt(GetEntityTile().X, GetEntityTile().Y).ID;
 
             if (EntityVelocity.Y < 6 && blockID2 != 6) EntityVelocity.Y += 1; // Gravity! This is a really nice side effect: The code for not allowing the player to go through a block downwards already exists, so I just need to add this one line to add gravity!
 

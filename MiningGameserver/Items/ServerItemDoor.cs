@@ -6,11 +6,11 @@
         {
             SetName("Door").SetDescription("Doorange you glad I didn't say banana?").SetID(5).SetValue(1);
         }
-        public override void OnItemUsed(int x, int y)
+        public override void OnItemUsed(int x, int y, NetworkPlayer player)
         {
-            byte blockID = GameServer.GetBlockIDAt(x, y);
-            byte blockUpID = GameServer.GetBlockIDAt(x, y - 1);
-            byte blockDownID = GameServer.GetBlockIDAt(x, y + 1);
+            short blockID = GameServer.GetBlockAt(x, y).ID;
+            short blockUpID = GameServer.GetBlockAt(x, y - 1).ID;
+            short blockDownID = GameServer.GetBlockAt(x, y + 1).ID;
             if (blockID != 0) return;
 
             if (blockUpID != 0 && blockUpID != 11 && blockDownID == 0)

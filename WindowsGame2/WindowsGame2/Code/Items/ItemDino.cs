@@ -5,7 +5,7 @@
         public ItemDino()
             : base()
         {
-            SetName("Dinosaur").SetDescription("Open the door!").SetID(7).SetValue(1).SetAsset("dinosaur").SetBlockID(201);
+            SetName("Piston").SetDescription("Open the door!").SetID(7).SetValue(1).SetAsset("pistonbase").SetBlockID(201);
         }
         public override void OnItemUsed(int x, int y)
         {

@@ -26,13 +26,12 @@ namespace MiningGame.Code
 
         public static List<EntityProjectile> GameProjectiles = new List<EntityProjectile>();
 
-        public static byte[,] WorldBlocks = new byte[WorldSizeX, WorldSizeY];
-        public static byte[,] WorldBlocksMetaData = new byte[WorldSizeX, WorldSizeY];
+        public static BlockData[,] WorldBlocks = new BlockData[WorldSizeX, WorldSizeY];
 
         public static void LoadBlocks()
         {
             Block.AllBlocks.Clear();
-
+            Block.GenerateBlocks();
         }
 
         public GameWorld()
@@ -107,39 +106,14 @@ namespace MiningGame.Code
             //return getBlockLitLevel(x, y);
         }
 
-        public static byte GetBlockIDAt(int x, int y)
+        public static BlockData GetBlockAt(int x, int y)
         {
-            return (x >= 0 && y >= 0 && x < WorldSizeX && y < WorldSizeY) ? WorldBlocks[x, y] : (byte)0;
+            return (x >= 0 && y >= 0 && x < WorldSizeX && y < WorldSizeY) ? WorldBlocks[x, y] : new BlockData();
         }
 
-        public static byte GetBlockIDAt(float x, float y)
+        public static BlockData GetBlockAt(float x, float y)
         {
-            return (x >= 0 && y >= 0 && x < WorldSizeX && y < WorldSizeY) ? WorldBlocks[(int)x, (int)y] : (byte)0;
-        }
-
-        public static Block GetBlockAt(int x, int y)
-        {
-            return Block.GetBlock(GetBlockIDAt(x, y));
-        }
-
-        public static Block GetBlockAt(float x, float y)
-        {
-            return Block.GetBlock(GetBlockIDAt(x, y));
-        }
-
-        public static byte GetBlockMDAt(int x, int y)
-        {
-            return (x >= 0 && y >= 0 && x < WorldSizeX && y < WorldSizeY) ? WorldBlocksMetaData[x, y] : (byte)0;
-        }
-
-        public static byte GetBlockMDAt(float x, float y)
-        {
-            return (x >= 0 && y >= 0 && x < WorldSizeX && y < WorldSizeY) ? WorldBlocksMetaData[(int)x, (int)y] : (byte)0;
-        }
-
-        public static bool CanWalkThrough(byte id)
-        {
-            return Block.GetBlock(id).GetBlockWalkThrough();
+            return GetBlockAt((int) x, (int) y);
         }
 
         public void Update(GameTime time)
@@ -166,7 +140,7 @@ namespace MiningGame.Code
             Vector2 blockMouseOver = AbsoluteToTile(mousePos);
             blockMouseOver.X = MathHelper.Clamp(blockMouseOver.X, 0, WorldSizeX - 1);
             blockMouseOver.Y = MathHelper.Clamp(blockMouseOver.Y, 0, WorldSizeY - 1);
-            byte mouseOverID = WorldBlocks[(int)blockMouseOver.X, (int)blockMouseOver.Y];
+            BlockData mouseOverID = WorldBlocks[(int)blockMouseOver.X, (int)blockMouseOver.Y];
 
             Vector2 curDig = ThePlayer.CurMining;
             float digMult = MathHelper.Clamp(1f - (float)((float)ThePlayer.DigPct / 100f), 0, 1);
@@ -182,7 +156,7 @@ namespace MiningGame.Code
                     }
                     Vector2 drawPos = new Vector2(x * BlockWidth + (BlockWidth / 2), y * BlockHeight + (BlockHeight / 2));
                     drawPos -= CameraManager.cameraPosition;
-                    byte blockID = WorldBlocks[x, y];
+                    BlockData blockID = WorldBlocks[x, y];
                     int render = ShouldRenderBlock(x, y);
                     if (render > 0)
                     {
@@ -193,17 +167,17 @@ namespace MiningGame.Code
                             sb.Draw(backTexture, drawPos - new Vector2(BlockWidth / 2, BlockHeight / 2), Color.White);
                         }
 
-                        if (blockID != 0)
+                        if (blockID.ID != 0)
                         {
-                            Block block = Block.GetBlock(blockID);
+                            Block block = blockID.Block;
                             bool flag = (x == curDig.X && y == curDig.Y);
                             bool flagHide = block.GetBlockHide() && render == 1;
 
                             if (block.GetBlockRenderSpecial() || y < 10)
                             {
-                                Texture2D blockTexture = block.RenderBlock(x, y, sb);
-                                if (blockTexture != null)
-                                    sb.Draw(blockTexture, drawPos, null, Color.White, 0f, new Vector2(BlockWidth / 2, BlockHeight / 2), (flag ? digMult : 1), SpriteEffects.None, 0);
+                                BlockRenderer renderer = block.RenderBlock(x, y, sb);
+                                if (renderer != null)
+                                    sb.Draw(renderer.Texture, drawPos, null, Color.White, renderer.Rotation, new Vector2(BlockWidth / 2, BlockHeight / 2), (flag ? digMult : 1), renderer.Effects, 0);
                             }
                             else
                             {
@@ -255,20 +229,20 @@ namespace MiningGame.Code
             return new Vector2((int)(tile.X / BlockWidth), (int)(tile.Y / BlockHeight));
         }
 
-        public static void SetBlock(int x, int y, byte blockID, bool notify = true, byte metaData = 0)
+        public static void SetBlock(int x, int y, short blockID, bool notify = true, byte metaData = 0)
         {
             if (x < WorldSizeX && y < WorldSizeY && blockID >= 0)
             {
-                if (blockID != GetBlockIDAt(x, y) && GetBlockIDAt(x, y) != 0) Block.GetBlock(GetBlockIDAt(x, y)).OnBlockRemoved(x, y);
-                WorldBlocksMetaData[x, y] = metaData;
-                WorldBlocks[x, y] = blockID;
+                if (blockID != GetBlockAt(x, y).ID && GetBlockAt(x, y).ID != 0) GetBlockAt(x, y).Block.OnBlockRemoved(x, y);
+                WorldBlocks[x, y].MetaData = metaData;
+                WorldBlocks[x, y].ID = blockID;
                 if (blockID != 0) Block.GetBlock(blockID).OnBlockPlaced(x, y, notify);
             }
         }
 
         public static void SetBlockMetaData(int x, int y, byte metadata)
         {
-            WorldBlocksMetaData[x, y] = metadata;
+            WorldBlocks[x, y].MetaData = metadata;
         }
 
         public static void HandleGameEvent(byte eventID, Packet p)
@@ -276,17 +250,17 @@ namespace MiningGame.Code
             switch ((GameServer.GameEvents)eventID)
             {
                 case GameServer.GameEvents.Block_Set:
-                    SetBlock(p.readShort(), p.readShort(), p.readByte(), false, p.readByte());
+                    SetBlock(p.readShort(), p.readShort(), p.readShort(), false, p.readByte());
                     break;
 
                 case GameServer.GameEvents.Block_Set_ID:
-                    SetBlock(p.readShort(), p.readShort(), p.readByte(), false, 0);
+                    SetBlock(p.readShort(), p.readShort(), p.readShort(), false, 0);
                     break;
 
                 case GameServer.GameEvents.Block_Set_MD:
                     short X = p.readShort();
                     short Y = p.readShort();
-                    SetBlock(X, Y, WorldBlocks[X, Y], false, p.readByte());
+                    SetBlock(X, Y, WorldBlocks[X, Y].ID, false, p.readByte());
                     break;
 
                 case GameServer.GameEvents.Block_Set_Chunk:
@@ -298,7 +272,7 @@ namespace MiningGame.Code
                     {
                         X = (short)(p.readByte() + startX);
                         Y = (short)(p.readByte() + startY);
-                        byte Id = p.readByte();
+                        short Id = p.readShort();
                         byte metadata = p.readByte();
                         SetBlock(X, Y, Id, true, metadata);
                     }

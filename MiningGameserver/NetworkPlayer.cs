@@ -2,10 +2,10 @@
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Lidgren.Network;
-using MiningGameServer.Blocks;
 using MiningGameServer.ExtensionMethods;
 using MiningGameServer.Packets;
 using MiningGameServer.Structs;
+using MiningGameserver.Blocks;
 using MiningGameserver.Entities;
 using MiningGameserver.Items;
 using ItemStack = MiningGameserver.Structs.ItemStack;
@@ -41,7 +41,6 @@ namespace MiningGameServer
         }
 
         public NetConnection NetConnection;
-        public Vector2 PlayerPosition;
         public List<char> PressedKeys = new List<char>();
         public List<ItemStack> PlayerInventory = new List<ItemStack>();
         private int _jumpTimer, _attackTimer;
@@ -52,8 +51,7 @@ namespace MiningGameServer
 
         public int PlayerHealth = 5;
 
-        public byte[,] PlayerBlockIDCache;
-        public byte[,] PlayerBlockMDCache;
+        public BlockData[,] PlayerBlockCache;
 
         public string PlayerName = "PLAYER";
 
@@ -74,12 +72,12 @@ namespace MiningGameServer
             PlayerUpdateFlags.Player_Position_Y;
 
             this.PlayerID = playerID;
-            this.PlayerPosition = playerPos;
+            this.EntityPosition = playerPos;
             this.PlayerName = name;
             EntityVelocity.X = 3;
 
-            PlayerBlockIDCache = new byte[GameServer.WorldSizeX, GameServer.WorldSizeY];
-            PlayerBlockMDCache = new byte[GameServer.WorldSizeX, GameServer.WorldSizeY];
+            PlayerBlockCache = new BlockData[GameServer.WorldSizeX, GameServer.WorldSizeY];
+            
         }
 
         public void UpdateCache()
@@ -101,24 +99,24 @@ namespace MiningGameServer
             {
                 for (short y = startY; y < endY; y++)
                 {
-                    byte cachedByte = PlayerBlockIDCache[x, y];
-                    byte cachedByteM = PlayerBlockMDCache[x, y];
+                    short cachedID = PlayerBlockCache[x, y].ID;
+                    byte cachedMD = PlayerBlockCache[x, y].MetaData;
 
-                    byte realByte = GameServer.WorldBlocks[x, y];
-                    byte realByteM = GameServer.WorldBlocksMetaData[x, y];
+                    short realID = GameServer.WorldBlocks[x, y].ID;
+                    byte realMD = GameServer.WorldBlocks[x, y].MetaData;
 
-                    if (cachedByte == realByte && realByteM == cachedByteM) continue;
+                    if (cachedID == realID && realMD == cachedMD) continue;
 
-                    PlayerBlockIDCache[x, y] = realByte;
-                    PlayerBlockMDCache[x, y] = realByteM;
+                    PlayerBlockCache[x, y].ID = realID;
+                    PlayerBlockCache[x, y].MetaData = realMD;
 
                     oneX = x;
                     oneY = y;
 
                     packet.writeByte((byte)(x - startX));
                     packet.writeByte((byte)(y - startY));
-                    packet.writeByte(realByte);
-                    packet.writeByte(realByteM);
+                    packet.writeShort(realID);
+                    packet.writeByte(realMD);
 
                     numSending++;
                 }
@@ -135,7 +133,7 @@ namespace MiningGameServer
             }
             else if (numSending == 1)
             {
-                Packet packet2 = new Packet1SCGameEvent(GameServer.GameEvents.Block_Set, (short)oneX, (short)oneY, GameServer.WorldBlocks[oneX, oneY], GameServer.WorldBlocksMetaData[oneX, oneY]);
+                Packet packet2 = new Packet1SCGameEvent(GameServer.GameEvents.Block_Set, (short)oneX, (short)oneY, GameServer.WorldBlocks[oneX, oneY].ID, GameServer.WorldBlocks[oneX, oneY].MetaData);
                 GameServer.ServerNetworkManager.SendPacket(packet2, NetConnection);
             }
         }
@@ -247,11 +245,11 @@ namespace MiningGameServer
 
             foreach (Vector2 newTile in newTiles)
             {
-                byte blockID = GameServer.GetBlockIDAt(newTile.X, newTile.Y);
+                BlockData blockData = GameServer.GetBlockAt(newTile.X, newTile.Y);
 
-                if (blockID == 0) continue;
+                if (blockData.ID == 0) continue;
 
-                Block block = Block.GetBlock(blockID);
+                Block block = blockData.Block;
                 bool walkThrough = block.GetBlockWalkThrough();
 
                 //A wall
@@ -308,7 +306,7 @@ namespace MiningGameServer
             BlockCollisions();
 
             //Ropes
-            byte blockID2 = GameServer.GetBlockIDAt(GetEntityTile().X, GetEntityTile().Y);
+            short blockID2 = GameServer.GetBlockAt(GetEntityTile().X, GetEntityTile().Y).ID;
 
             if (EntityVelocity.Y < 6 && blockID2 != 6) EntityVelocity.Y += 1; // Gravity! This is a really nice side effect: The code for not allowing the player to go through a block downwards already exists, so I just need to add this one line to add gravity!
 

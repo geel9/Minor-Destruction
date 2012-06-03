@@ -1,0 +1,1 @@
+MiningGameDedicatedServer.exe 43594

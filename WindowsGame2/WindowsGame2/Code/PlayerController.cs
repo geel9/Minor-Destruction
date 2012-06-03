@@ -131,7 +131,7 @@ namespace MiningGame.Code
             InputManager.BindKey(() =>
             {
                 if (InterfaceManager.blocking) return;
-                byte blockID = GameWorld.GetBlockIDAt(PlayerEntity.GetEntityTile().X, PlayerEntity.GetEntityTile().Y);
+                short blockID = GameWorld.GetBlockAt(PlayerEntity.GetEntityTile().X, PlayerEntity.GetEntityTile().Y).ID;
                 if (blockID == 6)
                 {
                     Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_KeyPress, 's', (bool)true);
@@ -172,7 +172,7 @@ namespace MiningGame.Code
             {
                 if (InterfaceManager.blocking) return;
                 Vector2 aim = PlayerEntity.GetBlockAimingAt();
-                byte id = GameWorld.GetBlockIDAt(aim.X, aim.Y);
+                short id = GameWorld.GetBlockAt(aim.X, aim.Y).ID;
                 if (id != 0)
                 {
                     Packet1CSGameEvent p = new Packet1CSGameEvent(GameServer.GameEvents.Player_Use_Block, (short)aim.X, (short)aim.Y);

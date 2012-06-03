@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using Microsoft.Xna.Framework;
-using MiningGameServer.Blocks;
+using MiningGameserver.Blocks;
 using MiningGameServer.Packets;
 using MiningGameserver;
 using MiningGameserver.Entities;
@@ -16,8 +16,7 @@ namespace MiningGameServer
     {
         public static Random Random = new Random();
 
-        public static byte[,] WorldBlocks = new byte[WorldSizeX, WorldSizeY];
-        public static byte[,] WorldBlocksMetaData = new byte[WorldSizeX, WorldSizeY];
+        public static BlockData[,] WorldBlocks = new BlockData[WorldSizeX, WorldSizeY];
 
         public static List<NetworkPlayer> NetworkPlayers = new List<NetworkPlayer>();
         public static ServerProjectile[] GameProjectiles = new ServerProjectile[256];
@@ -107,17 +106,17 @@ namespace MiningGameServer
 
         public static void GenerateOreVein(int x, int y, byte id, int startX, int startY)
         {
-            byte blockID = GetBlockIDAt(x, y);
+            short blockID = GetBlockAt(x, y).ID;
             if (blockID == 2)
             {
                 SetBlock(x, y, id);
                 int dist = (int)Math.Sqrt(((x - startX) * (x - startX)) + ((y - startY) * (y - startY)));
                 if (dist <= 10)
                 {
-                    byte blockUp = GetBlockIDAt(x, y - 1);
-                    byte blockDown = GetBlockIDAt(x, y + 1);
-                    byte blockLeft = GetBlockIDAt(x - 1, y);
-                    byte blockRight = GetBlockIDAt(x + 1, y);
+                    short blockUp = GetBlockAt(x, y - 1).ID;
+                    short blockDown = GetBlockAt(x, y + 1).ID;
+                    short blockLeft = GetBlockAt(x - 1, y).ID;
+                    short blockRight = GetBlockAt(x + 1, y).ID;
 
                     if ((blockUp == 0 || blockUp == 2) && Random.Next(0, 5) == 0)
                         GenerateOreVein(x, y - 1, id, startX, startY);
@@ -142,7 +141,7 @@ namespace MiningGameServer
                 int highestPoint = 0;
                 for (int y = 0; y < WorldSizeY; y++)
                 {
-                    if (WorldBlocks[x, y] == 1)
+                    if (WorldBlocks[x, y].ID == 1)
                     {
                         highestPoint = y;
                         break;
@@ -181,16 +180,36 @@ namespace MiningGameServer
             }
         }
 
-        public static void SetBlock(int x, int y, byte blockID, bool notify = true, byte metaData = 0)
+        public static void SetBlock(int x, int y, short blockID, bool notify = true, byte metaData = 0)
         {
             if (x < WorldSizeX && y < WorldSizeY && blockID >= 0)
             {
-                Block block = Block.GetBlock(GetBlockIDAt(x, y));
-                WorldBlocks[x, y] = blockID;
+                Block block = GetBlockAt(x, y).Block;
+                WorldBlocks[x, y].ID = blockID;
                 if (blockID != block.GetBlockID())
                     block.OnBlockRemoved(x, y);
-                WorldBlocksMetaData[x, y] = metaData;
-                if (blockID != 0) Block.GetBlock(blockID).OnBlockPlaced(x, y, notify);
+                WorldBlocks[x, y].MetaData = metaData;
+
+                if (blockID != 0)
+                    Block.GetBlock(blockID).OnBlockPlaced(x, y, notify);
+
+                //Packet1SCGameEvent pack = new Packet1SCGameEvent((byte)GameEvents.Block_Set, x, y, blockID, metaData);
+                // Main.serverNetworkManager.SendPacket(pack);
+            }
+        }
+
+        public static void SetBlock(NetworkPlayer placer, int x, int y, short blockID, bool notify = true, byte metaData = 0)
+        {
+            if (x < WorldSizeX && y < WorldSizeY && blockID >= 0)
+            {
+                Block block = GetBlockAt(x, y).Block;
+                WorldBlocks[x, y].ID = blockID;
+                if (blockID != block.GetBlockID())
+                    block.OnBlockRemoved(x, y);
+                WorldBlocks[x, y].MetaData = metaData;
+
+                if (blockID != 0)
+                    Block.GetBlock(blockID).OnBlockPlaced(x, y, notify, placer);
 
                 //Packet1SCGameEvent pack = new Packet1SCGameEvent((byte)GameEvents.Block_Set, x, y, blockID, metaData);
                 // Main.serverNetworkManager.SendPacket(pack);
@@ -199,9 +218,7 @@ namespace MiningGameServer
 
         public static void SetBlockMetaData(int x, int y, byte metadata)
         {
-            WorldBlocksMetaData[x, y] = metadata;
-            //Packet1SCGameEvent pack = new Packet1SCGameEvent((byte)GameEvents.Block_Set, x, y, WorldBlocks[x, y], metadata);
-            //Main.serverNetworkManager.SendPacket(pack);
+            WorldBlocks[x, y].MetaData = metadata;
         }
 
         /*public static void LoadRecipes()
@@ -311,36 +328,14 @@ namespace MiningGameServer
             return ret;
         }*/
 
-        public static byte GetBlockIDAt(int x, int y)
+        internal static BlockData GetBlockAt(int x, int y)
         {
-            return (x >= 0 && y >= 0 && x < WorldSizeX && y < WorldSizeY) ? WorldBlocks[x, y] : (byte)255;
+            return (x >= 0 && y >= 0 && x < WorldSizeX && y < WorldSizeY) ? WorldBlocks[x, y] : new BlockData();
         }
 
-        public static byte GetBlockIDAt(float x, float y)
+        internal static BlockData GetBlockAt(float x, float y)
         {
-            return (x >= 0 && y >= 0 && x < WorldSizeX && y < WorldSizeY) ? WorldBlocks[(int)x, (int)y] : (byte)0;
-        }
-
-        public static Block GetBlockAt(int x, int y)
-        {
-            return Block.GetBlock(GetBlockIDAt(x, y));
-        }
-
-        public static Block GetBlockAt(float x, float y)
-        {
-            return Block.GetBlock(GetBlockIDAt(x, y));
-        }
-
-        public static byte GetBlockMDAt(int x, int y)
-        {
-            if (x < 0 || x >= WorldSizeX || y < 0 || y >= WorldSizeY) return 0;
-            byte ret = WorldBlocksMetaData[x, y];
-            return (x >= 0 && y >= 0 && x < WorldSizeX && y < WorldSizeY) ? ret : (byte)0;
-        }
-
-        public static byte GetBlockMDAt(float x, float y)
-        {
-            return (x >= 0 && y >= 0 && x < WorldSizeX && y < WorldSizeY) ? WorldBlocksMetaData[(int)x, (int)y] : (byte)0;
+            return GetBlockAt((int) x, (int) y);
         }
 
         public static bool CanWalkThrough(byte id)
@@ -395,7 +390,7 @@ namespace MiningGameServer
                     ScheduledUpdates[i] = update;
                     continue;
                 }
-                int nextUpdate = GetBlockAt(update.X, update.Y).OnBlockUpdate((int)update.X, (int)update.Y);
+                int nextUpdate = GetBlockAt(update.X, update.Y).Block.OnBlockUpdate((int)update.X, (int)update.Y);
                 if (nextUpdate == -1)
                 {
                     toUnschedule.Add(update);
@@ -486,13 +481,13 @@ namespace MiningGameServer
                     short y = p.readShort();
                     ServerItem itemInHand = player.GetPlayerItemInHand();
                     if (itemInHand == null) break;
-                    itemInHand.OnItemUsed(x, y);
+                    itemInHand.OnItemUsed(x, y, player);
                     break;
 
                 case GameEvents.Player_Use_Block:
                     x = p.readShort();
                     y = p.readShort();
-                    Block b = Block.GetBlock(GetBlockIDAt(x, y));
+                    Block b = GetBlockAt(x, y).Block;
                     b.OnBlockUsed(x, y);
                     break;
 

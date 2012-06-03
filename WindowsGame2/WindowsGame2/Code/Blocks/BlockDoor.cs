@@ -18,16 +18,16 @@ namespace MiningGame.Code.Blocks
 
         private Texture2D GetTexture(int x, int y)
         {
-            byte md = GameWorld.GetBlockMDAt(x, y);
-            bool above = GameWorld.GetBlockIDAt(x, y - 1) == 11;
+            byte md = GameWorld.GetBlockAt(x, y).MetaData;
+            bool above = GameWorld.GetBlockAt(x, y - 1).ID == 11;
             string doorName = "door" + (!above ? "top" : "");
             doorName += (md == 1) ? "_open" : "";
             return AssetManager.GetTexture(doorName);
         }
 
-        public override Microsoft.Xna.Framework.Graphics.Texture2D RenderBlock(int x, int y, Microsoft.Xna.Framework.Graphics.SpriteBatch sb)
+        public override BlockRenderer RenderBlock(int x, int y, SpriteBatch sb)
         {
-            return GetTexture(x, y);
+            return new BlockRenderer(GetTexture(x, y));
         }
     }
 }

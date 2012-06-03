@@ -45,6 +45,8 @@
     <Compile Include="Blocks\Block.cs" />
     <Compile Include="Blocks\BlockDirt.cs" />
     <Compile Include="Blocks\BlockDoor.cs" />
+    <Compile Include="Blocks\BlockPistonArm.cs" />
+    <Compile Include="Blocks\BlockPistonBase.cs" />
     <Compile Include="ConversionManager.cs" />
     <Compile Include="Entities\ServerEntity.cs" />
     <Compile Include="Entities\ServerEntityMoveable.cs" />

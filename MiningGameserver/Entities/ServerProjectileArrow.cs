@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using MiningGameServer;
-using MiningGameServer.Blocks;
+using MiningGameserver.Blocks;
 using MiningGameServer.ExtensionMethods;
 using MiningGameServer.Structs;
 
@@ -49,11 +49,12 @@ namespace MiningGameserver.Entities
 
             foreach (Vector2 newTile in newTiles)
             {
-                byte blockID = GameServer.GetBlockIDAt(newTile.X, newTile.Y);
 
-                if (blockID == 0) continue;
+                BlockData blockData = GameServer.GetBlockAt(newTile.X, newTile.Y);
 
-                Block block = Block.GetBlock(blockID);
+                if (blockData.ID == 0) continue;
+
+                Block block = blockData.Block;
                 bool walkThrough = block.GetBlockWalkThrough();
 
                 //A wall
@@ -116,7 +117,7 @@ namespace MiningGameserver.Entities
                 if (p.BoundBox.Intersects(newRectTest))
                 {
                     ShouldDestroy = true;
-                    p.EntityVelocity += EntityVelocity/5;
+                    p.EntityVelocity += EntityVelocity / 5;
                     p.PlayerHealth--;
                     if (p.PlayerHealth <= 0)
                     {
@@ -146,7 +147,7 @@ namespace MiningGameserver.Entities
             EntityPosition += EntityVelocity;
 
             //if (EntityVelocity.Y < 6)
-                EntityVelocity.Y += EffectOfGravity;
+            EntityVelocity.Y += EffectOfGravity;
 
 
             if (EntityVelocity.X < 0) EntityVelocity.X += AirFriction;

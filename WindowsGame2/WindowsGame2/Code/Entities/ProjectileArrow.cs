@@ -40,11 +40,11 @@ namespace MiningGame.Code.Entities
 
             foreach (Vector2 newTile in newTiles)
             {
-                byte blockID = GameWorld.GetBlockIDAt(newTile.X, newTile.Y);
+                BlockData blockData = GameWorld.GetBlockAt(newTile.X, newTile.Y);
 
-                if (blockID == 0) continue;
+                if (blockData.ID == 0) continue;
 
-                Block block = Block.GetBlock(blockID);
+                Block block = blockData.Block;
                 bool walkThrough = block.GetBlockWalkThrough();
 
                 //A wall

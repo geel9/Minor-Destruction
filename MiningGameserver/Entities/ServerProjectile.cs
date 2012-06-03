@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
-using MiningGameServer.Blocks;
+using MiningGameserver.Blocks;
 using MiningGameServer.ExtensionMethods;
 using MiningGameServer.Structs;
 using MiningGameServer;
@@ -89,11 +89,11 @@ namespace MiningGameserver.Entities
 
             foreach (Vector2 newTile in newTiles)
             {
-                byte blockID = GameServer.GetBlockIDAt(newTile.X, newTile.Y);
+                BlockData blockData = GameServer.GetBlockAt(newTile.X, newTile.Y);
 
-                if (blockID == 0) continue;
+                if (blockData.ID == 0) continue;
 
-                Block block = Block.GetBlock(blockID);
+                Block block = blockData.Block;
                 bool walkThrough = block.GetBlockWalkThrough();
 
                 //A wall

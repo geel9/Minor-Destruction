@@ -82,12 +82,12 @@ namespace MiningGameserver.Items
             return _itemID;
         }
 
-        public virtual void OnItemUsed(int x, int y)
+        public virtual void OnItemUsed(int x, int y, NetworkPlayer user)
         {
-            byte block = GameServer.GetBlockIDAt(x, y);
+            short block = GameServer.GetBlockAt(x, y).ID;
             if(block == 0 && _blockID != 0)
             {
-                GameServer.SetBlock(x, y, _blockID);
+                GameServer.SetBlock(user, x, y, _blockID);
             }
         }
 

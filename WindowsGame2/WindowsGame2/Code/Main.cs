@@ -323,7 +323,6 @@ namespace MiningGame.Code
             AssetManager.LoadAsset<Effect>("WaterLevel", "WaterLevelEffect", Content);
 
             GameWorld.LoadBlocks();
-            Block.GenerateBlocks();
             Item.MakeItems();
 
             PauseManager = new PauseManager();
@@ -376,10 +375,7 @@ namespace MiningGame.Code
             isActive = this.IsActive;
             Window.Title = ConsoleManager.getVariableValue("window_title");
             int tileX = (int)InputManager.GetMousePosV().X / GameWorld.BlockWidth;
-            int tileY = (int)InputManager.GetMousePosV().Y / GameWorld.BlockHeight;
-            byte MD = GameWorld.GetBlockMDAt(tileX, tileY);
-            byte bid = GameWorld.GetBlockIDAt(tileX, tileY);
-            //Window.Title = "Tile X: " + tileX + " y: " + tileY + " ID: " + bid + " MD: " + MD + " update scheduled: " + GameServer.updateScheduled(tileX, tileY);
+            int tileY = (int)InputManager.GetMousePosV().Y / GameWorld.BlockHeight;;
             GeeUI.GeeUI.Update(gameTime);
             clientNetworkManager.Update(gameTime);
 

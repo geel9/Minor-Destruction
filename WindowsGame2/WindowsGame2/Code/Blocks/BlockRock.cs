@@ -13,9 +13,9 @@ namespace MiningGame.Code.Blocks
             this.SetBlockRenderSpecial(true).SetBlockID(3).SetBlockName("Rock");
         }
 
-        public override Microsoft.Xna.Framework.Graphics.Texture2D RenderBlock(int x, int y, Microsoft.Xna.Framework.Graphics.SpriteBatch sb)
+        public override BlockRenderer RenderBlock(int x, int y, Microsoft.Xna.Framework.Graphics.SpriteBatch sb)
         {
-            return AssetManager.GetTexture("rock");
+            return new BlockRenderer(AssetManager.GetTexture("rock"));
         }
     }
 }

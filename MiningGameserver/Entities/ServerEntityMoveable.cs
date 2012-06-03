@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using MiningGameServer;
-using MiningGameServer.Blocks;
+using MiningGameserver.Blocks;
 using MiningGameServer.Structs;
 
 namespace MiningGameserver.Entities
@@ -69,11 +69,11 @@ namespace MiningGameserver.Entities
 
             foreach (Vector2 newTile in newTiles)
             {
-                byte blockID = GameServer.GetBlockIDAt(newTile.X, newTile.Y);
+                BlockData blockData = GameServer.GetBlockAt(newTile.X, newTile.Y);
 
-                if (blockID == 0) continue;
+                if (blockData.ID == 0) continue;
 
-                Block block = Block.GetBlock(blockID);
+                Block block = blockData.Block;
                 bool walkThrough = block.GetBlockWalkThrough();
 
                 //A wall
@@ -115,7 +115,7 @@ namespace MiningGameserver.Entities
             //EntityPosition += EntityVelocity;
 
             //Ropes
-            byte blockID2 = GameServer.GetBlockIDAt(GetEntityTile().X, GetEntityTile().Y);
+            short blockID2 = GameServer.GetBlockAt(GetEntityTile().X, GetEntityTile().Y).ID;
 
             if (EntityVelocity.Y < 6 && blockID2 != 6) EntityVelocity.Y += 1; // Gravity! This is a really nice side effect: The code for not allowing the player to go through a block downwards already exists, so I just need to add this one line to add gravity!
 

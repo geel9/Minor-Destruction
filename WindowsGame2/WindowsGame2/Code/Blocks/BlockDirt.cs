@@ -8,14 +8,15 @@ namespace MiningGame.Code.Blocks
 {
     public class BlockDirt : Block
     {
-        public BlockDirt() : base()
+        public BlockDirt()
+            : base()
         {
             this.SetBlockRenderSpecial(true).SetBlockID(2).SetBlockName("Dirt");
         }
 
-        public override Microsoft.Xna.Framework.Graphics.Texture2D RenderBlock(int x, int y, Microsoft.Xna.Framework.Graphics.SpriteBatch sb)
+        public override BlockRenderer RenderBlock(int x, int y, Microsoft.Xna.Framework.Graphics.SpriteBatch sb)
         {
-            return AssetManager.GetTexture("dirt");
+            return new BlockRenderer(AssetManager.GetTexture("dirt"));
         }
     }
 }
