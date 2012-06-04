@@ -19,6 +19,8 @@ namespace MiningGameserver.Items
             new ServerItemDoor();
             new ServerItemPlank();
             new ServerItemDino();
+            new ServerItemBow();
+            new ServerItemSword();
         }
 
         protected ServerItem()

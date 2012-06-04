@@ -17,6 +17,8 @@ namespace MiningGame.Code.Items
             new ItemDoor();
             new ItemPlank();
             new ItemDino();
+            new ItemBow();
+            new ItemSword();
         }
 
         protected Item()

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GeeUI.Managers;
 using MiningGame.Code.Items;
 using MiningGame.Code.Managers;
 using Microsoft.Xna.Framework;
@@ -19,6 +20,7 @@ namespace MiningGame.Code.Interfaces
         public PanelView MainView;
 
         public int offset = 0;
+        public int curSelected = 0;
 
         public InGameInterface()
         {
@@ -48,6 +50,20 @@ namespace MiningGame.Code.Interfaces
                 buttons.Add(b);
                 start.X += 70;
             }
+
+            InputManager.BindMouse(() =>
+            {
+                if (++curSelected >= 9)
+                    curSelected = 0;
+                BlockPressed(curSelected);
+            }, MouseButton.Scrollup);
+            InputManager.BindMouse(() =>
+            {
+                if (--curSelected < 0)
+                    curSelected = 8;
+                BlockPressed(curSelected);
+            }, MouseButton.Scrolldown);
+
         }
 
         public void RecomputeBoxes()
@@ -96,6 +112,7 @@ namespace MiningGame.Code.Interfaces
         public void BlockPressed(int i)
         {
             int b = i + offset;
+            curSelected = b;
             GameWorld.ThePlayer.PlayerInventorySelected = b;
             Packet p = new Packet1CSGameEvent(GameServer.GameEvents.Player_Inventory_Selection_Change, (byte)b);
             Main.clientNetworkManager.SendPacket(p);

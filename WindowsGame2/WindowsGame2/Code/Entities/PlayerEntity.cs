@@ -1,6 +1,7 @@
 ﻿using System;
 using GeeUI.Managers;
 using Microsoft.Xna.Framework;
+using MiningGame.Code.Items;
 using MiningGame.Code.Managers;
 using Microsoft.Xna.Framework.Graphics;
 using MiningGame.ExtensionMethods;
@@ -36,6 +37,8 @@ namespace MiningGame.Code.Entities
 
         public Animateable TorsoAnimateable;
         public Animateable LegsAnimateable;
+
+        public Item EquippedItem;
 
         private Vector2 _oldPlayerPos = new Vector2();
 
@@ -83,8 +86,23 @@ namespace MiningGame.Code.Entities
 
             ConsoleManager.setVariableValue("window_title", (int)aimingAt.X + ", " + (int)aimingAt.Y);
 
-            sb.DrawString(AssetManager.GetFont("Console"), PlayerName, EntityPosition - new Vector2(30, 30) - CameraManager.cameraPosition, Color.White);
+            string name = "Nothing";
+            if (EquippedItem != null)
+                name = EquippedItem.GetName();
+
+            sb.DrawString(AssetManager.GetFont("Console"), name, EntityPosition - new Vector2(30, 30) - CameraManager.cameraPosition, Color.White);
             base.Draw(sb);
+        }
+
+        public void OnAttack()
+        {
+            if (EquippedItem == null)
+                return;
+            if (EquippedItem is ItemSword || EquippedItem is ItemBow)
+            {
+                TorsoAnimateable.GotoAndStart(TorsoAnimateable.IndexOfFrame("swing_start"));
+                TorsoAnimateable.StartLooping("swing_start", "swing_end");
+            }
         }
 
         public short GetAimingAngle()
@@ -102,7 +120,7 @@ namespace MiningGame.Code.Entities
             return tile;
         }
 
-        public void Update(GameTime time)
+        public override void Update(GameTime time)
         {
             _oldPlayerPos = EntityPosition;
             base.Update(time);

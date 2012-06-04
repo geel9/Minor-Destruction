@@ -1,15 +1,17 @@
 <Configuration>
   <RecentFiles>
     <RecentFiles>
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Managers/f:PlayerBindManager.cs" caret="0" fromTop="0" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Managers/f:PauseManager.cs" caret="0" fromTop="0" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Interfaces/f:ToolTip.cs" caret="0" fromTop="0" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Interfaces/f:AnimationEditorInterface.cs" caret="0" fromTop="0" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Blocks/f:BlockLadder.csO" caret="0" fromTop="0" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Packets/f:Packet2SCCreateProjectile.cs" caret="0" fromTop="0" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Managers/f:ClientNetworkManager.cs" caret="0" fromTop="0" />
       <File id="A53AE9EB-F5AD-4DD2-A0D5-4F3C30DCE692/f:Program.cs" caret="0" fromTop="0" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:ExtensionMethods/f:ExtensionMethods.cs" caret="0" fromTop="0" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Structs/f:Convar.cs" caret="0" fromTop="0" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Structs/f:ConCommand.cs" caret="0" fromTop="0" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:EntityDroppedItem.cs" caret="0" fromTop="0" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Items/f:ItemDirt.cs" caret="0" fromTop="0" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Items/f:ItemPlank.cs" caret="0" fromTop="0" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Items/f:ItemIron.cs" caret="0" fromTop="0" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Items/f:Item.cs" caret="0" fromTop="0" />
       <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Packets/f:Packet0SCPlayerConnect.cs" caret="0" fromTop="0" />
       <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Packets/f:Packet1CSGameEvent.cs" caret="0" fromTop="0" />
       <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Packets/f:Packet200SCPlayerUpdate.cs" caret="0" fromTop="0" />
@@ -28,41 +30,39 @@
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:Animation.cs" caret="0" fromTop="0" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:Animateable.cs" caret="0" fromTop="0" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Structs/f:ItemRecipe.cs" caret="0" fromTop="0" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Items/f:ItemRock.cs" caret="0" fromTop="0" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Items/f:ItemCoal.cs" caret="0" fromTop="0" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Blocks/f:BlockPistonBase.cs" caret="1966" fromTop="25" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Blocks/f:Block.cs" caret="687" fromTop="22" />
     </RecentFiles>
     <RecentEdits>
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/f:GameServer.cs" caret="17584" fromTop="21" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Blocks/f:BlockPistonBase.cs" caret="5007" fromTop="21" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Blocks/f:BlockPistonBase.cs" caret="5007" fromTop="24" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Blocks/f:BlockPistonBase.cs" caret="5082" fromTop="37" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Blocks/f:BlockPistonBase.cs" caret="5430" fromTop="40" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Blocks/f:BlockPistonBase.cs" caret="4888" fromTop="31" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Blocks/f:Block.cs" caret="749" fromTop="23" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Blocks/f:Block.cs" caret="1620" fromTop="11" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Blocks/f:Block.cs" caret="4450" fromTop="22" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Blocks/f:Block.cs" caret="6146" fromTop="32" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Blocks/f:BlockPistonBase.cs" caret="4888" fromTop="11" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Blocks/f:BlockPistonBase.cs" caret="4888" fromTop="33" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Blocks/f:BlockPistonBase.cs" caret="4888" fromTop="18" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Blocks/f:BlockPistonBase.cs" caret="4888" fromTop="25" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/f:NetworkPlayer.cs" caret="1077" fromTop="21" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/f:NetworkPlayer.cs" caret="2161" fromTop="9" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Blocks/f:BlockPistonBase.cs" caret="4888" fromTop="22" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Items/f:ItemDino.cs" caret="164" fromTop="7" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Items/f:ItemDoor.cs" caret="279" fromTop="9" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Blocks/f:BlockDoor.cs" caret="352" fromTop="13" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Blocks/f:BlockPistonArm.cs" caret="166" fromTop="7" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Blocks/f:BlockPistonArm.cs" caret="275" fromTop="7" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Blocks/f:BlockPistonArm.cs" caret="1121" fromTop="34" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Blocks/f:BlockPistonArm.cs" caret="610" fromTop="20" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Blocks/f:BlockPistonBase.cs" caret="4888" fromTop="33" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Blocks/f:BlockPistonBase.cs" caret="4973" fromTop="29" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Blocks/f:BlockPistonBase.cs" caret="4888" fromTop="17" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Blocks/f:BlockPistonBase.cs" caret="4888" fromTop="36" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Blocks/f:BlockPistonBase.cs" caret="4888" fromTop="29" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Blocks/f:BlockPistonBase.cs" caret="2111" fromTop="30" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Blocks/f:BlockPistonArm.cs" caret="673" fromTop="21" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Blocks/f:BlockPistonBase.cs" caret="699" fromTop="18" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/f:GameServer.cs" caret="11817" fromTop="20" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/f:GameServer.cs" caret="12015" fromTop="25" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Items/f:Item.cs" caret="2260" fromTop="27" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Items/f:Item.cs" caret="989" fromTop="0" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Items/f:Item.cs" caret="1269" fromTop="18" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/f:NetworkPlayer.cs" caret="1463" fromTop="12" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/f:NetworkPlayer.cs" caret="3521" fromTop="34" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/f:NetworkPlayer.cs" caret="3986" fromTop="31" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/f:NetworkPlayer.cs" caret="4730" fromTop="34" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/f:NetworkPlayer.cs" caret="11757" fromTop="20" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:GameWorld.cs" caret="10699" fromTop="16" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:GameWorld.cs" caret="10431" fromTop="10" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:GameWorld.cs" caret="10246" fromTop="6" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:GameWorld.cs" caret="11185" fromTop="28" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Blocks/f:Block.cs" caret="6323" fromTop="21" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:Main.cs" caret="15851" fromTop="20" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:PlayerController.cs" caret="5266" fromTop="21" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:PlayerController.cs" caret="7235" fromTop="21" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Items/f:ServerItemDoor.cs" caret="517" fromTop="12" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Items/f:ServerItem.cs" caret="1990" fromTop="21" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Entities/f:ServerEntityMoveable.cs" caret="4967" fromTop="21" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Blocks/f:Block.cs" caret="1217" fromTop="18" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Blocks/f:Block.cs" caret="2286" fromTop="20" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Blocks/f:Block.cs" caret="3451" fromTop="48" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Blocks/f:Block.cs" caret="3182" fromTop="39" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Blocks/f:Block.cs" caret="2933" fromTop="77" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Blocks/f:Block.cs" caret="2816" fromTop="76" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Blocks/f:Block.cs" caret="383" fromTop="11" />
     </RecentEdits>
   </RecentFiles>
   <CompletionStatisticsManager>
@@ -85,9 +85,9 @@
       <Item value="public" priority="4027" />
       <Item value="virtual" priority="255" />
       <Item value="Rectangle`0" priority="127" />
-      <Item value="int" priority="4511" />
+      <Item value="int" priority="4577" />
       <Item value="return" priority="1855" />
-      <Item value="new" priority="2975" />
+      <Item value="new" priority="3007" />
       <Item value="Rectangle" priority="116" />
       <Item value="X" priority="288" />
       <Item value="Y" priority="256" />
@@ -103,7 +103,7 @@
       <Item value="byte" priority="1665" />
       <Item value="Packet1CSGameEvent`0" priority="191" />
       <Item value="Packet1CSGameEvent" priority="144" />
-      <Item value="GameServer`0" priority="1274" />
+      <Item value="GameServer`0" priority="1306" />
       <Item value="float" priority="1284" />
       <Item value="Vector2`0" priority="863" />
       <Item value="aim" priority="127" />
@@ -247,8 +247,8 @@
       <Item value="else" priority="415" />
       <Item value="Update`0" priority="96" />
       <Item value="updateMask" priority="130" />
-      <Item value="x" priority="1279" />
-      <Item value="y" priority="1023" />
+      <Item value="x" priority="1311" />
+      <Item value="y" priority="1055" />
       <Item value="FacingLeft" priority="127" />
       <Item value="PressedKeys" priority="31" />
       <Item value="facingLeft" priority="63" />
@@ -265,7 +265,7 @@
       <Item value="Type`0" priority="62" />
       <Item value="a" priority="31" />
       <Item value="typeof" priority="63" />
-      <Item value="Block`0" priority="287" />
+      <Item value="Block`0" priority="319" />
       <Item value="Activator`0" priority="31" />
       <Item value="b" priority="223" />
       <Item value="BlockConnection`0" priority="31" />
@@ -353,13 +353,13 @@
       <Item value="BlockCollisions`0" priority="31" />
       <Item value="PlayerCollisions`0" priority="31" />
       <Item value="ServerEntityMoveable`0" priority="63" />
-      <Item value="Blocks" priority="92" />
+      <Item value="Blocks" priority="124" />
       <Item value="ServerProjectile`0" priority="63" />
       <Item value="ServerNetworkManager`0" priority="30" />
       <Item value="double" priority="157" />
       <Item value="degrees" priority="64" />
       <Item value="ServerEntity`0" priority="95" />
-      <Item value="GameServer" priority="316" />
+      <Item value="GameServer" priority="348" />
       <Item value="ServerNetworkManager" priority="220" />
       <Item value="Game`0" priority="31" />
       <Item value="AssemblyLoadEventArgs`0" priority="31" />
@@ -498,9 +498,9 @@
       <Item value="then" priority="64" />
       <Item value="now" priority="31" />
       <Item value="Block" priority="31" />
-      <Item value="BlockData" priority="59" />
-      <Item value="BlockData`0" priority="287" />
-      <Item value="blockData" priority="159" />
+      <Item value="BlockData" priority="88" />
+      <Item value="BlockData`0" priority="447" />
+      <Item value="blockData" priority="287" />
       <Item value="PistonFlags`0" priority="384" />
       <Item value="textureEnd" priority="31" />
       <Item value="texture" priority="191" />
@@ -540,6 +540,8 @@
       <Item value="BlockPistonArm`0" priority="31" />
       <Item value="xM" priority="31" />
       <Item value="yM" priority="31" />
+      <Item value="GetBlockAt`0" priority="31" />
+      <Item value="blockID" priority="31" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@System.Windows.Forms.Application">
       <Item value="ExecutablePath" priority="26" />
@@ -766,7 +768,7 @@
       <Item value="CreateInstance`0" priority="26" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@MiningGame.Code.Blocks.Block">
-      <Item value="GenerateBlocks`0" priority="26" />
+      <Item value="GenerateBlocks`0" priority="53" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:System.Int32">
       <Item value="CompareTo`0" priority="26" />
@@ -832,7 +834,7 @@
     <ItemStatistics item="Qualified:MiningGameServer.Packets.Packet">
       <Item value="readByte`0" priority="26" />
       <Item value="readString`0" priority="80" />
-      <Item value="readShort`0" priority="161" />
+      <Item value="readShort`0" priority="244" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@MiningGameserver.Items.ServerItem">
       <Item value="MakeItems`0" priority="26" />
@@ -1029,6 +1031,11 @@
     </ItemStatistics>
     <ItemStatistics item="Qualified:MiningGameserver.Blocks.BlockPistonArm">
       <Item value="SetBlockName`0" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:MiningGame.Code.Blocks.BlockData">
+      <Item value="ID" priority="242" />
+      <Item value="Block" priority="135" />
+      <Item value="MetaData" priority="134" />
     </ItemStatistics>
   </CompletionStatisticsManager>
   <NAntValidationSettings>

@@ -8,6 +8,7 @@ using MiningGameServer.Packets;
 using MiningGameserver;
 using MiningGameserver.Entities;
 using MiningGameserver.Items;
+using MiningGameserver.Packets;
 using MiningGameserver.ServerCommands;
 
 namespace MiningGameServer
@@ -335,7 +336,7 @@ namespace MiningGameServer
 
         internal static BlockData GetBlockAt(float x, float y)
         {
-            return GetBlockAt((int) x, (int) y);
+            return GetBlockAt((int)x, (int)y);
         }
 
         public static bool CanWalkThrough(byte id)
@@ -449,7 +450,6 @@ namespace MiningGameServer
                     {
                         packet.writeShort((short)p.EntityPosition.X);
                     }
-
                     if ((p.UpdateMask & (int)PlayerUpdateFlags.Player_Position_Y) != 0)
                     {
                         packet.writeShort((short)p.EntityPosition.Y);
@@ -493,6 +493,12 @@ namespace MiningGameServer
 
                 case GameEvents.Player_Inventory_Selection_Change:
                     player.PlayerInventorySelected = p.readByte();
+                    ServerItem i = player.GetPlayerItemInHand();
+                    byte itemID = 0;
+                    if (i != null)
+                        itemID = i.GetItemID();
+                    Packet7SCPlayerCurItemChanged packet7 = new Packet7SCPlayerCurItemChanged(player.PlayerID, itemID);
+                    ServerNetworkManager.SendPacket(packet7);
                     break;
 
                 case GameEvents.Player_Chat:

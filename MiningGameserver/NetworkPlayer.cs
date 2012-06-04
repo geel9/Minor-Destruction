@@ -8,6 +8,7 @@ using MiningGameServer.Structs;
 using MiningGameserver.Blocks;
 using MiningGameserver.Entities;
 using MiningGameserver.Items;
+using MiningGameserver.Packets;
 using ItemStack = MiningGameserver.Structs.ItemStack;
 
 namespace MiningGameServer
@@ -43,9 +44,42 @@ namespace MiningGameServer
         public NetConnection NetConnection;
         public List<char> PressedKeys = new List<char>();
         public List<ItemStack> PlayerInventory = new List<ItemStack>();
-        private int _jumpTimer, _attackTimer;
+        private int _jumpTimer;
+        public int _attackTimer;
         public float PlayerAimAngle = 0;
         public int PlayerInventorySelected;
+        public bool FacingLeft = false;
+
+        public bool LeftPressed
+        {
+            get { return (MovementFlags & (int)PlayerMovementFlag.Left_Pressed) != 0; }
+        }
+
+        public bool RightPressed
+        {
+            get { return (MovementFlags & (int)PlayerMovementFlag.Right_Pressed) != 0; }
+        }
+
+        public bool OldLeftPressed
+        {
+            get { return (OldMovementFlags & (int)PlayerMovementFlag.Left_Pressed) != 0; }
+        }
+
+        public bool OldRightPressed
+        {
+            get { return (OldMovementFlags & (int)PlayerMovementFlag.Right_Pressed) != 0; }
+        }
+
+        public bool AttackPressed
+        {
+            get { return (MovementFlags & (int)PlayerMovementFlag.Attack_Pressed) != 0; }
+        }
+
+        public bool OldAttackPressed
+        {
+            get { return (OldMovementFlags & (int)PlayerMovementFlag.Attack_Pressed) != 0; }
+        }
+
 
         public byte MovementFlags, OldMovementFlags;
 
@@ -77,7 +111,7 @@ namespace MiningGameServer
             EntityVelocity.X = 3;
 
             PlayerBlockCache = new BlockData[GameServer.WorldSizeX, GameServer.WorldSizeY];
-            
+
         }
 
         public void UpdateCache()
@@ -142,8 +176,25 @@ namespace MiningGameServer
         {
             UpdateCache();
 
+            if (PlayerHealth <= 0)
+            {
+                PlayerHealth = 5;
+                EntityPosition = new Vector2(50, 50);
+                EntityVelocity = Vector2.Zero;
+            }
+            else
+
             if (_jumpTimer > 0) _jumpTimer--;
-            if (_attackTimer > 0) _attackTimer--;
+            if (_attackTimer > 0)
+            {
+                _attackTimer--;
+                if(_attackTimer == 5)
+                {
+                    UpdateMask |= (int)PlayerUpdateFlags.Player_Update;
+                    UpdateMask |= (int)PlayerUpdateFlags.Player_Movement_Flags;
+                    MovementFlags |= (int)PlayerMovementFlag.Idle;
+                }
+            }
 
             if ((MovementFlags & (int)PlayerMovementFlag.Jump_Pressed) != 0)
             {
@@ -153,52 +204,42 @@ namespace MiningGameServer
                     _jumpTimer = 20;
                 }
             }
-            if ((MovementFlags & (int)PlayerMovementFlag.Left_Pressed) != 0)
+            if (LeftPressed)
             {
                 EntityVelocity.X = MathHelper.Clamp(EntityVelocity.X - 3, -3, 3);
+                FacingLeft = true;
             }
 
-            if ((MovementFlags & (int)PlayerMovementFlag.Right_Pressed) != 0)
+            if (RightPressed)
             {
                 EntityVelocity.X = MathHelper.Clamp(EntityVelocity.X + 3, -3, 3);
+                FacingLeft = false;
             }
 
-            if ((MovementFlags & (int)PlayerMovementFlag.Attack_Pressed) != 0)
+            if ((OldLeftPressed || OldRightPressed) && (!RightPressed && !LeftPressed))
+            {
+                UpdateMask |= (int)PlayerUpdateFlags.Player_Update;
+                UpdateMask |= (int)PlayerUpdateFlags.Player_Movement_Flags;
+                MovementFlags |= (int)PlayerMovementFlag.Idle;
+            }
+
+            if (AttackPressed)
             {
                 _timeHeldAttack++;
-                if (_timeHeldAttack > 30) _timeHeldAttack = 30;
+                if (_timeHeldAttack > 30)
+                    _timeHeldAttack = 30;
             }
 
-            if ((OldMovementFlags & (int)PlayerMovementFlag.Attack_Pressed) != 0)
+            if (OldAttackPressed && !AttackPressed)
             {
-                if ((MovementFlags & (int)PlayerMovementFlag.Attack_Pressed) == 0)
+                if (_attackTimer <= 0)
                 {
-                    if (_attackTimer <= 0)
-                    {
-                        if (_timeHeldAttack == 0) _timeHeldAttack = 1;
-                        _attackTimer = 20;
-                        int nextslot = GameServer.GetFreeProjectileSlot();
-                        if (nextslot != -1)
-                        {
-                            short angle = (short) PlayerAimAngle.RToD();
-
-                            var packet = new Packet2SCCreateProjectile((byte)nextslot, 1,
-                                                                       (short)EntityPosition.X,
-                                                                       (short)
-                                                                       ((short)EntityPosition.Y - 10),
-                                                                       angle, (byte)((_timeHeldAttack / 5) + 10),
-                                                                       PlayerID);
-                            GameServer.ServerNetworkManager.SendPacket(packet);
-
-                            GameServer.GameProjectiles[nextslot] =
-                                new ServerProjectileArrow(new Vector2(EntityPosition.X,
-                                                                EntityPosition.Y - 10), angle,
-                                                    PlayerID, (_timeHeldAttack / 5) + 10) { ProjectileID = (byte)nextslot };
-
-                        }
-                    }
-                    _timeHeldAttack = 0;
+                    if (_timeHeldAttack == 0)
+                        _timeHeldAttack = 1;
+                    _attackTimer = 20;
+                    Attack();
                 }
+                _timeHeldAttack = 0;
             }
 
 
@@ -215,6 +256,63 @@ namespace MiningGameServer
                     UpdateMask |= (int)PlayerUpdateFlags.Player_Position_Y;
             }
             OldMovementFlags = MovementFlags;
+        }
+
+        private void Attack()
+        {
+            ServerItem inHand = GetPlayerItemInHand();
+            if (inHand != null)
+            {
+                Packet6SCPlayerAttack packet6 = new Packet6SCPlayerAttack(PlayerID);
+                GameServer.ServerNetworkManager.SendPacket(packet6);
+                if (inHand is ServerItemBow)
+                {
+                    AttackArrows();
+                }
+                else if (inHand is ServerItemSword)
+                {
+                    AttackSword();
+                }
+            }
+        }
+
+        private void AttackSword()
+        {
+            int leftX = FacingLeft ? BoundBox.Left - 10 : BoundBox.Right;
+            AABB bound = new AABB(new Rectangle(leftX, (int)EntityPosition.Y, 15, PlayerHeight));
+            foreach(NetworkPlayer player in GameServer.NetworkPlayers)
+            {
+                if (player == this) continue;
+                if(player.BoundBox.Intersects(bound) || player.BoundBox.Contains(bound) || bound.Contains(player.BoundBox))
+                {
+                    player.PlayerHealth--;
+                    player.EntityVelocity.Y = -4;
+                    player.EntityVelocity.X = FacingLeft ? -5 : 5;
+                }
+            }
+        }
+
+        private void AttackArrows()
+        {
+            int nextslot = GameServer.GetFreeProjectileSlot();
+            if (nextslot != -1)
+            {
+                short angle = (short)PlayerAimAngle.RToD();
+
+                var packet = new Packet2SCCreateProjectile((byte)nextslot, 1,
+                                                           (short)EntityPosition.X,
+                                                           (short)
+                                                           ((short)EntityPosition.Y - 10),
+                                                           angle, (byte)((_timeHeldAttack / 5) + 10),
+                                                           PlayerID);
+                GameServer.ServerNetworkManager.SendPacket(packet);
+
+                GameServer.GameProjectiles[nextslot] =
+                    new ServerProjectileArrow(new Vector2(EntityPosition.X,
+                                                    EntityPosition.Y - 10), angle,
+                                        PlayerID, (_timeHeldAttack / 5) + 10) { ProjectileID = (byte)nextslot };
+
+            }
         }
 
         private void PlayerCollisions()

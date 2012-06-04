@@ -119,14 +119,7 @@ namespace MiningGameserver.Entities
                     ShouldDestroy = true;
                     p.EntityVelocity += EntityVelocity / 5;
                     p.PlayerHealth--;
-                    if (p.PlayerHealth <= 0)
-                    {
-                        p.PlayerHealth = 5;
-                        p.EntityPosition = new Vector2(50, 50);
-                        GameServer.SendMessageToAll(playerOwner.PlayerName + " killed " + p.PlayerName + ".");
-                    }
-                    else
-                        GameServer.SendMessageToAll(playerOwner.PlayerName + " hit " + p.PlayerName + ". Their new health: " + p.PlayerHealth);
+                    GameServer.SendMessageToAll(playerOwner.PlayerName + " hit " + p.PlayerName + ". Their new health: " + p.PlayerHealth);
                     break;
                 }
             }

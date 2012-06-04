@@ -90,7 +90,7 @@ namespace MiningGame.Code.Entities
                 ShouldDestroy = true;
                 return;
             }
-            //BlockCollision();
+            BlockCollision();
 
             EntityPosition += EntityVelocity;
 

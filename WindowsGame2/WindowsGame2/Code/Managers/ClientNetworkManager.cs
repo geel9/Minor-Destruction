@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using MiningGame.Code.Items;
 using MiningGame.Code.Structs;
 using System.Net;
 using MiningGame.Code.Interfaces;
@@ -114,6 +115,46 @@ namespace MiningGame.Code.Managers
                                                      }
                                                      if (proj != null) GameWorld.GameProjectiles.Remove(proj);
                                                  }, 3));
+
+            boundPackets.Add(new BoundPacket(p =>
+                                                 {
+                                                     byte playerID = p.readByte();
+                                                     if (playerID == GameWorld.ThePlayer.PlayerEntity.PlayerID)
+                                                     {
+                                                         GameWorld.ThePlayer.PlayerEntity.OnAttack();
+                                                     }
+                                                     else
+                                                     {
+                                                         foreach (PlayerEntity pe in GameWorld.OtherPlayers)
+                                                         {
+                                                             if (pe.PlayerID == playerID)
+                                                             {
+                                                                 pe.OnAttack();
+                                                                 break;
+                                                             }
+                                                         }
+                                                     }
+                                                 }, 6));
+            boundPackets.Add(new BoundPacket(p =>
+            {
+                byte playerID = p.readByte();
+                byte itemID = p.readByte();
+                if (playerID == GameWorld.ThePlayer.PlayerEntity.PlayerID)
+                {
+                    GameWorld.ThePlayer.PlayerEntity.EquippedItem = Item.GetItem(itemID);
+                }
+                else
+                {
+                    foreach (PlayerEntity pe in GameWorld.OtherPlayers)
+                    {
+                        if (pe.PlayerID == playerID)
+                        {
+                            pe.EquippedItem = Item.GetItem(itemID);
+                            break;
+                        }
+                    }
+                }
+            }, 7));
 
             boundPackets.Add(new BoundPacket((Packet p) =>
             {
@@ -229,8 +270,9 @@ namespace MiningGame.Code.Managers
                     byte flags = p.readByte();
                     player.OtherPlayerNetworkFlags = flags;
                     bool leftPress = (flags & (int) PlayerMovementFlag.Left_Pressed) != 0;
-                    bool rightPress = (flags & (int)PlayerMovementFlag.Right_Pressed) != 0;
-                    if(leftPress || rightPress)
+                    bool rightPress = (flags & (int) PlayerMovementFlag.Right_Pressed) != 0;
+                    bool idle = (flags & (int) PlayerMovementFlag.Idle) != 0;
+                    if (leftPress || rightPress)
                     {
                         player.FacingLeft = leftPress && !rightPress;
                         if (!(leftPress && rightPress))
@@ -244,12 +286,11 @@ namespace MiningGame.Code.Managers
                             player.LegsAnimateable.StartLooping("player_idle", "player_idle");
                         }
                     }
-                    else
+                    if(idle)
                     {
                         player.TorsoAnimateable.StartLooping("player_idle", "player_idle");
                         player.LegsAnimateable.StartLooping("player_idle", "player_idle");
                     }
-                                        
                 }
                 //player.FacingLeft = (updateMask & (int)PlayerUpdateFlags.Player_Facing_Left) != 0;
             }

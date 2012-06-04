@@ -14,6 +14,7 @@
         Left_Pressed = 1,
         Right_Pressed = 2,
         Jump_Pressed = 4,
-        Attack_Pressed = 8
+        Idle = 8,
+        Attack_Pressed = 16
     }
 }
