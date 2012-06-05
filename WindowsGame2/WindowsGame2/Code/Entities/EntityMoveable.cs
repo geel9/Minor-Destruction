@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using GeeUI.Managers;
 using Microsoft.Xna.Framework;
 using MiningGame.Code.Blocks;
+using MiningGame.Code.Managers;
 using MiningGameServer.Structs;
 
 namespace MiningGame.Code.Entities
@@ -21,10 +23,10 @@ namespace MiningGame.Code.Entities
             Vector2 rectCenter = rect.Center;
 
             Vector2 topLeftHit = GameWorld.AbsoluteToTile(new Vector2(rect.Left, rect.Top));
-            //topLeftHit.X = (topLeftHit.X > 0) ? topLeftHit.X - 1 : topLeftHit.X;
-           // topLeftHit.Y = (topLeftHit.Y > 0) ? topLeftHit.Y - 1 : topLeftHit.Y;
+            topLeftHit.X = (topLeftHit.X > 0) ? topLeftHit.X - 1 : topLeftHit.X;
+            topLeftHit.Y = (topLeftHit.Y > 0) ? topLeftHit.Y - 1 : topLeftHit.Y;
 
-            Vector2 bottomRightHit = GameWorld.AbsoluteToTile(new Vector2(rect.Right - 2, rect.Bottom - 2));
+            Vector2 bottomRightHit = GameWorld.AbsoluteToTile(new Vector2(rect.Right, rect.Bottom));
             bottomRightHit.X = (bottomRightHit.X < GameWorld.WorldSizeX) ? bottomRightHit.X + 1 : bottomRightHit.X;
             bottomRightHit.Y = (bottomRightHit.Y < GameWorld.WorldSizeY) ? bottomRightHit.Y + 1 : bottomRightHit.Y;
             //From the top of the rectangle to the bottom, find the tiles that the rectangle intersects and add them.
@@ -133,7 +135,7 @@ namespace MiningGame.Code.Entities
             List<Vector2> hits = RectangleHitsTiles(BoundBox);
             foreach (Vector2 vec in hits)
             {
-                //DrawManager.Draw_Outline(new Vector2(vec.X * GameWorld.BlockWidth + (GameWorld.BlockWidth / 2), vec.Y * GameWorld.BlockHeight + (GameWorld.BlockHeight / 2)) - CameraManager.cameraPosition, GameWorld.BlockWidth, GameWorld.BlockHeight, Color.Red, sb);
+                //DrawManager.DrawOutline(new Vector2(vec.X * GameWorld.BlockWidth + (GameWorld.BlockWidth / 2), vec.Y * GameWorld.BlockHeight + (GameWorld.BlockHeight / 2)) - CameraManager.cameraPosition, GameWorld.BlockWidth, GameWorld.BlockHeight, Color.Red, sb);
             }
 
             base.Draw(sb);

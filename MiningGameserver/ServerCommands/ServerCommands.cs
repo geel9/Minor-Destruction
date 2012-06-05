@@ -22,6 +22,9 @@ namespace MiningGameserver.ServerCommands
                 GameServer.ServerNetworkManager.NetServer.Shutdown("bye");
             });
 
+            ServerConsole.AddConVar("break", "break", "0");
+            ServerConsole.AddConVar("sv_cheats", "If 1, cheats may be used.", "1");
+
             ServerConsole.AddConCommand("give", "Give a player an item", args =>
                                                                              {
                                                                                  string playerName = args[0].ToLower();

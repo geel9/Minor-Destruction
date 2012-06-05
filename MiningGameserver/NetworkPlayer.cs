@@ -5,6 +5,7 @@ using Lidgren.Network;
 using MiningGameServer.ExtensionMethods;
 using MiningGameServer.Packets;
 using MiningGameServer.Structs;
+using MiningGameserver;
 using MiningGameserver.Blocks;
 using MiningGameserver.Entities;
 using MiningGameserver.Items;
@@ -278,13 +279,29 @@ namespace MiningGameServer
 
         private void AttackSword()
         {
-            int leftX = FacingLeft ? BoundBox.Left - 25 : BoundBox.Right;
-            AABB bound = new AABB(new Rectangle(leftX, (int)BoundBox.Top, 25, PlayerHeight));
+            int leftX = FacingLeft ? BoundBox.Left - 15 : BoundBox.Right;
+            AABB bound = new AABB(new Rectangle(leftX, (int)BoundBox.Top + 5, 15, PlayerHeight - 6));
+            List<Vector2> newTiles = RectangleHitsTiles(bound);
+
+            foreach(Vector2 v in newTiles)
+            {
+                BlockData block = GameServer.GetBlockAt(v.X, v.Y);
+                if(block.ID != 0)
+                {
+                    AABB bound2 = new AABB(block.Block.GetBlockBoundBox((int) v.X, (int) v.Y));
+                    if(bound2.Intersects(bound))
+                    {
+                        GameServer.SetBlock((int)v.X, (int)v.Y, 0);
+                    }
+                }
+            }
+            
             foreach(NetworkPlayer player in GameServer.NetworkPlayers)
             {
                 if (player == this) continue;
                 if(player.BoundBox.Intersects(bound) || player.BoundBox.Contains(bound) || bound.Contains(player.BoundBox))
                 {
+                    GameServer.SendMessageToAll(PlayerName + " hit " + player.PlayerName);
                     player.PlayerHealth--;
                     player.EntityVelocity.Y = -4;
                     player.EntityVelocity.X = FacingLeft ? -5 : 5;
@@ -357,9 +374,9 @@ namespace MiningGameServer
                 AABB blockAABB = new AABB(blockBB);
                 AABBResult collide = thisAABB.AxisCollide(blockAABB);
 
-                if (!collide.IsIntersecting) continue;
+                if (!collide.IsIntersecting || collide.X == 0 || collide.Y == 0) continue;
 
-                if (collide.XSmaller)
+                if (collide.XSmaller && collide.X != 0)
                 {
                     bool right = (collide.X < 0);
                     if (!walkThrough)
@@ -369,10 +386,9 @@ namespace MiningGameServer
                     }
                     block.OnBlockTouched((int)newTile.X, (int)newTile.Y, right ? 3 : 1, this);
                 }
-                else
+                else if(!collide.XSmaller || (collide.XSmaller && collide.X == 0 && collide.Y != 0))
                 {
                     bool up = (collide.Y > 0);
-                    //if (up && EntityVelocity.Y < 0) continue;
                     if (!walkThrough)
                     {
                         EntityVelocity.Y = 0;
@@ -396,6 +412,7 @@ namespace MiningGameServer
             if (BoundBox.Bottom > GameServer.BlockHeight * GameServer.WorldSizeY) EntityPosition.Y = GameServer.BlockHeight * GameServer.WorldSizeY - (BoundBox.Height / 2);
 
             //Didn't want to make a new BoundBox so this'll do. Gets the tiles the player will be in with his velocity.
+
             EntityPosition += EntityVelocity;
 
             if (EntityVelocity != Vector2.Zero)
@@ -403,19 +420,15 @@ namespace MiningGameServer
 
             BlockCollisions();
 
-            //Ropes
-            short blockID2 = GameServer.GetBlockAt(GetEntityTile().X, GetEntityTile().Y).ID;
+            
 
-            if (EntityVelocity.Y < 6 && blockID2 != 6) EntityVelocity.Y += 1; // Gravity! This is a really nice side effect: The code for not allowing the player to go through a block downwards already exists, so I just need to add this one line to add gravity!
-
-            if (blockID2 == 6)
-            {
-                EntityVelocity = EntityVelocity.ApproachZeroY();
-            }
+            if (EntityVelocity.Y < 6)
+                EntityVelocity.Y += 1; // Gravity! This is a really nice side effect: The code for not allowing the player to go through a block downwards already exists, so I just need to add this one line to add gravity!
 
             EntityVelocity = EntityVelocity.ApproachZeroX();
 
-            if (EntityVelocity.Y != 1) Falling = true;
+            if (EntityVelocity.Y != 1)
+                Falling = true;
         }
 
         public bool HasItem(byte id)

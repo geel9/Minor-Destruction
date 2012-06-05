@@ -15,6 +15,7 @@ using System.Text.RegularExpressions;
 using System.Diagnostics;
 using MiningGameServer;
 using MiningGameServer.Packets;
+using MiningGameServer.Structs;
 using MiningGameserver;
 using GeeUI.Views;
 using ConCommand = MiningGame.Code.Structs.ConCommand;
@@ -78,9 +79,9 @@ namespace MiningGame.Code
 
         protected override void Initialize()
         {
+
             ConsoleManager.Log("Width: " + graphics.PreferredBackBufferWidth + " Height: " + graphics.PreferredBackBufferHeight);
             ConsoleManager.addConVar("window_title", "Window title", "Mining thing");
-            ConsoleManager.addConVar("sv_cheats", "If 1, cheats may be used.", "1");
             ConsoleManager.addConVar("draw_hitboxes", "If 1, hitboxes are drawn.", "0", null, FLAG_CHEATS);
 
             ConsoleManager.addConCommand("connect", "Connect to a server", (string[] ls) =>
@@ -104,29 +105,10 @@ namespace MiningGame.Code
                 }
             });
 
-            ConsoleManager.addConCommand("qhc", "Quick Host Connect", (string[] ls) =>
-            {
-                ConsoleManager.ConsoleInput("host 870", true);
-                ConsoleManager.ConsoleInput("connect 127.0.0.1 870", true);
-            });
-
             ConsoleManager.addConCommand("host", "Host a game", (string[] ls) =>
             {
                 int port = Convert.ToInt32(ls[0]);
                 GameServer = new GameServer(port);
-            });
-
-            ConsoleManager.addConCommand("music", "Play music", (string[] ls) =>
-            {
-                MusicManager.SetSong(ls[0]);
-                MusicManager.Play();
-            });
-
-            ConsoleManager.addConCommand("log", "Log to the console", (string[] ls) =>
-            {
-                string fullLog = "";
-                foreach (string s in ls) { fullLog += s; }
-                ConsoleManager.Log(fullLog);
             });
 
             ConsoleManager.addConCommand("exec", "Execute a file in the config folder", (string[] ls) =>
@@ -174,13 +156,6 @@ namespace MiningGame.Code
 
             ConsoleManager.addConCommand("reset_textures", "Reload the textures", (string[] ls) => { LoadTextures(); });
 
-            ConsoleManager.addConCommand("togglepause", "Toggle pause", (string[] ls) => { PauseManager.TogglePaused(); });
-
-            ConsoleManager.addConVar("player_height", "playerheight", "14");
-            ConsoleManager.addConVar("player_width", "playerwidth", "10");
-
-            ConsoleManager.addConVar("curblock", "curblock", "0");
-
             ConsoleManager.addConCommand("list", "List console commands and variables", (string[] ls) =>
             {
                 ConsoleManager.Log("Name                Description                Flags");
@@ -203,53 +178,7 @@ namespace MiningGame.Code
                 }
             });
 
-            ConsoleManager.addConCommand("add_keyvalue", "Adds a keyvalue!", (string[] ls) =>
-            {
-                string name = ls[0];
-                string value = ls[1];
-                ConsoleManager.Log("Name: " + name + " Value: " + value);
-            });
-
-            ConsoleManager.addConCommand("change_keyvalue", "Changes a keyvalue!", (string[] ls) =>
-            {
-                string name = ls[0];
-                string value = ls[1];
-                SaveGameManager.SetValue(name, value);
-            });
-
-            ConsoleManager.addConCommand("reset_blocks", "Reload the blocks", (string[] s) => GameWorld.LoadBlocks());
-
-            ConsoleManager.addConVar("do_update", "update", "1");
-
-            ConsoleManager.addConCommand("remove_keyvalue", "Removes a keyvalue!", (string[] ls) =>
-            {
-                string name = ls[0];
-                SaveGameManager.RemoveValue(name);
-            });
-
-            ConsoleManager.addConCommand("read_keyvalues", "Reads the keyvalues!", (string[] ls) =>
-            {
-                List<KeyValue> kvs = SaveGameManager.GetKeyValues();
-                foreach (KeyValue k in kvs)
-                {
-                    ConsoleManager.Log(k.name + ": " + k.value);
-                }
-            });
-
-            ConsoleManager.addConCommand("teststuff", "test", (string[] ls) =>
-            {
-                string regex = "([\\t ]+)?\"?(.+?)\"?";
-                string input = "bind \"mouse1\" \"kill; help; I love you;\"";
-                string output = "";
-                Regex r = new Regex(regex);
-                MatchCollection mc = r.Matches(input);
-                foreach (Match m in mc)
-                {
-                    output += m.Groups[2].Value + " ";
-                }
-                ConsoleManager.Log(output);
-            });
-            ConsoleManager.addConCommand("help", "help help help help help help help help", (string[] ls) =>
+            ConsoleManager.addConCommand("help", "RECURSION", (string[] ls) =>
             {
                 if (ls.Length > 0)
                 {
@@ -315,6 +244,7 @@ namespace MiningGame.Code
             LoadTextures();
 
             AssetManager.LoadAsset<SpriteFont>("Console", "Console", Content);
+            AssetManager.LoadAsset<SpriteFont>("Console2", "Console2", Content);
             AssetManager.LoadAsset<SpriteFont>("default", "default", Content);
             AssetManager.LoadAsset<SpriteFont>("TinyText", "TinyText", Content);
             AssetManager.LoadAsset<Effect>("CircleShader", "CircleEffect", Content);

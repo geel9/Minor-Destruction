@@ -24,12 +24,12 @@ namespace MiningGameserver.Entities
             Vector2 rectCenter = rect.Center;
 
             Vector2 topLeftHit = GameServer.AbsoluteToTile(new Vector2(rect.Left, rect.Top));
-            //topLeftHit.X = (topLeftHit.X > 0) ? topLeftHit.X - 1 : topLeftHit.X;
-             //topLeftHit.Y = (topLeftHit.Y > 0) ? topLeftHit.Y - 1 : topLeftHit.Y;
+            topLeftHit.X = (topLeftHit.X > 0) ? topLeftHit.X - 1 : topLeftHit.X;
+             topLeftHit.Y = (topLeftHit.Y > 0) ? topLeftHit.Y - 1 : topLeftHit.Y;
 
             Vector2 bottomRightHit = GameServer.AbsoluteToTile(new Vector2(rect.Right, rect.Bottom));
-            //bottomRightHit.X = (bottomRightHit.X < GameServer.WorldSizeX) ? bottomRightHit.X + 1 : bottomRightHit.X;
-            //bottomRightHit.Y = (bottomRightHit.Y < GameServer.WorldSizeY) ? bottomRightHit.Y + 1 : bottomRightHit.Y;
+            bottomRightHit.X = (bottomRightHit.X < GameServer.WorldSizeX) ? bottomRightHit.X + 1 : bottomRightHit.X;
+            bottomRightHit.Y = (bottomRightHit.Y < GameServer.WorldSizeY) ? bottomRightHit.Y + 1 : bottomRightHit.Y;
             //From the top of the rectangle to the bottom, find the tiles that the rectangle intersects and add them.
             for (int y = (int)topLeftHit.Y; y <= bottomRightHit.Y; y++)
             {
@@ -112,7 +112,6 @@ namespace MiningGameserver.Entities
                     block.OnBlockTouched((int)newTile.X, (int)newTile.Y, up ? 2 : 0, this);
                 }
             }
-            //EntityPosition += EntityVelocity;
 
             //Ropes
             short blockID2 = GameServer.GetBlockAt(GetEntityTile().X, GetEntityTile().Y).ID;

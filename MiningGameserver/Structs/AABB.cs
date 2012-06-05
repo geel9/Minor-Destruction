@@ -81,19 +81,24 @@ namespace MiningGameServer.Structs
         {
             AABB bound1 = this;
 
-            Vector2[] bound1HalfWidths = bound1.GetHalfWidths(bound2);
-            Vector2[] bound2HalfWidths = bound2.GetHalfWidths(bound1);
+            Vector2 bound1HalfWidths = new Vector2(bound1.Width / 2, bound1.Height / 2);
+            Vector2 bound2HalfWidths = new Vector2(bound2.Width / 2, bound2.Height / 2);
 
             float yMove = 0;
             float xMove = 0;
             float multY = (bound1.Center.Y < bound2.Center.Y) ? -1 : 1;
             float multX = (bound1.Center.X < bound2.Center.X) ? -1 : 1;
 
+            int xCDist = (int) Math.Abs(bound2.Center.X - bound1.Center.X);
+            int yCDist = (int)Math.Abs(bound2.Center.Y - bound1.Center.Y);
+            xMove = bound1HalfWidths.X + bound2HalfWidths.X - xCDist;
+            yMove = bound1HalfWidths.Y + bound2HalfWidths.Y - yCDist;
+            /*
             if (bound1.Center.X < bound2.Center.X)
             {
                 xMove = bound1HalfWidths[0].X - bound2HalfWidths[0].X;
             }
-            else if (bound1.Center.X > bound2.Center.X)
+            else if (bound1.Center.X >= bound2.Center.X)
             {
                 xMove = bound2HalfWidths[0].X - bound1HalfWidths[0].X;
             }
@@ -102,13 +107,13 @@ namespace MiningGameServer.Structs
             {
                 yMove = bound1HalfWidths[1].Y - bound2HalfWidths[1].Y;
             }
-            else if (bound1.Center.Y > bound2.Center.Y)
+            else if (bound1.Center.Y >= bound2.Center.Y)
             {
                 yMove = bound2HalfWidths[1].Y - bound1HalfWidths[1].Y;
-            }
+            }*/
 
             //Not colliding. SAT.
-            if (yMove <= 0 || xMove <= 0) return new AABBResult(0, 0, false, false);
+            if (yMove < 0 || xMove < 0) return new AABBResult(0, 0, false, false);
 
             //if (yMove < xMove && yMove > 0) xMove = 0;
             //else if (xMove < yMove && xMove > 0) yMove = 0;
@@ -126,19 +131,6 @@ namespace MiningGameServer.Structs
 
             ret += origin;
             return ret;
-        }
-
-        public Vector2[] GetHalfWidths(AABB bound2)
-        {
-            List<Vector2> ret = new List<Vector2>();
-            ret.Add(Center.X < bound2.Center.X
-                        ? new Vector2(Center.X + (Width / 2), 0)
-                        : new Vector2(Center.X - (Width / 2), 0));
-            ret.Add(Center.Y < bound2.Center.Y
-                        ? new Vector2(0, Center.Y + (Height / 2))
-                        : new Vector2(0, Center.Y - (Height / 2)));
-
-            return ret.ToArray();
         }
 
         public bool Intersects(AABB boundBox)

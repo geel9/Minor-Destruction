@@ -90,6 +90,11 @@ namespace MiningGame.Code.Entities
             if (EquippedItem != null)
                 name = EquippedItem.GetName();
 
+            int leftX = FacingLeft ? BoundBox.Left - 15 : BoundBox.Right;
+            AABB bound = new AABB(new Rectangle(leftX, (int)BoundBox.Top + 3, 15, PlayerHeight - 6));
+
+            //DrawManager.DrawBox(new Vector2(bound.Left, bound.Top), new Vector2(bound.Right, bound.Bottom), Color.Red, sb  );
+
             sb.DrawString(AssetManager.GetFont("Console"), name, EntityPosition - new Vector2(30, 30) - CameraManager.cameraPosition, Color.White);
             base.Draw(sb);
         }

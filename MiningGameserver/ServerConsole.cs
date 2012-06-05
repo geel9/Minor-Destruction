@@ -109,7 +109,7 @@ namespace MiningGameserver
 
         public static bool GetVariableBool(string name)
         {
-            return GetVariable(name).value.Replace(" ", "") == "1" ? true : false;
+            return GetVariable(name).value.Replace(" ", "") == "1";
         }
 
         public static float GetVariableFloat(string name)

@@ -67,7 +67,7 @@ namespace MiningGame.Code.Managers
 
         public static void executeCommand(string name, string[] arguments)
         {
-            bool cheats = getVariableBool("sv_cheats");
+            bool cheats = true;
             bool needsCheats = (getFlags(name) & FLAG_CHEATS) > 0;
             if ((!needsCheats && !cheats) || cheats)
             {
@@ -81,7 +81,7 @@ namespace MiningGame.Code.Managers
 
         public static void executeVariable(string name, string[] arguments)
         {
-            bool cheats = getVariableBool("sv_cheats");
+            bool cheats = true;
             bool needsCheats = (getFlags(name) & FLAG_CHEATS) > 0;
             Convar c = variables[variables.IndexOf(getVariable(name))];
             if (arguments.Length > 0)
