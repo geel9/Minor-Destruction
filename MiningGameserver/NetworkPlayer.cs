@@ -278,8 +278,8 @@ namespace MiningGameServer
 
         private void AttackSword()
         {
-            int leftX = FacingLeft ? BoundBox.Left - 10 : BoundBox.Right;
-            AABB bound = new AABB(new Rectangle(leftX, (int)EntityPosition.Y, 15, PlayerHeight));
+            int leftX = FacingLeft ? BoundBox.Left - 25 : BoundBox.Right;
+            AABB bound = new AABB(new Rectangle(leftX, (int)BoundBox.Top, 25, PlayerHeight));
             foreach(NetworkPlayer player in GameServer.NetworkPlayers)
             {
                 if (player == this) continue;

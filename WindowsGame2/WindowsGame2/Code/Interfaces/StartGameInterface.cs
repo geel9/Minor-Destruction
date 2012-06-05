@@ -37,10 +37,15 @@ namespace MiningGame.Code.Interfaces
             HostGameButton = new ButtonView(p, "Host", new Vector2(20, 200), AssetManager.GetFont("Console"));
             JoinGameButton = new ButtonView(p, "Connect", new Vector2(100, 200), AssetManager.GetFont("Console"));
 
-            JoinGameButton.OnMouseClick +=new View.MouseClickEventHandler((object sender, EventArgs e) =>
-                                                                              {
-                                                                                  Connect();
-                                                                              });
+            JoinGameButton.OnMouseClick += (sender, e) =>
+            {
+                Connect();
+            };
+
+            HostGameButton.OnMouseClick += (sender, e) =>
+            {
+                Host();
+            };
 
             PlayerNameTextField = new TextFieldView(p, new Vector2(5, 10),
                                                         AssetManager.GetFont("Console"))

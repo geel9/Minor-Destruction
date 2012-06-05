@@ -43,10 +43,10 @@ namespace MiningGame.Code.Interfaces
             {
                 ButtonView b = new ButtonView(MainView, new ImageView(null, AssetManager.GetTexture("white")), start) { Width = 25, Height = 25 };
                 int i1 = i;
-                b.OnMouseClick += new View.MouseClickEventHandler((object sender, EventArgs e) =>
-                                                                      {
-                                                                          BlockPressed(i1);
-                                                                      });
+                b.OnMouseClick += (sender, e) =>
+                                      {
+                                          BlockPressed(i1);
+                                      };
                 buttons.Add(b);
                 start.X += 70;
             }

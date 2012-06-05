@@ -167,6 +167,10 @@ namespace MiningGame.Code.Entities
         {
             input = tI.Text;
             tI.Update(time);
+            if(shown)
+            {
+                MainView.ParentView.BringChildToFront(MainView);
+            }
             //tdP.Clear();
             int i = 0;
             /*

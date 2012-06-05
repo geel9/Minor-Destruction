@@ -12,22 +12,39 @@ namespace MiningGame.Code.Interfaces
 {
     public class ChatInterface : Interface
     {
-        public static List<ChatEntry> chatEntries = new List<ChatEntry>();
-        public TextFieldView chatEntryField = null;
+        private static List<ChatEntry> chatEntries = new List<ChatEntry>();
+        public static TextFieldView ChatEntryField = null;
+        public static TextFieldView ChatLogField = null;
         public static bool ChatEntryMode = false;
 
-        public View MainView;
+        private static bool shouldClearT = false;
+
+        public static View MainView;
 
         public ChatInterface()
         {
             base.initialize(10000);
             MainView = new View(GeeUI.GeeUI.RootView) { Width = 290, Height = 200, X = 10, Y = 500 - 240 };
-            chatEntryField = new TextFieldView(MainView, new Vector2(0, 180), AssetManager.GetFont("Console")) { Width = 290, Height = 20 };
+            ChatEntryField = new TextFieldView(MainView, new Vector2(0, 180), AssetManager.GetFont("Console")) { Width = 290, Height = 20, MultiLine = false, AutoWrap = false};
+            ChatLogField = new TextFieldView(MainView, new Vector2(0, 95), AssetManager.GetFont("Console"))
+                               {Width = 290, Height = 75, Editable = false, MultiLine = true};
+            ChatEntryField.OnEnterPressed += (sender, e) =>
+                                                 {
+                                                     string text = ChatEntryField.Text;
+                                                     ChatEntryField.ClearText();
+                                                     HideChatEntry();
 
+                                                     if (text == "") return;
+                                                     Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_Chat, false, text);
+                                                     Main.clientNetworkManager.SendPacket(pack);
+
+                                                 };
+            HideChatEntry();
         }
 
         public override void Draw(SpriteBatch sb)
         {
+            if (ChatEntryMode) return;
             Vector2 startDraw = new Vector2(10, Main.graphics.PreferredBackBufferHeight - 40);
             foreach (ChatEntry ce in chatEntries.Where(cel => cel.framesUntilDeath-- > 0 || ChatEntryMode).OrderByDescending(cel => cel.framesUntilDeath))
             {
@@ -43,19 +60,38 @@ namespace MiningGame.Code.Interfaces
 
         public override void Update(GameTime time)
         {
-            MainView.Active = ChatEntryMode;
+            //MainView.Active = ChatEntryMode;
             blocking = ChatEntryMode;
+            if(ChatEntryMode && shouldClearT)
+            {
+                ChatEntryField.ClearText();
+                shouldClearT = false;
+            }
             base.Update(time);
         }
 
         public static void ShowChatEntry()
         {
             ChatEntryMode = true;
+            MainView.Active = ChatEntryField.Selected = ChatEntryField.Active = ChatLogField.Active = true;
+            ChatEntryField.ClearText();
+            shouldClearT = true;
         }
 
         public static void HideChatEntry()
         {
             ChatEntryMode = false;
+            MainView.Active = ChatEntryField.Selected = ChatEntryField.Active = ChatLogField.Active = false;
+            ChatEntryField.ClearText();
+        }
+
+        public static void AddChat(ChatEntry entry)
+        {
+            chatEntries.Add(entry);
+            ChatLogField.AppendText(entry.playerName + ": " + entry.playerChat + "\n");
+            int then = ChatLogField.TextLines.Length;
+            ChatLogField._cursorY = then - 2;
+            ChatLogField.ReEvaluateOffset();
         }
 
     }

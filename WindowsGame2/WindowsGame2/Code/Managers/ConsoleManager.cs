@@ -5,7 +5,9 @@ using System.Text;
 using MiningGame.Code.Structs;
 using MiningGame.Code.Entities;
 using Microsoft.Xna.Framework;
+using MiningGameServer;
 using Console = MiningGame.Code.Entities.Console;
+
 
 namespace MiningGame.Code.Managers
 {
@@ -364,6 +366,15 @@ namespace MiningGame.Code.Managers
             return ret.ToArray();
         }
 
+        private static bool BelongsToServer(string command)
+        {
+            /*if(GameServer.ServerNetworkManager.NetServer.Status != MiningGameServer.lNetPeerStatus.Running)
+            {
+                return false;
+            }*/
+            return MiningGameserver.ServerConsole.Consume(command);
+        }
+
         public static void ConsoleInput(string input2, bool silent = false)
         {
             string[] cons = splitConsoleInput_Semicolons(input2);
@@ -375,7 +386,20 @@ namespace MiningGame.Code.Managers
                 
                 if (!silent)
                     Log(">" + input);
-                if (isCommand(command))
+
+                if(MiningGameserver.ServerConsole.IsCommand(command))
+                {
+                    MiningGameserver.ServerConsole.ExecuteCommand(command, inputs.Skip(1).ToArray());
+                    continue;
+                }
+
+                else if (MiningGameserver.ServerConsole.IsVariable(command))
+                {
+                    MiningGameserver.ServerConsole.ExecuteVariable(command, inputs.Skip(1).ToArray());
+                    continue;
+                }
+
+                else if (isCommand(command))
                 {
                     executeCommand(command, inputs.Skip(1).ToArray<string>());
                 }

@@ -403,11 +403,6 @@ namespace MiningGame.Code
         private int numDone = 0;
         protected override void Draw(GameTime gameTime)
         {
-            //RenderTarget2D rend = new RenderTarget2D(GraphicsDevice, GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight, false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 1, RenderTargetUsage.PreserveContents);
-
-            //GraphicsDevice.SetRenderTarget(rend);
-
-
             GraphicsDevice.Clear(BackColor);
 
             spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null);
@@ -417,8 +412,14 @@ namespace MiningGame.Code
                 if (drawables[i].inCamera() && drawables[i] != null)
                     drawables[i].Draw(spriteBatch);
             }
-            
+
+            foreach (Interface i in interfaces.OrderBy(x => x.depth))
+            {
+                i.Draw(spriteBatch);
+            }
+
             GeeUI.GeeUI.Draw(spriteBatch);
+
 
             spriteBatch.End();
 

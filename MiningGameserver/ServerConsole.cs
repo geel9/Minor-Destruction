@@ -59,6 +59,11 @@ namespace MiningGameserver
             return false;
         }
 
+        public static bool Consume(string input)
+        {
+            return IsCommand(input) || IsVariable(input);
+        }
+
         public static void ExecuteCommand(string name, string[] arguments)
         {
             bool cheats = GetVariableBool("sv_cheats");

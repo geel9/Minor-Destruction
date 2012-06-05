@@ -285,7 +285,7 @@ namespace MiningGame.Code
                     string chatText = p.readString();
                     if (playerID == ThePlayer.PlayerEntity.PlayerID)
                     {
-                        ChatInterface.chatEntries.Add(new ChatEntry(ThePlayer.PlayerEntity.PlayerName, chatText, Color.White, teamChat));
+                        ChatInterface.AddChat(new ChatEntry(ThePlayer.PlayerEntity.PlayerName, chatText, Color.White, teamChat));
                     }
                     else if (playerID != 0)
                     {
@@ -293,13 +293,13 @@ namespace MiningGame.Code
                         {
                             if (pe.PlayerID == playerID)
                             {
-                                ChatInterface.chatEntries.Add(new ChatEntry(pe.PlayerName, chatText, Color.White, teamChat));
+                                ChatInterface.AddChat(new ChatEntry(pe.PlayerName, chatText, Color.White, teamChat));
                             }
                         }
                     }
                     else
                     {
-                        ChatInterface.chatEntries.Add(new ChatEntry("Server", chatText, Color.Blue, false));
+                        ChatInterface.AddChat(new ChatEntry("Server", chatText, Color.Blue, false));
                     }
                     break;
 
@@ -375,7 +375,7 @@ namespace MiningGame.Code
 
                     if (playerID == ThePlayer.PlayerEntity.PlayerID)
                     {
-                        ChatInterface.chatEntries.Add(new ChatEntry("Server", ThePlayer.PlayerEntity.PlayerName + " has changed name to " + newName, Color.Blue, false));
+                        ChatInterface.AddChat(new ChatEntry("Server", ThePlayer.PlayerEntity.PlayerName + " has changed name to " + newName, Color.Blue, false));
                         ThePlayer.PlayerEntity.PlayerName = newName;
                     }
                     else
@@ -384,7 +384,7 @@ namespace MiningGame.Code
                         {
                             if (pe.PlayerID == playerID)
                             {
-                                ChatInterface.chatEntries.Add(new ChatEntry("Server", pe.PlayerName + " has changed name to " + newName, Color.Blue, false));
+                                ChatInterface.AddChat(new ChatEntry("Server", pe.PlayerName + " has changed name to " + newName, Color.Blue, false));
                                 pe.PlayerName = newName;
                             }
                         }
