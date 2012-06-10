@@ -1,6 +1,7 @@
 ﻿using System;
 using GeeUI.Managers;
 using Microsoft.Xna.Framework;
+using MiningGame.Code.Blocks;
 using MiningGame.Code.Items;
 using MiningGame.Code.Managers;
 using Microsoft.Xna.Framework.Graphics;
@@ -81,21 +82,38 @@ namespace MiningGame.Code.Entities
 
             Vector2 aimingAt = GetBlockAimingAt();
 
+            short BlockID = GameWorld.GetBlockAt(aimingAt.X, aimingAt.Y).ID;
             Rectangle drawBB = new Rectangle((int)aimingAt.X * GameWorld.BlockWidth, (int)aimingAt.Y * GameWorld.BlockHeight, GameWorld.BlockWidth, GameWorld.BlockHeight);
-            DrawManager.DrawOutline(drawBB.Center.ToVector2() - CameraManager.cameraPosition, drawBB.Width, drawBB.Height, Color.White, sb);
+            Item inHand = GameWorld.ThePlayer.GetPlayerItemInHand();
+            short itemBlockID = 0;
+            if(inHand != null)
+                itemBlockID = inHand.GetBlockID();
+            Vector2 blockDrawPos = aimingAt*GameWorld.BlockHeight;
+            if (BlockID == 0)
+            {
+                if (itemBlockID != 0)
+                {
+                    Block b = Block.GetBlock(itemBlockID);
+                    BlockRenderer tex = b.RenderBlock((int)aimingAt.X, (int)aimingAt.Y, sb);
+                    if (tex.Texture != null)
+                    {
+                        sb.Draw(tex.Texture, blockDrawPos - CameraManager.cameraPosition, null, new Color(1f, 1f, 1f, .75f), 0f, Vector2.Zero, Vector2.One, SpriteEffects.None, 0);
+                    }
+                }
+            }
+            else
+            {
+                DrawManager.DrawOutline(drawBB.Center.ToVector2() - CameraManager.cameraPosition, drawBB.Width,
+                                        drawBB.Height, Color.White, sb);
+            }
 
             ConsoleManager.setVariableValue("window_title", (int)aimingAt.X + ", " + (int)aimingAt.Y);
-
-            string name = "Nothing";
-            if (EquippedItem != null)
-                name = EquippedItem.GetName();
 
             int leftX = FacingLeft ? BoundBox.Left - 15 : BoundBox.Right;
             AABB bound = new AABB(new Rectangle(leftX, (int)BoundBox.Top + 3, 15, PlayerHeight - 6));
 
-            //DrawManager.DrawBox(new Vector2(bound.Left, bound.Top), new Vector2(bound.Right, bound.Bottom), Color.Red, sb  );
-
-            sb.DrawString(AssetManager.GetFont("Console"), name, EntityPosition - new Vector2(30, 30) - CameraManager.cameraPosition, Color.White);
+            Vector2 measure = AssetManager.GetFont("Console").MeasureString(PlayerName);
+            sb.DrawString(AssetManager.GetFont("Console"), PlayerName, EntityPosition - new Vector2(measure.X / 2, 30) - CameraManager.cameraPosition, Color.White);
             base.Draw(sb);
         }
 

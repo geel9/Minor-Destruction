@@ -94,8 +94,7 @@ namespace MiningGame.Code.Entities
 
             EntityPosition += EntityVelocity;
 
-            //if (EntityVelocity.Y < 6)
-                EntityVelocity.Y += EffectOfGravity;
+            EntityVelocity.Y += EffectOfGravity;
 
 
             if (EntityVelocity.X < 0) EntityVelocity.X += AirFriction;
@@ -106,7 +105,7 @@ namespace MiningGame.Code.Entities
         public ProjectileArrow(Vector2 Position, short angle, byte owner, int strength = 10)
             : base()
         {
-            float angle2 = (float) angle.DToR();
+            float angle2 = (float)angle.DToR();
             EntityPosition = Position;
             float strengthX = (float)(strength * Math.Cos(angle2));
             float strengthY = (float)(strength * Math.Sin(angle2));

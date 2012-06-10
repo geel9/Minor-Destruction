@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
-using MiningGameserver.Blocks;
+using MiningGameServer.Blocks;
 using MiningGameServer.ExtensionMethods;
 using MiningGameServer.Structs;
 using MiningGameServer;
 
-namespace MiningGameserver.Entities
+namespace MiningGameServer.Entities
 {
     public class ServerProjectile : ServerEntity
     {

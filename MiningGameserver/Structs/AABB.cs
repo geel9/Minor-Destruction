@@ -31,6 +31,8 @@ namespace MiningGameServer.Structs
             get { return (int)(Center.Y + Height / 2); }
         }
 
+        
+
         public AABB(Rectangle r, float rotation = 0)
         {
             Center = new Vector2(r.Center.X, r.Center.Y);
@@ -157,6 +159,27 @@ namespace MiningGameServer.Structs
         public int X, Y;
         public bool XSmaller;
         public bool IsIntersecting;
+        public Vector2 Projection
+        {
+            get
+            {
+                if(X == Y)
+                    return new Vector2(X, Y);
+                return XSmaller ? new Vector2(X, 0) : new Vector2(0, Y);
+            }
+        }
+
+        //For velocities. Put 0 in the field that is smaller.
+        public Vector2 MultProjection
+        {
+            get
+            {
+                if (X == Y)
+                    return new Vector2(0, 0);
+                return XSmaller ? new Vector2(0, 1) : new Vector2(1, 0);
+            }
+        }
+
         public AABBResult(int X, int Y, bool XSmaller, bool intersecting)
         {
             this.X = X;

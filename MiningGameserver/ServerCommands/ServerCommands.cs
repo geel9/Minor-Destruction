@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using MiningGameServer;
 using MiningGameServer.ExtensionMethods;
-using MiningGameserver.Structs;
+using MiningGameServer.Structs;
 
-namespace MiningGameserver.ServerCommands
+namespace MiningGameServer
 {
     public static class ServerCommands
     {
@@ -26,20 +22,20 @@ namespace MiningGameserver.ServerCommands
             ServerConsole.AddConVar("sv_cheats", "If 1, cheats may be used.", "1");
 
             ServerConsole.AddConCommand("give", "Give a player an item", args =>
-                                                                             {
-                                                                                 string playerName = args[0].ToLower();
-                                                                                 int ID = Convert.ToInt32(args[1]);
-                                                                                 int amount = Convert.ToInt32(args[2]);
+                                                                        {
+                                                                            string playerName = args[0].ToLower();
+                                                                            int ID = Convert.ToInt32(args[1]);
+                                                                            int amount = Convert.ToInt32(args[2]);
 
-                                                                                 foreach(NetworkPlayer p in GameServer.NetworkPlayers)
-                                                                                 {
-                                                                                     if(p.PlayerName.ToLower() == playerName)
-                                                                                     {
-                                                                                         p.PickupItem(new ItemStack(amount, (byte) ID));
-                                                                                     }
-                                                                                 }
+                                                                            foreach (NetworkPlayer p in GameServer.NetworkPlayers)
+                                                                            {
+                                                                                if (p.PlayerName.ToLower() == playerName)
+                                                                                {
+                                                                                    p.PickupItem(new ItemStack(amount, (byte)ID));
+                                                                                }
+                                                                            }
 
-                                                                             });
+                                                                        });
         }
     }
 }

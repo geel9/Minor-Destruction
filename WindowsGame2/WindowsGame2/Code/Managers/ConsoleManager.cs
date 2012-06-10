@@ -6,7 +6,9 @@ using MiningGame.Code.Structs;
 using MiningGame.Code.Entities;
 using Microsoft.Xna.Framework;
 using MiningGameServer;
+using ConCommand = MiningGame.Code.Structs.ConCommand;
 using Console = MiningGame.Code.Entities.Console;
+using Convar = MiningGame.Code.Structs.Convar;
 
 
 namespace MiningGame.Code.Managers
@@ -372,7 +374,7 @@ namespace MiningGame.Code.Managers
             {
                 return false;
             }*/
-            return MiningGameserver.ServerConsole.Consume(command);
+            return MiningGameServer.ServerConsole.Consume(command);
         }
 
         public static void ConsoleInput(string input2, bool silent = false)
@@ -387,15 +389,15 @@ namespace MiningGame.Code.Managers
                 if (!silent)
                     Log(">" + input);
 
-                if(MiningGameserver.ServerConsole.IsCommand(command))
+                if(MiningGameServer.ServerConsole.IsCommand(command))
                 {
-                    MiningGameserver.ServerConsole.ExecuteCommand(command, inputs.Skip(1).ToArray());
+                    MiningGameServer.ServerConsole.ExecuteCommand(command, inputs.Skip(1).ToArray());
                     continue;
                 }
 
-                else if (MiningGameserver.ServerConsole.IsVariable(command))
+                else if (MiningGameServer.ServerConsole.IsVariable(command))
                 {
-                    MiningGameserver.ServerConsole.ExecuteVariable(command, inputs.Skip(1).ToArray());
+                    MiningGameServer.ServerConsole.ExecuteVariable(command, inputs.Skip(1).ToArray());
                     continue;
                 }
 

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MiningGameServer.Items
 {
-    public class ServerItemCoal : MiningGameserver.Items.ServerItem
+    public class ServerItemCoal : MiningGameServer.Items.ServerItem
     {
         public ServerItemCoal() : base(){
             SetName("Coal").SetDescription("Useful to those who like fire.").SetID(3).SetValue(7).SetBlockID(4);

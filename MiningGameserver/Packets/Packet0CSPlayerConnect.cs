@@ -4,8 +4,8 @@
     {
         public Packet0CSPlayerConnect(string name)
         {
-            writeByte((byte)0);
-            writeString(name);
+            WriteByte((byte)0);
+            WriteString(name);
         }
     }
 }

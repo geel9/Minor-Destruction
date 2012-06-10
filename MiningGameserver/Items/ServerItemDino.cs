@@ -1,6 +1,6 @@
 ﻿namespace MiningGameServer.Items
 {
-    public class ServerItemDino : MiningGameserver.Items.ServerItem
+    public class ServerItemDino : MiningGameServer.Items.ServerItem
     {
         public ServerItemDino()
             : base()

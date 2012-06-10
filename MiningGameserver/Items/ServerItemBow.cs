@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MiningGameserver.Items
+namespace MiningGameServer.Items
 {
     public class ServerItemBow : ServerItem
     {

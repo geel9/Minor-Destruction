@@ -4,7 +4,7 @@
     {
         public Packet200SCPlayerUpdate()
         {
-            writeByte(200);
+            WriteByte(200);
         }
     }
 

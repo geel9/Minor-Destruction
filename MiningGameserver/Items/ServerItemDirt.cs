@@ -1,6 +1,6 @@
 ﻿namespace MiningGameServer.Items
 {
-    public class ServerItemDirt : MiningGameserver.Items.ServerItem
+    public class ServerItemDirt : MiningGameServer.Items.ServerItem
     {
         public ServerItemDirt() : base()
         {

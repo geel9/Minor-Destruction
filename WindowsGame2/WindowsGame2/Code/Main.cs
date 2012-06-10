@@ -16,7 +16,7 @@ using System.Diagnostics;
 using MiningGameServer;
 using MiningGameServer.Packets;
 using MiningGameServer.Structs;
-using MiningGameserver;
+using MiningGameServer;
 using GeeUI.Views;
 using ConCommand = MiningGame.Code.Structs.ConCommand;
 using Convar = MiningGame.Code.Structs.Convar;
@@ -98,7 +98,7 @@ namespace MiningGame.Code
 
             ConsoleManager.addConVar("player_name", "Your name in a server", "Player_" + Main.R.Next(0, 1000), l =>
             {
-                if (clientNetworkManager.isConnected())
+                if (clientNetworkManager.IsConnected())
                 {
                     Packet1CSGameEvent packet = new Packet1CSGameEvent(GameServer.GameEvents.Player_Change_Name, l[0]);
                     clientNetworkManager.SendPacket(packet);
@@ -213,7 +213,7 @@ namespace MiningGame.Code
 
             ConsoleManager.addConCommand("showchat", "Show the chat window", (string[] ls) =>
             {
-                if (!InterfaceManager.blocking && clientNetworkManager.netClient != null)
+                if (!InterfaceManager.blocking && clientNetworkManager.NetClient != null)
                 {
                     ChatInterface.ShowChatEntry();
                 }
@@ -335,7 +335,7 @@ namespace MiningGame.Code
         {
             GraphicsDevice.Clear(BackColor);
 
-            spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, null, null);
 
             for (int i = 0; i < drawables.Count; i++)
             {

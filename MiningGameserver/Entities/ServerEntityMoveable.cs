@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using MiningGameServer;
-using MiningGameserver.Blocks;
+using MiningGameServer.Blocks;
 using MiningGameServer.Structs;
 
-namespace MiningGameserver.Entities
+namespace MiningGameServer.Entities
 {
     public class ServerEntityMoveable : ServerEntity
     {

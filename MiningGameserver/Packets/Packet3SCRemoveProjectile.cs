@@ -4,8 +4,8 @@
     {
         public Packet3SCRemoveProjectile(byte projectileID)
         {
-            writeByte(3);
-            writeByte(projectileID);
+            WriteByte(3);
+            WriteByte(projectileID);
         }
     }
 }

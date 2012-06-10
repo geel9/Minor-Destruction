@@ -3,7 +3,7 @@ using System.Linq;
 using MiningGameServer;
 using MiningGameServer.Items;
 
-namespace MiningGameserver.Items
+namespace MiningGameServer.Items
 {
     public abstract class ServerItem
     {
@@ -53,7 +53,7 @@ namespace MiningGameserver.Items
             return this;
         }
 
-        public ServerItem SetBlockID(byte id)
+        public ServerItem SetBlockID(short id)
         {
             _blockID = id;
             return this;
@@ -90,10 +90,11 @@ namespace MiningGameserver.Items
             if(block == 0 && _blockID != 0)
             {
                 GameServer.SetBlock(user, x, y, _blockID);
+                user.RemoveItems(_itemID, 1);
             }
         }
 
-        public byte GetBlockID()
+        public short GetBlockID()
         {
             return _blockID;
         }
@@ -102,18 +103,6 @@ namespace MiningGameserver.Items
         private int _itemWorth;
         private string _itemDescription;
         private byte _itemID;
-        private byte _blockID = 0;
-    }
-
-    public struct ItemStack
-    {
-        public int numberItems;
-        public byte itemID;
-
-        public ItemStack(int n = 0, byte b = 0)
-        {
-            numberItems = n;
-            itemID = b;
-        }
+        private short _blockID = 0;
     }
 }

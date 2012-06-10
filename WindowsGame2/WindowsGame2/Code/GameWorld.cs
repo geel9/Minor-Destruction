@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MiningGame.Code.Entities;
 using MiningGame.Code.Interfaces;
 using MiningGameServer;
+using MiningGameServer.Entities;
 using MiningGameServer.Packets;
 
 namespace MiningGame.Code
@@ -25,6 +26,7 @@ namespace MiningGame.Code
         public static PlayerController ThePlayer = new PlayerController();
 
         public static List<EntityProjectile> GameProjectiles = new List<EntityProjectile>();
+        public static List<EntityDroppedItem> DroppedItems = new List<EntityDroppedItem>();
 
         public static BlockData[,] WorldBlocks = new BlockData[WorldSizeX, WorldSizeY];
 
@@ -38,6 +40,11 @@ namespace MiningGame.Code
         {
             addToList();
             ThePlayer.Start();
+            for (int x = 0; x < WorldSizeX; x++)
+            {
+                for (int y = 0; y < WorldSizeY; y++)
+                    WorldBlocks[x, y] = new BlockData();
+            }
         }
 
         public static List<Vector2> LineIntersections(Vector2 p1, Vector2 p2)
@@ -113,7 +120,7 @@ namespace MiningGame.Code
 
         public static BlockData GetBlockAt(float x, float y)
         {
-            return GetBlockAt((int) x, (int) y);
+            return GetBlockAt((int)x, (int)y);
         }
 
         public void Update(GameTime time)
@@ -122,6 +129,18 @@ namespace MiningGame.Code
             ThePlayer.Update(time);
             if (ThePlayer.PlayerEntity != null)
                 CameraManager.setCameraPositionCenterMin(ThePlayer.PlayerEntity.EntityPosition, Vector2.Zero);
+
+            List<EntityDroppedItem> toRemove = new List<EntityDroppedItem>();
+            foreach(EntityDroppedItem item in DroppedItems)
+            {
+                item.Update(time);
+                if(item.ShouldDestroy)
+                    toRemove.Add(item);
+            }
+
+            foreach (EntityDroppedItem item in toRemove)
+                DroppedItems.Remove(item);
+
             foreach (EntityProjectile p in GameProjectiles)
                 p.Update(time);
         }
@@ -206,8 +225,8 @@ namespace MiningGame.Code
             }
             foreach (ItemStack i in ThePlayer.PlayerInventory)
             {
-                Item item = Item.GetItem(i.itemID);
-                inventory += item.GetName() + ": " + i.numberItems + "\n";
+                Item item = Item.GetItem(i.ItemID);
+                inventory += item.GetName() + ": " + i.NumberItems + "\n";
             }
             if (ThePlayer.PlayerInventory.Count == 0)
                 inventory += "Nothing!\n";
@@ -217,6 +236,9 @@ namespace MiningGame.Code
             {
                 oth.Draw(sb);
             }
+
+            foreach(EntityDroppedItem item in DroppedItems)
+                item.Draw(sb);
 
             foreach (EntityProjectile projectile in GameProjectiles)
             {
@@ -245,44 +267,223 @@ namespace MiningGame.Code
             WorldBlocks[x, y].MetaData = metadata;
         }
 
+        public static PlayerEntity PlayerOfID(byte ID)
+        {
+            if (ThePlayer.PlayerEntity.PlayerID == ID)
+                return ThePlayer.PlayerEntity;
+
+            return OtherPlayers.FirstOrDefault(pe => pe.PlayerID == ID);
+        }
+
+        public static EntityDroppedItem DroppedItemOfID(short ID)
+        {
+            return DroppedItems.FirstOrDefault(it => it.DroppedItemID == ID);
+        }
+
+        public static void HandlePacket(byte packetID, Packet p)
+        {
+            switch (packetID)
+            {
+                case 0:
+                    string pName = p.ReadString();
+                    byte id = p.ReadByte();
+
+                    int posX = p.ReadInt();
+                    int posY = p.ReadInt();
+                    if (OtherPlayers.Where(pl => pl.PlayerID == id).Count() > 0) return;
+                    if (ThePlayer.PlayerEntity.PlayerID != id)
+                    {
+                        ConsoleManager.Log("New player: " + pName + " id: " + id + " x: " + posX + " y: " + posY);
+                        OtherPlayers.Add(new PlayerEntity(new Vector2(posX, posY), id, pName));
+                    }
+                    else
+                    {
+                        ThePlayer.PlayerEntity.EntityPosition = new Vector2(posX, posY);
+                    }
+                    break;
+                case 1:
+                    HandleGameEvent(p.ReadByte(), p);
+                    break;
+
+                case 2:
+                    byte type = p.ReadByte();
+                    byte ID = p.ReadByte();
+                    short X = p.ReadShort();
+                    short Y = p.ReadShort();
+                    short angle = p.ReadShort();
+                    byte strength = p.ReadByte();
+                    byte owner = p.ReadByte();
+                    GameProjectiles.Add(new ProjectileArrow(new Vector2(X, Y), angle, owner, strength) { ProjectileID = ID });
+                    break;
+
+                case 3:
+                    byte toRemove = p.ReadByte();
+                    EntityProjectile proj = null;
+                    foreach (EntityProjectile projectile in GameProjectiles)
+                    {
+                        if (projectile.ProjectileID == toRemove)
+                        {
+                            proj = projectile;
+                            break;
+                        }
+                    }
+                    if (proj != null) GameProjectiles.Remove(proj);
+                    break;
+
+                case 6:
+                    byte playerID = p.ReadByte();
+                    PlayerEntity player = PlayerOfID(playerID);
+                    if (player == null) break;
+                    player.OnAttack();
+                    break;
+
+                case 7:
+                    playerID = p.ReadByte();
+                    byte itemID = p.ReadByte();
+                    player = PlayerOfID(playerID);
+                    if (player == null) break;
+                    player.EquippedItem = Item.GetItem(itemID);
+
+                    break;
+
+                case 8:
+                    Vector2 pos = p.ReadVectorS();
+                    Vector2 velocity = p.ReadVectorS();
+                    short droppedID = p.ReadShort();
+                    itemID = p.ReadByte();
+                    EntityDroppedItem item = DroppedItemOfID(droppedID);
+                    if (item != null)
+                        break;
+
+                    item = new EntityDroppedItem(pos, velocity, itemID, droppedID);
+                    DroppedItems.Add(item);
+                    break;
+
+                case 9:
+                    droppedID = p.ReadShort();
+                    byte pickerUpper = p.ReadByte();
+                    player = PlayerOfID(pickerUpper);
+                    item = DroppedItemOfID(droppedID);
+                    if (item == null || player == null) break;
+                    item.MovingTowards = player;
+                    break;
+
+                case 10:
+                    droppedID = p.ReadShort();
+                    item = DroppedItemOfID(droppedID);
+                    if (item != null)
+                        DroppedItems.Remove(item);
+                    break;
+
+                case 200:
+                    PlayerUpdating(p);
+                    break;
+
+                case 255:
+                    id = p.ReadByte();
+                    ConsoleManager.Log("My id is " + id);
+                    ThePlayer.PlayerEntity = new PlayerEntity(new Vector2(0, 0), id, ConsoleManager.getVariableValue("player_name"));
+                    break;
+            }
+        }
+
+        public static void PlayerUpdating(Packet p)
+        {
+            int numToUpdate = p.ReadByte();
+            List<byte> playersUpdated = new List<byte>();
+            List<byte> allPlayers = GameWorld.OtherPlayers.Select(pl => pl.PlayerID).ToList();
+            for (int i = 0; i < numToUpdate; i++)
+            {
+                int playerID = p.ReadByte();
+                playersUpdated.Add((byte)playerID);
+                PlayerEntity player;
+                if (playerID == GameWorld.ThePlayer.PlayerEntity.PlayerID)
+                    player = GameWorld.ThePlayer.PlayerEntity;
+                else
+                {
+                    player = GameWorld.OtherPlayers.Where(pl => pl.PlayerID == playerID).FirstOrDefault();
+                }
+                if (player == null) player = new PlayerEntity(Vector2.Zero, (byte)playerID);
+                byte updateMask = p.ReadByte();
+
+                if ((updateMask & (int)PlayerUpdateFlags.Player_Position_X) != 0)
+                {
+                    short x = p.ReadShort();
+                    player.EntityPosition.X = x;
+                }
+                if ((updateMask & (int)PlayerUpdateFlags.Player_Position_Y) != 0)
+                {
+                    short y = p.ReadShort();
+                    player.EntityPosition.Y = y;
+                }
+                if ((updateMask & (int)PlayerUpdateFlags.Player_Movement_Flags) != 0)
+                {
+                    byte flags = p.ReadByte();
+                    player.OtherPlayerNetworkFlags = flags;
+                    bool leftPress = (flags & (int)PlayerMovementFlag.Left_Pressed) != 0;
+                    bool rightPress = (flags & (int)PlayerMovementFlag.Right_Pressed) != 0;
+                    bool idle = (flags & (int)PlayerMovementFlag.Idle) != 0;
+                    if (leftPress || rightPress)
+                    {
+                        player.FacingLeft = leftPress && !rightPress;
+                        if (!(leftPress && rightPress))
+                        {
+                            player.TorsoAnimateable.StartLooping("player_run_start", "player_run_end");
+                            player.LegsAnimateable.StartLooping("player_run_start", "player_run_end");
+                        }
+                        else
+                        {
+                            player.TorsoAnimateable.StartLooping("player_idle", "player_idle");
+                            player.LegsAnimateable.StartLooping("player_idle", "player_idle");
+                        }
+                    }
+                    if (idle)
+                    {
+                        player.TorsoAnimateable.StartLooping("player_idle", "player_idle");
+                        player.LegsAnimateable.StartLooping("player_idle", "player_idle");
+                    }
+                }
+            }
+        }
+
         public static void HandleGameEvent(byte eventID, Packet p)
         {
             switch ((GameServer.GameEvents)eventID)
             {
                 case GameServer.GameEvents.Block_Set:
-                    SetBlock(p.readShort(), p.readShort(), p.readShort(), false, p.readByte());
+                    SetBlock(p.ReadShort(), p.ReadShort(), p.ReadShort(), false, p.ReadByte());
                     break;
 
                 case GameServer.GameEvents.Block_Set_ID:
-                    SetBlock(p.readShort(), p.readShort(), p.readShort(), false, 0);
+                    SetBlock(p.ReadShort(), p.ReadShort(), p.ReadShort(), false, 0);
                     break;
 
                 case GameServer.GameEvents.Block_Set_MD:
-                    short X = p.readShort();
-                    short Y = p.readShort();
-                    SetBlock(X, Y, WorldBlocks[X, Y].ID, false, p.readByte());
+                    short X = p.ReadShort();
+                    short Y = p.ReadShort();
+                    SetBlock(X, Y, WorldBlocks[X, Y].ID, false, p.ReadByte());
                     break;
 
                 case GameServer.GameEvents.Block_Set_Chunk:
-                    int numSending = p.readShort();
-                    short startX = p.readShort();
-                    short startY = p.readShort();
+                    int numSending = p.ReadShort();
+                    short startX = p.ReadShort();
+                    short startY = p.ReadShort();
 
                     for (int i = 0; i < numSending; i++)
                     {
-                        X = (short)(p.readByte() + startX);
-                        Y = (short)(p.readByte() + startY);
-                        short Id = p.readShort();
-                        byte metadata = p.readByte();
+                        X = (short)(p.ReadByte() + startX);
+                        Y = (short)(p.ReadByte() + startY);
+                        short Id = p.ReadShort();
+                        byte metadata = p.ReadByte();
                         SetBlock(X, Y, Id, true, metadata);
                     }
 
                     break;
 
                 case GameServer.GameEvents.Player_Chat:
-                    byte playerID = p.readByte();
-                    bool teamChat = p.readBool();
-                    string chatText = p.readString();
+                    byte playerID = p.ReadByte();
+                    bool teamChat = p.ReadBool();
+                    string chatText = p.ReadString();
                     if (playerID == ThePlayer.PlayerEntity.PlayerID)
                     {
                         ChatInterface.AddChat(new ChatEntry(ThePlayer.PlayerEntity.PlayerName, chatText, Color.White, teamChat));
@@ -304,9 +505,9 @@ namespace MiningGame.Code
                     break;
 
                 case GameServer.GameEvents.Player_Position:
-                    playerID = p.readByte();
-                    int x = p.readInt();
-                    int y = p.readInt();
+                    playerID = p.ReadByte();
+                    int x = p.ReadInt();
+                    int y = p.ReadInt();
                     if (playerID == ThePlayer.PlayerEntity.PlayerID)
                     {
                         ThePlayer.PlayerEntity.EntityPosition = new Vector2(x, y);
@@ -324,9 +525,9 @@ namespace MiningGame.Code
                     break;
 
                 case GameServer.GameEvents.Player_Aim_And_Position:
-                    playerID = p.readByte();
-                    x = p.readShort();
-                    y = p.readShort();
+                    playerID = p.ReadByte();
+                    x = p.ReadShort();
+                    y = p.ReadShort();
                     if (playerID == ThePlayer.PlayerEntity.PlayerID)
                     {
                         ThePlayer.PlayerEntity.EntityPosition = new Vector2(x, y);
@@ -344,15 +545,15 @@ namespace MiningGame.Code
                     break;
 
                 case GameServer.GameEvents.Player_Leave:
-                    byte pId = p.readByte();
+                    byte pId = p.ReadByte();
                     OtherPlayers.Remove(OtherPlayers.Where(pl => pl.PlayerID == pId).FirstOrDefault());
                     ConsoleManager.Log("Player " + pId + " left.");
                     break;
 
                 case GameServer.GameEvents.Player_Inventory_Update:
-                    byte index = p.readByte();
-                    byte id = p.readByte();
-                    int num = p.readInt();
+                    byte index = p.ReadByte();
+                    byte id = p.ReadByte();
+                    int num = p.ReadInt();
                     if (index < ThePlayer.PlayerInventory.Count)
                     {
                         ThePlayer.PlayerInventory[index] = new ItemStack(num, id);
@@ -360,18 +561,17 @@ namespace MiningGame.Code
                     break;
 
                 case GameServer.GameEvents.Player_Inventory_Add:
-                    byte itemID = p.readByte();
-                    int itemNum = p.readInt();
-                    ThePlayer.PlayerInventory.Add(new ItemStack(itemNum, itemID));
+                    ItemStack it = p.ReadNT<ItemStack>();
+                    ThePlayer.PlayerInventory.Add(it);
                     break;
 
                 case GameServer.GameEvents.Player_Inventory_Remove:
-                    ThePlayer.PlayerInventory.RemoveAt(p.readByte());
+                    ThePlayer.PlayerInventory.RemoveAt(p.ReadByte());
                     break;
 
-                    case GameServer.GameEvents.Player_Change_Name:
-                    playerID = p.readByte();
-                    string newName = p.readString();
+                case GameServer.GameEvents.Player_Change_Name:
+                    playerID = p.ReadByte();
+                    string newName = p.ReadString();
 
                     if (playerID == ThePlayer.PlayerEntity.PlayerID)
                     {
@@ -395,7 +595,7 @@ namespace MiningGame.Code
             }
         }
 
-        internal static void lightUpAroundRadius(int blockX, int blockY, int radius, int level = 1, int sign = 1)
+        internal static void LightUpAroundRadius(int blockX, int blockY, int radius, int level = 1, int sign = 1)
         {/*
             if (blockX - radius < 0 || blockX + radius >= GameServer.WorldSizeX || blockY - radius < 0 || blockY + radius >= GameServer.WorldSizeY) return;
             Vector2 playerTile = new Vector2(blockX, blockY);

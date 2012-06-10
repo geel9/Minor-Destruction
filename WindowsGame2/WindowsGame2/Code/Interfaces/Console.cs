@@ -53,7 +53,7 @@ namespace MiningGame.Code.Entities
             Color black = Color.Black;
             black.A = 200;
             active = false;
-            output = new TextFieldView(p, new Vector2(0, 0), AssetManager.GetFont("Console"))
+            output = new TextFieldView(p, new Vector2(0, 0), AssetManager.GetFont("Console2"))
                          {Width = 490, Height = 330, Editable = false};
             tI = new TextFieldView(p, new Vector2(0, output.Height + 1), AssetManager.GetFont("Console"))
                      {Width = 490, Height = 20, MultiLine = false};

@@ -4,9 +4,9 @@
     {
         public Packet5CSPlayerMovementFlagsAndAim(byte flag, short aim)
         {
-            writeByte(5);
-            writeByte(flag);
-            writeShort(aim);
+            WriteByte(5);
+            WriteByte(flag);
+            WriteShort(aim);
         }
     }
 }

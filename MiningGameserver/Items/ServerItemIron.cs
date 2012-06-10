@@ -5,10 +5,11 @@ using System.Text;
 
 namespace MiningGameServer.Items
 {
-    public class ServerItemIron : MiningGameserver.Items.ServerItem
+    public class ServerItemIron : MiningGameServer.Items.ServerItem
     {
-        public ServerItemIron() : base(){
-            SetName("Iron").SetDescription("I am iron man").SetValue(7).SetID(4);
+        public ServerItemIron() : base()
+        {
+            SetName("Iron").SetDescription("I am iron man").SetValue(7).SetID(4).SetBlockID(5);
         }
         public override void OnItemUsed(int x, int y, NetworkPlayer user)
         {

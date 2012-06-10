@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using MiningGameServer;
 
-namespace MiningGameserver.Blocks
+namespace MiningGameServer.Blocks
 {
     public class BlockPistonBase : Block
     {

@@ -5,16 +5,16 @@ namespace MiningGameServer.Packets
     {
         public Packet1CSGameEvent(byte gameEventID, params object[] eventParams)
         {
-            writeByte((byte)1);
-            writeByte(gameEventID);
-            writeAll(eventParams);
+            WriteByte((byte)1);
+            WriteByte(gameEventID);
+            WriteAll(eventParams);
         }
 
         public Packet1CSGameEvent(GameServer.GameEvents gameEventID, params object[] eventParams)
         {
-            writeByte((byte)1);
-            writeByte((byte)gameEventID);
-            writeAll(eventParams);
+            WriteByte((byte)1);
+            WriteByte((byte)gameEventID);
+            WriteAll(eventParams);
         }
     }
 }

@@ -48,9 +48,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MiningGameserver\MiningGameserver.csproj">
+    <ProjectReference Include="..\MiningGameserver\MiningGameServer.csproj">
       <Project>{70DD389A-8498-49BD-BCD7-CD7D33A1A4FD}</Project>
-      <Name>MiningGameserver</Name>
+      <Name>MiningGameServer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -5,12 +5,12 @@ using Lidgren.Network;
 using MiningGameServer.ExtensionMethods;
 using MiningGameServer.Packets;
 using MiningGameServer.Structs;
-using MiningGameserver;
-using MiningGameserver.Blocks;
-using MiningGameserver.Entities;
-using MiningGameserver.Items;
-using MiningGameserver.Packets;
-using ItemStack = MiningGameserver.Structs.ItemStack;
+using MiningGameServer;
+using MiningGameServer.Blocks;
+using MiningGameServer.Entities;
+using MiningGameServer.Items;
+using MiningGameServer.Packets;
+using ItemStack = MiningGameServer.Structs.ItemStack;
 
 namespace MiningGameServer
 {
@@ -112,7 +112,11 @@ namespace MiningGameServer
             EntityVelocity.X = 3;
 
             PlayerBlockCache = new BlockData[GameServer.WorldSizeX, GameServer.WorldSizeY];
-
+            for (int x = 0; x < GameServer.WorldSizeX; x++)
+            {
+                for (int y = 0; y < GameServer.WorldSizeY; y++)
+                    PlayerBlockCache[x, y] = new BlockData();
+            }
         }
 
         public void UpdateCache()
@@ -148,10 +152,10 @@ namespace MiningGameServer
                     oneX = x;
                     oneY = y;
 
-                    packet.writeByte((byte)(x - startX));
-                    packet.writeByte((byte)(y - startY));
-                    packet.writeShort(realID);
-                    packet.writeByte(realMD);
+                    packet.WriteByte((byte)(x - startX));
+                    packet.WriteByte((byte)(y - startY));
+                    packet.WriteShort(realID);
+                    packet.WriteByte(realMD);
 
                     numSending++;
                 }
@@ -159,10 +163,10 @@ namespace MiningGameServer
             if (numSending > 1)
             {
                 Packet packet2 = new Packet1SCGameEvent(GameServer.GameEvents.Block_Set_Chunk);
-                packet2.writeShort(numSending);
-                packet2.writeShort(startX);
-                packet2.writeShort(startY);
-                packet2.writeBytes(packet.data.ToArray());
+                packet2.WriteShort(numSending);
+                packet2.WriteShort(startX);
+                packet2.WriteShort(startY);
+                packet2.WriteBytes(packet.data.ToArray());
 
                 GameServer.ServerNetworkManager.SendPacket(packet2, NetConnection);
             }
@@ -185,11 +189,11 @@ namespace MiningGameServer
             }
             else
 
-            if (_jumpTimer > 0) _jumpTimer--;
+                if (_jumpTimer > 0) _jumpTimer--;
             if (_attackTimer > 0)
             {
                 _attackTimer--;
-                if(_attackTimer == 5)
+                if (_attackTimer == 5)
                 {
                     UpdateMask |= (int)PlayerUpdateFlags.Player_Update;
                     UpdateMask |= (int)PlayerUpdateFlags.Player_Movement_Flags;
@@ -283,23 +287,23 @@ namespace MiningGameServer
             AABB bound = new AABB(new Rectangle(leftX, (int)BoundBox.Top + 5, 15, PlayerHeight - 6));
             List<Vector2> newTiles = RectangleHitsTiles(bound);
 
-            foreach(Vector2 v in newTiles)
+            foreach (Vector2 v in newTiles)
             {
                 BlockData block = GameServer.GetBlockAt(v.X, v.Y);
-                if(block.ID != 0)
+                if (block.ID != 0)
                 {
-                    AABB bound2 = new AABB(block.Block.GetBlockBoundBox((int) v.X, (int) v.Y));
-                    if(bound2.Intersects(bound))
+                    AABB bound2 = new AABB(block.Block.GetBlockBoundBox((int)v.X, (int)v.Y));
+                    if (bound2.Intersects(bound))
                     {
                         GameServer.SetBlock((int)v.X, (int)v.Y, 0);
                     }
                 }
             }
-            
-            foreach(NetworkPlayer player in GameServer.NetworkPlayers)
+
+            foreach (NetworkPlayer player in GameServer.NetworkPlayers)
             {
                 if (player == this) continue;
-                if(player.BoundBox.Intersects(bound) || player.BoundBox.Contains(bound) || bound.Contains(player.BoundBox))
+                if (player.BoundBox.Intersects(bound) || player.BoundBox.Contains(bound) || bound.Contains(player.BoundBox))
                 {
                     GameServer.SendMessageToAll(PlayerName + " hit " + player.PlayerName);
                     player.PlayerHealth--;
@@ -376,7 +380,32 @@ namespace MiningGameServer
 
                 if (!collide.IsIntersecting || collide.X == 0 || collide.Y == 0) continue;
 
-                if (collide.XSmaller && collide.X != 0)
+                if (!walkThrough)
+                {
+                    int side = 0;
+
+
+
+                    if (collide.Projection.Y > 0)
+                        side = 2;
+                    if (collide.Projection.Y < 0)
+                        side = 0;
+                    if (collide.Projection.X > 0)
+                        side = 1;
+                    if (collide.Projection.X < 0)
+                        side = 3;
+
+                    if (collide.Projection.Y < 0)
+                    {
+                        TimeFalling = 0;
+                        Falling = false;
+                    }
+
+                    EntityVelocity *= collide.MultProjection;
+                    EntityPosition += collide.Projection;
+                    block.OnBlockTouched((int)newTile.X, (int)newTile.Y, side, this);
+                }
+                /*else if (collide.XSmaller)
                 {
                     bool right = (collide.X < 0);
                     if (!walkThrough)
@@ -386,7 +415,7 @@ namespace MiningGameServer
                     }
                     block.OnBlockTouched((int)newTile.X, (int)newTile.Y, right ? 3 : 1, this);
                 }
-                else if(!collide.XSmaller || (collide.XSmaller && collide.X == 0 && collide.Y != 0))
+                else
                 {
                     bool up = (collide.Y > 0);
                     if (!walkThrough)
@@ -400,7 +429,7 @@ namespace MiningGameServer
                         }
                     }
                     block.OnBlockTouched((int)newTile.X, (int)newTile.Y, up ? 2 : 0, this);
-                }
+                }*/
             }
         }
 
@@ -420,7 +449,7 @@ namespace MiningGameServer
 
             BlockCollisions();
 
-            
+
 
             if (EntityVelocity.Y < 6)
                 EntityVelocity.Y += 1; // Gravity! This is a really nice side effect: The code for not allowing the player to go through a block downwards already exists, so I just need to add this one line to add gravity!
@@ -446,19 +475,30 @@ namespace MiningGameServer
             return PlayerInventory.Where(x => x.ItemID == id).FirstOrDefault().NumberItems;
         }
 
+        public void SendEquippedItemUpdate()
+        {
+            ServerItem i = GetPlayerItemInHand();
+            byte itemID = 0;
+            if (i != null)
+                itemID = i.GetItemID();
+            Packet7SCPlayerCurItemChanged packet7 = new Packet7SCPlayerCurItemChanged(PlayerID, itemID);
+            GameServer.ServerNetworkManager.SendPacket(packet7);
+        }
+
         public void RemoveItems(byte itemID, int numToRemove)
         {
-            if (GetNumItemInInventory(itemID) < numToRemove) return;
+            if (GetNumItemInInventory(itemID) == 0) return;
             ItemStack i = GetPlayerItemStackFromInventory(itemID);
             int index = PlayerInventory.IndexOf(i);
             i.NumberItems -= numToRemove;
-            if (i.NumberItems == 0)
+            if (i.NumberItems <= 0)
             {
-                if (index < PlayerInventorySelected) PlayerInventorySelected++;
+                if (index < PlayerInventorySelected)
+                    PlayerInventorySelected++;
                 PlayerInventory.RemoveAt(index);
                 Packet p = new Packet1SCGameEvent(GameServer.GameEvents.Player_Inventory_Remove, (byte)index);
                 GameServer.ServerNetworkManager.SendPacket(p, NetConnection);
-
+                SendEquippedItemUpdate();
             }
             else
             {
@@ -480,17 +520,20 @@ namespace MiningGameServer
             for (int i = 0; i < PlayerInventory.Count; i++)
             {
                 ItemStack it = PlayerInventory[i];
-                if (it.ItemID == item.ItemID)
-                {
-                    PlayerInventory[i] = new ItemStack(it.NumberItems + item.NumberItems, it.ItemID);
-                    Packet pack = new Packet1SCGameEvent(GameServer.GameEvents.Player_Inventory_Update, (byte)i, (byte)PlayerInventory[i].ItemID, PlayerInventory[i].NumberItems);
-                    GameServer.ServerNetworkManager.SendPacket(pack, NetConnection);
-                    return;
-                }
+                if (it.ItemID != item.ItemID) continue;
+                PlayerInventory[i] = new ItemStack(it.NumberItems + item.NumberItems, it.ItemID);
+                Packet pack = new Packet1SCGameEvent(GameServer.GameEvents.Player_Inventory_Update, (byte)i, (byte)PlayerInventory[i].ItemID, PlayerInventory[i].NumberItems);
+                GameServer.ServerNetworkManager.SendPacket(pack, NetConnection);
+                return;
             }
             PlayerInventory.Add(item);
-            Packet p = new Packet1SCGameEvent(GameServer.GameEvents.Player_Inventory_Add, (byte)item.ItemID, item.NumberItems);
+
+
+            Packet p = new Packet1SCGameEvent(GameServer.GameEvents.Player_Inventory_Add);
+            p.WriteNT(item);
             GameServer.ServerNetworkManager.SendPacket(p, NetConnection);
+
+            SendEquippedItemUpdate();
         }
     }
 }

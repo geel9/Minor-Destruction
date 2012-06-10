@@ -4,9 +4,11 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Xna.Framework;
 using MiningGameServer;
-using MiningGameserver.Entities;
+using MiningGameServer.Packets;
+using MiningGameServer.Entities;
+using MiningGameServer.Interfaces;
 
-namespace MiningGameserver.Blocks
+namespace MiningGameServer.Blocks
 {
     public class Block
     {
@@ -181,12 +183,12 @@ namespace MiningGameserver.Blocks
             return -1;
         }
 
-        public byte GetItemDrop(int x, int y)
+        public virtual byte GetItemDrop(int x, int y)
         {
             return 0;
         }
 
-        public int GetItemDropNum(int x, int y)
+        public virtual int GetItemDropNum(int x, int y)
         {
             return 0;
         }
@@ -253,13 +255,27 @@ namespace MiningGameserver.Blocks
         }
     }
 
-    public struct BlockData
+    public class BlockData : INetTransferable<BlockData>
     {
         public short ID;
         public byte MetaData;
         public Block Block
         {
-            get { return Block.GetBlock(ID); }
+            get
+            {
+                return Block.GetBlock(ID);
+            }
+        }
+
+        public void Write(Packet p)
+        {
+            p.WriteShort(ID);
+            p.WriteByte(MetaData);
+        }
+
+        public BlockData Read(Packet p)
+        {
+            return new BlockData{ID = p.ReadShort(), MetaData = p.ReadByte()};
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace MiningGameServer.Items
 {
-    public class ServerItemPlank : MiningGameserver.Items.ServerItem
+    public class ServerItemPlank : MiningGameServer.Items.ServerItem
     {
         public ServerItemPlank()
             : base()

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MiningGameServer.Items
 {
-    public class ServerItemRock : MiningGameserver.Items.ServerItem
+    public class ServerItemRock : MiningGameServer.Items.ServerItem
     {
         public ServerItemRock() : base()
         {

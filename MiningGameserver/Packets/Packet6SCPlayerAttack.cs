@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using MiningGameServer.Packets;
 
-namespace MiningGameserver.Packets
+namespace MiningGameServer.Packets
 {
     public class Packet6SCPlayerAttack : Packet
     {
         public Packet6SCPlayerAttack(byte playerID)
         {
-            writeByte(6);
-            writeByte(playerID);
+            WriteByte(6);
+            WriteByte(playerID);
         }
     }
 }

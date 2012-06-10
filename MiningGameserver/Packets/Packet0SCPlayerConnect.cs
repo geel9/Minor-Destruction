@@ -6,11 +6,11 @@ namespace MiningGameServer.Packets
     {
         public Packet0SCPlayerConnect(string name, int playerID, Vector2 playerPos)
         {
-            writeByte((byte)0);
-            writeString(name);
-            writeInt(playerID);
-            writeInt((int)playerPos.X);
-            writeInt((int)playerPos.Y);
+            WriteByte((byte)0);
+            WriteString(name);
+            WriteInt(playerID);
+            WriteInt((int)playerPos.X);
+            WriteInt((int)playerPos.Y);
         }
     }
 }

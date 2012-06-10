@@ -3,7 +3,7 @@ using Lidgren.Network;
 using Microsoft.Xna.Framework;
 using MiningGameServer.ExtensionMethods;
 using MiningGameServer.Packets;
-using MiningGameserver;
+using MiningGameServer;
 
 namespace MiningGameServer
 {
@@ -110,11 +110,11 @@ namespace MiningGameServer
 
         public void HandlePacket(Packet p, NetworkPlayer player)
         {
-            byte num = p.readByte();
+            byte num = p.ReadByte();
             switch (num)
             {
                 case 0:
-                    string name = p.readString();
+                    string name = p.ReadString();
                     player.PlayerName = name;
                     Packet255SCConnectionFirmed packet2 = new Packet255SCConnectionFirmed(player.PlayerID);
                     SendPacket(packet2, player.NetConnection);
@@ -133,18 +133,18 @@ namespace MiningGameServer
                     break;
                 //A game event, JC!
                 case 1:
-                    byte eventID = p.readByte();
+                    byte eventID = p.ReadByte();
                     GameServer.HandleGameEvent(eventID, p, player);
                     break;
 
                 case 2:
-                    int pX = p.readInt();
-                    int pY = p.readInt();
+                    int pX = p.ReadInt();
+                    int pY = p.ReadInt();
                     GameServer.SetBlock(pX, pY, 0, true, 0);
                     break;
 
                 case 4:
-                    byte flags = p.readByte();
+                    byte flags = p.ReadByte();
                     if (player.MovementFlags != flags)
                     {
                         player.UpdateMask |= (int)PlayerUpdateFlags.Player_Update;
@@ -154,8 +154,8 @@ namespace MiningGameServer
                     break;
 
                 case 5:
-                    flags = p.readByte();
-                    float angle = p.readShort().DToR();
+                    flags = p.ReadByte();
+                    float angle = p.ReadShort().DToR();
                     if (player.MovementFlags != flags || angle != player.PlayerAimAngle)
                     {
                         player.UpdateMask |= (int)PlayerUpdateFlags.Player_Update;

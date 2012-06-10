@@ -4,14 +4,14 @@
     {
         public Packet2SCCreateProjectile(byte ProjectileID, byte projectileType, short X, short Y, short angle, byte strength, byte owner)
         {
-            writeByte(2);
-            writeByte(projectileType);
-            writeByte(ProjectileID);
-            writeShort(X);
-            writeShort(Y);
-            writeShort(angle);
-            writeByte(strength);
-            writeByte(owner);
+            WriteByte(2);
+            WriteByte(projectileType);
+            WriteByte(ProjectileID);
+            WriteShort(X);
+            WriteShort(Y);
+            WriteShort(angle);
+            WriteByte(strength);
+            WriteByte(owner);
         }
     }
 }

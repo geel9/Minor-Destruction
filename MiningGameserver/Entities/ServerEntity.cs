@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using MiningGameServer.Structs;
 
-namespace MiningGameserver.Entities
+namespace MiningGameServer.Entities
 {
     public class ServerEntity
     {

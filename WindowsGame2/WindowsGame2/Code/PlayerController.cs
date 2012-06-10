@@ -189,17 +189,17 @@ namespace MiningGame.Code
 
         public bool HasItem(byte id)
         {
-            return GetPlayerItemStackFromInventory(id).itemID == id;
+            return GetPlayerItemStackFromInventory(id).ItemID == id;
         }
 
         public ItemStack GetPlayerItemStackFromInventory(byte id)
         {
-            return PlayerInventory.Where(x => x.itemID == id).FirstOrDefault();
+            return PlayerInventory.Where(x => x.ItemID == id).FirstOrDefault();
         }
 
         public int GetNumItemInInventory(byte id)
         {
-            return PlayerInventory.Where(x => x.itemID == id).FirstOrDefault().numberItems;
+            return PlayerInventory.Where(x => x.ItemID == id).FirstOrDefault().NumberItems;
         }
 
         public void RemoveItems(byte itemID, int numToRemove)
@@ -207,8 +207,8 @@ namespace MiningGame.Code
             if (GetNumItemInInventory(itemID) < numToRemove) return;
             ItemStack i = GetPlayerItemStackFromInventory(itemID);
             int index = PlayerInventory.IndexOf(i);
-            i.numberItems -= numToRemove;
-            if (i.numberItems == 0)
+            i.NumberItems -= numToRemove;
+            if (i.NumberItems == 0)
             {
                 if (index < PlayerInventorySelected) PlayerInventorySelected++;
                 PlayerInventory.RemoveAt(index);
@@ -223,7 +223,7 @@ namespace MiningGame.Code
         {
             if (PlayerInventorySelected >= PlayerInventory.Count) PlayerInventorySelected = -1;
             if (PlayerInventorySelected == -1) return null;
-            return Item.GetItem(PlayerInventory[PlayerInventorySelected].itemID);
+            return Item.GetItem(PlayerInventory[PlayerInventorySelected].ItemID);
         }
 
         public void PickupItem(ItemStack item)
@@ -231,9 +231,9 @@ namespace MiningGame.Code
             for (int i = 0; i < PlayerInventory.Count; i++)
             {
                 ItemStack it = PlayerInventory[i];
-                if (it.itemID == item.itemID)
+                if (it.ItemID == item.ItemID)
                 {
-                    PlayerInventory[i] = new ItemStack(it.numberItems + item.numberItems, it.itemID);
+                    PlayerInventory[i] = new ItemStack(it.NumberItems + item.NumberItems, it.ItemID);
                     //playerInventory.Clear();
                     return;
                 }

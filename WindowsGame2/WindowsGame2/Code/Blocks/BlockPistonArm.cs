@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using MiningGame.Code.Managers;
 using MiningGame.ExtensionMethods;
-using MiningGameserver.Blocks;
+using MiningGameServer.Blocks;
 
 namespace MiningGame.Code.Blocks
 {

@@ -5,8 +5,8 @@ namespace MiningGameServer.Packets
     {
         public Packet255SCConnectionFirmed(int playerID)
         {
-            writeByte((byte)255);
-            writeInt(playerID);
+            WriteByte((byte)255);
+            WriteInt(playerID);
         }
     }
 }

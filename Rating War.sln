@@ -5,7 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiningGame", "WindowsGame2\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiningGameContent", "WindowsGame2\WindowsGame2Content\MiningGameContent.contentproj", "{2A271523-D3F9-4314-BD45-B0C61A6F4B31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiningGameserver", "MiningGameserver\MiningGameserver.csproj", "{70DD389A-8498-49BD-BCD7-CD7D33A1A4FD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiningGameServer", "MiningGameserver\MiningGameServer.csproj", "{70DD389A-8498-49BD-BCD7-CD7D33A1A4FD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiningGameDedicatedServer", "MiningGameDedicatedServer\MiningGameDedicatedServer.csproj", "{A53AE9EB-F5AD-4DD2-A0D5-4F3C30DCE692}"
 EndProject

@@ -6,7 +6,7 @@ using System.Text;
 using Lidgren.Network;
 using MiningGameServer;
 using System.Threading;
-using MiningGameserver;
+using MiningGameServer;
 
 namespace MiningGameDedicatedServer
 {

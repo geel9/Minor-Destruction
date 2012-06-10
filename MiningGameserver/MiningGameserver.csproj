@@ -8,8 +8,8 @@
     <ProjectGuid>{70DD389A-8498-49BD-BCD7-CD7D33A1A4FD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MiningGameserver</RootNamespace>
-    <AssemblyName>MiningGameserver</AssemblyName>
+    <RootNamespace>MiningGameServer</RootNamespace>
+    <AssemblyName>MiningGameServer</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -45,15 +45,18 @@
     <Compile Include="Blocks\Block.cs" />
     <Compile Include="Blocks\BlockDirt.cs" />
     <Compile Include="Blocks\BlockDoor.cs" />
+    <Compile Include="Blocks\BlockIron.cs" />
     <Compile Include="Blocks\BlockPistonArm.cs" />
     <Compile Include="Blocks\BlockPistonBase.cs" />
     <Compile Include="ConversionManager.cs" />
     <Compile Include="Entities\ServerEntity.cs" />
+    <Compile Include="Entities\ServerEntityDroppedItem.cs" />
     <Compile Include="Entities\ServerEntityMoveable.cs" />
     <Compile Include="Entities\ServerProjectile.cs" />
     <Compile Include="Entities\ServerProjectileArrow.cs" />
     <Compile Include="ExtensionMethods\ExtensionMethods.cs" />
     <Compile Include="GameServer.cs" />
+    <Compile Include="Interfaces\INetTransferable.cs" />
     <Compile Include="Items\ServerItem.cs" />
     <Compile Include="Items\ServerItemBow.cs" />
     <Compile Include="Items\ServerItemCoal.cs" />
@@ -134,6 +137,7 @@
     <Compile Include="Packets\Packet.cs" />
     <Compile Include="Packets\Packet0CSPlayerConnect.cs" />
     <Compile Include="Packets\Packet0SCPlayerConnect.cs" />
+    <Compile Include="Packets\Packet10SCItemDeleted.cs" />
     <Compile Include="Packets\Packet1CSGameEvent.cs" />
     <Compile Include="Packets\Packet1SCGameEvent.cs" />
     <Compile Include="Packets\Packet200SCPlayerUpdate.cs" />
@@ -144,6 +148,8 @@
     <Compile Include="Packets\Packet5CSPlayerMovementFlagsAndAim.cs" />
     <Compile Include="Packets\Packet6SCPlayerAttack.cs" />
     <Compile Include="Packets\Packet7SCPlayerCurItemChanged.cs" />
+    <Compile Include="Packets\Packet8SCItemDropped.cs" />
+    <Compile Include="Packets\Packet9SCItemPickedUp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerCommands\ServerCommands.cs" />
     <Compile Include="ServerConsole.cs" />
@@ -154,7 +160,6 @@
   <ItemGroup>
     <None Include="Blocks\BlockCoal.csO" />
     <None Include="Blocks\BlockGrass.csO" />
-    <None Include="Blocks\BlockIron.csO" />
     <None Include="Blocks\BlockLadder.csO" />
     <None Include="Blocks\BlockRock.csO" />
   </ItemGroup>

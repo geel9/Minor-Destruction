@@ -7,13 +7,21 @@ using MiningGame.Code.Items;
 using MiningGame.Code.Managers;
 using MiningGame.Code.Structs;
 using MiningGameServer.Structs;
+using ItemStack = MiningGame.Code.Items.ItemStack;
 
 namespace MiningGame.Code.Entities
 {
     public class EntityDroppedItem : EntityMoveable
     {
-
         private byte _itemID;
+
+        public PlayerEntity MovingTowards = null;
+
+        public short DroppedItemID;
+
+        public bool ShouldDestroy;
+
+        private int timeFlying = 0;
 
         private const int ItemWidth = 10;
         private const int ItemHeight = 10;
@@ -30,20 +38,21 @@ namespace MiningGame.Code.Entities
 
         public override void Update(GameTime time)
         {
-            EntityMovement();
-            float dist = 0;
-            if (_timeAlive++ < 15) return;
-            if (_timeAlive >= 3600) removeFromList();
-            dist = Vector2.DistanceSquared(EntityPosition, GameWorld.ThePlayer.PlayerEntity.EntityPosition);
-            if (dist <= 500)
+            if (MovingTowards == null)
+                EntityMovement();
+
+            if (_timeAlive++ < 15)
+                return;
+
+            if (MovingTowards == null)
+                return;
+
+            MoveTowardsPoint(MovingTowards.EntityPosition, 4);
+
+            if (HitTest(MovingTowards) || ++timeFlying >= 120)
             {
-                MoveTowardsPoint(GameWorld.ThePlayer.PlayerEntity.EntityPosition, 2);
-            }
-            if (HitTest(GameWorld.ThePlayer.PlayerEntity))
-            {
-                GameWorld.ThePlayer.PickupItem(new ItemStack(1, _itemID));
-                removeFromList();
                 Main.SoundManager.PlaySound("collectitem");
+                ShouldDestroy = true;
             }
             base.Update(time);
         }
@@ -60,19 +69,17 @@ namespace MiningGame.Code.Entities
             minus.Y += s;
 
             sb.Draw(AssetManager.GetTexture(i.GetAsset()), EntityPosition - minus - CameraManager.cameraPosition, null, Color.White, 0f, Vector2.Zero, drawScale, Microsoft.Xna.Framework.Graphics.SpriteEffects.None, 0f);
-            base.Draw(sb);
         }
 
-        public EntityDroppedItem(int x, int y, byte itemid)
+        public EntityDroppedItem(Vector2 position, Vector2 velocity, byte itemid, short ID)
         {
             Item i = Item.GetItem(itemid);
-            EntityPosition = new Vector2(x, y);
-            SpriteTexture = AssetManager.GetTexture(i.GetAsset());
-            EntityVelocity.Y = -5 - Main.R.Next(0, 3);
-            EntityVelocity.X = Main.R.Next(1, 7);
-            EntityVelocity.X *= (Main.R.Next(0, 2) == 1) ? 1 : -1;
+            string asset = i != null ? i.GetAsset() : "error";
+            EntityPosition = position;
+            SpriteTexture = AssetManager.GetTexture(asset);
             _itemID = itemid;
+            DroppedItemID = ID;
+            EntityVelocity = velocity;
         }
-
     }
 }

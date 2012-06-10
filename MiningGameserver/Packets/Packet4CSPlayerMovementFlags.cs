@@ -4,8 +4,8 @@
     {
         public Packet4CSPlayerMovementFlags(byte flag)
         {
-            writeByte(4);
-            writeByte(flag);
+            WriteByte(4);
+            WriteByte(flag);
         }
     }
 

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework;
+using MiningGameServer.Interfaces;
 
 namespace MiningGameServer.Packets
 {
@@ -14,116 +16,170 @@ namespace MiningGameServer.Packets
             return data.ToArray();
         }
 
-        public short readShort()
+        public T ReadNT<T>() where T : INetTransferable<T>, new()
+        {
+            return (new T()).Read(this);
+        }
+
+        public void WriteNT<T>(INetTransferable<T> trans)
+        {
+            trans.Write(this);
+        } 
+
+        public short ReadShort()
         {
             short num = BitConverter.ToInt16(getData(), offset);
             offset += 2;
             return num;
         }
 
-        public byte readByte()
+        public Vector2 ReadVector()
+        {
+            return new Vector2(ReadFloat(), ReadFloat());
+        }
+
+        public Vector2 ReadVectorS()
+        {
+            return new Vector2(ReadShort(), ReadShort());
+        }
+
+        public Vector2 ReadVectorB()
+        {
+            return new Vector2(ReadByte(), ReadByte());
+        }
+
+        public Vector2 ReadVectorSB()
+        {
+            return new Vector2(ReadSByte(), ReadSByte());
+        }
+
+        public byte ReadByte()
         {
             byte b = data[offset];
             offset++;
             return b;
         }
 
-        public sbyte readSByte()
+        public sbyte ReadSByte()
         {
             sbyte b = (sbyte)data[offset];
             offset++;
             return b;
         }
 
-        public bool readBool()
+        public bool ReadBool()
         {
             bool flag = BitConverter.ToBoolean(getData(), offset);
             offset++;
             return flag;
         }
 
-        public float readFloat()
+        public float ReadFloat()
         {
             float num = BitConverter.ToSingle(getData(), offset);
             offset += 4;
             return num;
         }
 
-        public int readInt()
+        public int ReadInt()
         {
             int num = BitConverter.ToInt32(getData(), offset);
             offset += 4;
             return num;
         }
 
-        public char readChar()
+        public char ReadChar()
         {
             char c = BitConverter.ToChar(getData(), offset);
             offset += 2;
             return c;
         }
 
-        public string readString()
+        public string ReadString()
         {
             string ret = String.Empty;
-            short count = readShort();
+            short count = ReadShort();
             for (int i = 0; i < count; i++)
             {
-                ret += readChar();
+                ret += ReadChar();
             }
             return ret;
         }
 
-        public void writeChar(char toWrite)
+        public void WriteChar(char toWrite)
         {
-            writeBytes(BitConverter.GetBytes(toWrite));
+            WriteBytes(BitConverter.GetBytes(toWrite));
         }
 
-        public void writeShort(short toWrite)
+        public void WriteVector(Vector2 toWrite)
         {
-            writeBytes(BitConverter.GetBytes(toWrite));
+            WriteFloat(toWrite.X);
+            WriteFloat(toWrite.Y);
         }
 
-        public void writeSByte(sbyte toWrite)
+        public void WriteVectorS(Vector2 toWrite)
         {
-            writeBytes(BitConverter.GetBytes(toWrite));
+            WriteShort((short)toWrite.X);
+            WriteShort((short)toWrite.Y);
         }
 
-        public void writeInt(int toWrite)
+        public void WriteVectorB(Vector2 toWrite)
         {
-            writeBytes(BitConverter.GetBytes(toWrite));
+            WriteByte((byte)toWrite.X);
+            WriteByte((byte)toWrite.Y);
         }
 
-        public void writeByte(byte toWrite)
+        public void WriteVectorSB(Vector2 toWrite)
+        {
+            WriteSByte((sbyte)toWrite.X);
+            WriteSByte((sbyte)toWrite.Y);
+        }
+
+        public void WriteShort(short toWrite)
+        {
+            WriteBytes(BitConverter.GetBytes(toWrite));
+        }
+
+        public void WriteSByte(sbyte toWrite)
+        {
+            WriteBytes(BitConverter.GetBytes(toWrite));
+        }
+
+        public void WriteInt(int toWrite)
+        {
+            WriteBytes(BitConverter.GetBytes(toWrite));
+        }
+
+        public void WriteByte(byte toWrite)
         {
             data.Add(toWrite);
         }
 
-        public void writeBool(bool toWrite)
+        public void WriteBool(bool toWrite)
         {
-            writeBytes(BitConverter.GetBytes(toWrite));
+            WriteBytes(BitConverter.GetBytes(toWrite));
         }
 
-        public void writeFloat(float toWrite)
+        public void WriteFloat(float toWrite)
         {
-            writeBytes(BitConverter.GetBytes(toWrite));
+            WriteBytes(BitConverter.GetBytes(toWrite));
         }
 
-        public void writeString(string toWrite)
+        public void WriteString(string toWrite)
         {
-            writeShort((short)toWrite.Length);
+            WriteShort((short)toWrite.Length);
             for (int i = 0; i < toWrite.Length; i++)
             {
-                writeChar(toWrite[i]);
+                WriteChar(toWrite[i]);
             }
         }
 
-        public void writeBytes(byte[] toWrite)
+        public void WriteBytes(byte[] toWrite)
         {
             data.AddRange(toWrite);
         }
 
-        public void writeBytes(byte[] toWrite, int offset, int length)
+        public void WriteBytes(byte[] toWrite, int offset, int length)
         {
             for(int i = offset; i < offset + length; i++)
             {
@@ -131,41 +187,41 @@ namespace MiningGameServer.Packets
             }
         }
 
-        public void writeAll(object[] objects)
+        public void WriteAll(object[] objects)
         {
             foreach (object o in objects)
             {
-                if (o.GetType() == typeof(int))
+                if (o is int)
                 {
-                    writeInt((int)o);
+                    WriteInt((int)o);
                 }
-                if (o.GetType() == typeof(string))
+                else if (o is string)
                 {
-                    writeString((string)o);
+                    WriteString((string)o);
                 }
-                if (o.GetType() == typeof(float))
+                else if (o is float)
                 {
-                    writeFloat((float)o);
+                    WriteFloat((float)o);
                 }
-                if (o.GetType() == typeof(bool))
+                else if (o is bool)
                 {
-                    writeBool((bool)o);
+                    WriteBool((bool)o);
                 }
-                if (o.GetType() == typeof(char))
+                else if (o is char)
                 {
-                    writeChar((char)o);
+                    WriteChar((char)o);
                 }
-                if (o.GetType() == typeof(byte))
+                else if (o is byte)
                 {
-                    writeByte((byte)o);
+                    WriteByte((byte)o);
                 }
-                if (o.GetType() == typeof(sbyte))
+                else if (o is sbyte)
                 {
-                    writeSByte((sbyte)o);
+                    WriteSByte((sbyte)o);
                 }
-                if (o.GetType() == typeof(short))
+                else if (o is short)
                 {
-                    writeShort((short)o);
+                    WriteShort((short)o);
                 }
             }
         }
@@ -174,7 +230,7 @@ namespace MiningGameServer.Packets
         {
             this.offset = 0;
             this.data = new List<byte>();
-            writeAll(objects);
+            WriteAll(objects);
         }
 
         public Packet(byte[] data)

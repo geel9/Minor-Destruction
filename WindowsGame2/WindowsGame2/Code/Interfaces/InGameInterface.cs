@@ -42,11 +42,12 @@ namespace MiningGame.Code.Interfaces
             for (int i = 0; i < 9; i++)
             {
                 ButtonView b = new ButtonView(MainView, new ImageView(null, AssetManager.GetTexture("white")), start) { Width = 25, Height = 25 };
+                new TextView(b, "10", new Vector2(0, 21), AssetManager.GetFont("Console2")) {TextColor = Color.White, Width = 25, Height = 10, TextJustification = TextJustification.Center};
                 int i1 = i;
                 b.OnMouseClick += (sender, e) =>
-                                      {
-                                          BlockPressed(i1);
-                                      };
+                {
+                    BlockPressed(i1);
+                };
                 buttons.Add(b);
                 start.X += 70;
             }
@@ -71,14 +72,18 @@ namespace MiningGame.Code.Interfaces
             for (int i = 0; i < 9; i++)
             {
                 ((ImageView)buttons[i].ButtonContentview).Texture = AssetManager.GetTexture("white");
+                ((TextView) buttons[i].Children[1]).Text = "";
             }
 
             for (int i = offset; i < GameWorld.ThePlayer.PlayerInventory.Count; i++)
             {
                 ItemStack itemStack = GameWorld.ThePlayer.PlayerInventory[i];
-                Item item = Item.GetItem(itemStack.itemID);
+                Item item = Item.GetItem(itemStack.ItemID);
                 Texture2D tex = AssetManager.GetTexture(item.GetAsset());
                 ((ImageView)buttons[i - offset].ButtonContentview).Texture = tex;
+                ((TextView) buttons[i].Children[1]).Text = itemStack.NumberItems > 0
+                                                               ? itemStack.NumberItems.ToString()
+                                                               : "";
             }
         }
 

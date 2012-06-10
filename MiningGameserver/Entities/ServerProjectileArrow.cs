@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using MiningGameServer;
-using MiningGameserver.Blocks;
+using MiningGameServer.Blocks;
 using MiningGameServer.ExtensionMethods;
 using MiningGameServer.Structs;
 
-namespace MiningGameserver.Entities
+namespace MiningGameServer.Entities
 {
     class ServerProjectileArrow : ServerProjectile
     {
@@ -74,8 +74,6 @@ namespace MiningGameserver.Entities
                         EntityVelocity.X = 0;
                         EntityPosition.X = (newEntityPosition.X + collide.X);
                         ShouldDestroy = true;
-                        GameServer.SetBlock((int)newTile.X, (int)newTile.Y, 0);
-                        break;
                     }
                 }
                 else
@@ -86,10 +84,25 @@ namespace MiningGameserver.Entities
                     {
                         EntityVelocity.Y = 0;
                         EntityPosition.Y = (newEntityPosition.Y + collide.Y);
-                        ShouldDestroy = true;
-                        GameServer.SetBlock((int)newTile.X, (int)newTile.Y, 0);
-                        break;
+                        ShouldDestroy = true;   
                     }
+                }
+
+                if(ShouldDestroy)
+                {
+                    byte dropID = blockData.Block.GetItemDrop((int)newTile.X, (int)newTile.Y);
+                    int num = blockData.Block.GetItemDropNum((int)newTile.X, (int)newTile.Y);
+
+                    GameServer.SetBlock((int)newTile.X, (int)newTile.Y, 0);
+
+                    if (dropID != 0 && num > 0)
+                    {
+                        ItemStack stack = new ItemStack(num, dropID);
+                        Vector2 pos = newTile * GameServer.BlockHeight;
+                        pos += new Vector2(GameServer.BlockHeight / 2);
+                        GameServer.DropItem(stack, pos);
+                    }
+                    break;
                 }
             }
         }
@@ -101,7 +114,7 @@ namespace MiningGameserver.Entities
             AABB newRectTest = BoundBox;
             EntityPosition -= EntityVelocity;
 
-            NetworkPlayer playerOwner = new NetworkPlayer(PlayerOwner, null, Vector2.Zero, "PLAYER");
+            NetworkPlayer playerOwner = null;
             foreach (NetworkPlayer p in GameServer.NetworkPlayers)
             {
                 if (p.PlayerID == PlayerOwner)
@@ -110,7 +123,11 @@ namespace MiningGameserver.Entities
                     break;
                 }
             }
-
+            if(playerOwner == null)
+            {
+                ShouldDestroy = true;
+                return;
+            }
             foreach (NetworkPlayer p in GameServer.NetworkPlayers)
             {
                 if (p.PlayerID == PlayerOwner) continue;

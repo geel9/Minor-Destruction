@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using Microsoft.Xna.Framework;
-using MiningGameserver.Blocks;
+using MiningGameServer.Blocks;
 using MiningGameServer.Packets;
-using MiningGameserver;
-using MiningGameserver.Entities;
-using MiningGameserver.Items;
-using MiningGameserver.Packets;
-using MiningGameserver.ServerCommands;
+using MiningGameServer;
+using MiningGameServer.Entities;
+using MiningGameServer.Items;
+using MiningGameServer.Packets;
+using MiningGameServer.Structs;
 
 namespace MiningGameServer
 {
@@ -21,6 +21,8 @@ namespace MiningGameServer
 
         public static List<NetworkPlayer> NetworkPlayers = new List<NetworkPlayer>();
         public static ServerProjectile[] GameProjectiles = new ServerProjectile[256];
+
+        public static List<ServerEntityDroppedItem> DroppedItems = new List<ServerEntityDroppedItem>();
 
         public const int WorldSizeX = 500, WorldSizeY = 500;
 
@@ -37,6 +39,11 @@ namespace MiningGameServer
             ServerNetworkManager = new ServerNetworkManager();
             if (ServerNetworkManager.Host(port))
             {
+                for (int x = 0; x < WorldSizeX; x++)
+                {
+                    for (int y = 0; y < WorldSizeY; y++)
+                        WorldBlocks[x, y] = new BlockData();
+                }
                 GenerateWorld();
                 ServerItem.MakeItems();
                 Block.GenerateBlocks();
@@ -62,22 +69,10 @@ namespace MiningGameServer
             //Place the base level of dirt
             for (int x = 0; x < WorldSizeX; x++)
             {
-                for (int y = 11; y < WorldSizeY; y++)
+                for (int y = 10; y < WorldSizeY; y++)
                 {
                     SetBlock(x, y, 2);
                 }
-            }
-
-            //Generate the top layer of grass.
-            for (int x = 0; x < WorldSizeX; x++)
-            {
-                int rand2 = Random.Next(0, 3);
-                rand2 = 0;
-                for (int y = 10; y >= 10 - rand2; y--)
-                {
-                    SetBlock(x, y, 2);
-                }
-                SetBlock(x, 10 - rand2, 2);
             }
 
             //Generate caves
@@ -222,113 +217,6 @@ namespace MiningGameServer
             WorldBlocks[x, y].MetaData = metadata;
         }
 
-        /*public static void LoadRecipes()
-        {
-            ItemRecipes.Clear();
-            string path = DirectoryManager.RECIPES;
-            string[] files = Directory.GetFiles(path).Where(f => f.Contains(".rcp")).Select(x => x.Replace(path, "")).ToArray<string>();
-
-            foreach (string file in files)
-            {
-                string contents = FileReaderManager.ReadFileContents(path + file);
-                List<ItemRecipe> l = loadRecipe(contents);
-                ItemRecipes.AddRange(l.Except(ItemRecipes));
-            }
-        }*/
-
-        /*public static List<ItemRecipe> loadRecipe(string contents)
-        {
-            ItemRecipe curRecipe = new ItemRecipe();
-            List<ItemRecipe> ret = new List<ItemRecipe>();
-            ItemStack currentStack = new ItemStack();
-            bool inString = false;
-            bool doneReturn = false;
-            bool inComment = false;
-            string currentToken = "";
-
-            string decimals = "0123456789";
-
-            foreach (char c in contents)
-            {
-                if (c == '#')
-                {
-                    inComment = true;
-                }
-                if (c == '\n')
-                {
-                    inComment = false; continue;
-                }
-                if (inComment) continue;
-                if (c == '"')
-                {
-                    inString = !inString;
-                    if (!inString)
-                    {
-                        curRecipe.recipeName = currentToken;
-                        currentToken = "";
-                    }
-                    continue;
-                }
-
-                if (inString)
-                {
-                    currentToken += c;
-                }
-                else
-                {
-                    if (c == '{')
-                    {
-                        curRecipe = new ItemRecipe();
-                    }
-
-                    else if (c == '}')
-                    {
-                        ret.Add(curRecipe);
-                        currentStack = new ItemStack();
-                        currentToken = "";
-                        curRecipe = new ItemRecipe();
-                        doneReturn = false;
-                    }
-
-                    else if (decimals.Contains(c))
-                    {
-                        currentToken += c;
-                    }
-
-                    else if (c == '*')
-                    {
-                        int id = Convert.ToInt32(currentToken.Replace(" ", ""));
-                        currentStack.itemID = (byte)id;
-                        currentToken = "";
-                    }
-
-                    else if (c == ';')
-                    {
-                        if (currentStack.itemID != 0)
-                        {
-                            int num = Convert.ToInt32(currentToken.Replace(" ", ""));
-                            currentStack.numberItems = num;
-
-                            if (doneReturn)
-                            {
-                                curRecipe.requiredItems.Add(currentStack);
-                            }
-                            else
-                            {
-                                curRecipe.returnItems = currentStack;
-                                doneReturn = true;
-                            }
-
-                            currentStack = new ItemStack();
-                            currentToken = "";
-                        }
-                    }
-                }
-            }
-
-            return ret;
-        }*/
-
         internal static BlockData GetBlockAt(int x, int y)
         {
             return (x >= 0 && y >= 0 && x < WorldSizeX && y < WorldSizeY) ? WorldBlocks[x, y] : new BlockData();
@@ -411,6 +299,17 @@ namespace MiningGameServer
                 t.Update(time);
             }
 
+            List<ServerEntityDroppedItem> droppedItemsToRemove = new List<ServerEntityDroppedItem>();
+
+            foreach(ServerEntityDroppedItem item in DroppedItems)
+            {
+                item.Update();
+                if(item.ShouldRemove)
+                    droppedItemsToRemove.Add(item);
+            }
+            foreach (ServerEntityDroppedItem item in droppedItemsToRemove)
+                DroppedItems.Remove(item);
+
             for (int i = 0; i < GameProjectiles.Length; i++)
             {
                 ServerProjectile p = GameProjectiles[i];
@@ -438,26 +337,26 @@ namespace MiningGameServer
                 if (playersToUpdate.Count == 0) continue;
 
                 Packet200SCPlayerUpdate packet = new Packet200SCPlayerUpdate();
-                packet.writeByte((byte)playersToUpdate.Count);
+                packet.WriteByte((byte)playersToUpdate.Count);
 
                 foreach (NetworkPlayer p in playersToUpdate)
                 {
                     byte realUpdateMask = p.UpdateMask;
 
-                    packet.writeByte(p.PlayerID);
-                    packet.writeByte(realUpdateMask);
+                    packet.WriteByte(p.PlayerID);
+                    packet.WriteByte(realUpdateMask);
                     if ((p.UpdateMask & (int)PlayerUpdateFlags.Player_Position_X) != 0)
                     {
-                        packet.writeShort((short)p.EntityPosition.X);
+                        packet.WriteShort((short)p.EntityPosition.X);
                     }
                     if ((p.UpdateMask & (int)PlayerUpdateFlags.Player_Position_Y) != 0)
                     {
-                        packet.writeShort((short)p.EntityPosition.Y);
+                        packet.WriteShort((short)p.EntityPosition.Y);
                     }
 
                     if ((p.UpdateMask & (int)PlayerUpdateFlags.Player_Movement_Flags) != 0)
                     {
-                        packet.writeByte(p.MovementFlags);
+                        packet.WriteByte(p.MovementFlags);
                     }
                 }
                 ServerNetworkManager.SendPacket(packet, t.NetConnection);
@@ -472,38 +371,33 @@ namespace MiningGameServer
             switch ((GameEvents)eventID)
             {
                 case GameEvents.Player_KeyPress:
-                    char characterPressing = p.readChar();
-                    bool isPressing = p.readBool();
+                    char characterPressing = p.ReadChar();
+                    bool isPressing = p.ReadBool();
                     break;
 
                 case GameEvents.Player_Use_Item:
-                    short x = p.readShort();
-                    short y = p.readShort();
+                    short x = p.ReadShort();
+                    short y = p.ReadShort();
                     ServerItem itemInHand = player.GetPlayerItemInHand();
                     if (itemInHand == null) break;
                     itemInHand.OnItemUsed(x, y, player);
                     break;
 
                 case GameEvents.Player_Use_Block:
-                    x = p.readShort();
-                    y = p.readShort();
+                    x = p.ReadShort();
+                    y = p.ReadShort();
                     Block b = GetBlockAt(x, y).Block;
                     b.OnBlockUsed(x, y);
                     break;
 
                 case GameEvents.Player_Inventory_Selection_Change:
-                    player.PlayerInventorySelected = p.readByte();
-                    ServerItem i = player.GetPlayerItemInHand();
-                    byte itemID = 0;
-                    if (i != null)
-                        itemID = i.GetItemID();
-                    Packet7SCPlayerCurItemChanged packet7 = new Packet7SCPlayerCurItemChanged(player.PlayerID, itemID);
-                    ServerNetworkManager.SendPacket(packet7);
+                    player.PlayerInventorySelected = p.ReadByte();
+                    player.SendEquippedItemUpdate();
                     break;
 
                 case GameEvents.Player_Chat:
-                    bool teamChat = p.readBool();
-                    string chatText = p.readString();
+                    bool teamChat = p.ReadBool();
+                    string chatText = p.ReadString();
 
                     ServerConsole.Log(player.PlayerName + ": " + chatText);
 
@@ -512,7 +406,7 @@ namespace MiningGameServer
                     break;
 
                 case GameEvents.Player_Change_Name:
-                    string newName = p.readString();
+                    string newName = p.ReadString();
                     if (newName.Length > 0)
                     {
                         player.PlayerName = newName;
@@ -535,6 +429,41 @@ namespace MiningGameServer
         public static void SendMessageToAll(string message)
         {
             Packet1CSGameEvent pack = new Packet1CSGameEvent(GameEvents.Player_Chat, (byte)0, false, message);
+            ServerNetworkManager.SendPacket(pack);
+        }
+
+        public static short GetFreeDroppedItemIndex()
+        {
+            List<short> possibleIDs = new List<short>();
+            List<short> takenIDs = new List<short>();
+            for (short i = 0; i < short.MaxValue; i++)
+                possibleIDs.Add(i);
+
+            for (short i = 0; i < DroppedItems.Count; i++)
+            {
+                ServerEntityDroppedItem item = DroppedItems[i];
+                if (item == null)
+                    continue;
+                takenIDs.Add(item.DroppedItemID);
+            }
+            short[] retIDs = possibleIDs.Except(takenIDs).ToArray();
+            if (retIDs.Length == 0)
+                return -1;
+            return retIDs[0];
+        }
+
+        public static void DropItem(ItemStack stack, Vector2 position)
+        {
+            short index = GetFreeDroppedItemIndex();
+            if (index == -1)
+                return;
+
+            Vector2 velocity = new Vector2(Random.Next(-5, 6), -3);
+
+            var item = new ServerEntityDroppedItem((int)position.X, (int)position.Y, velocity, stack, index);
+            DroppedItems.Add(item);
+
+            Packet8SCItemDropped pack = new Packet8SCItemDropped(position, velocity, index, stack.ItemID);
             ServerNetworkManager.SendPacket(pack);
         }
 

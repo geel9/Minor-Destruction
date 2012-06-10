@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using MiningGameServer.Packets;
+using MiningGameServer.Interfaces;
 
 namespace MiningGame.Code.Items
 {
@@ -107,15 +109,31 @@ namespace MiningGame.Code.Items
         private short _blockID = 0;
     }
 
-    public struct ItemStack
+    public class ItemStack : INetTransferable<ItemStack>
     {
-        public int numberItems;
-        public byte itemID;
+        public int NumberItems;
+        public byte ItemID;
 
         public ItemStack(int n = 0, byte b = 0)
         {
-            numberItems = n;
-            itemID = b;
+            NumberItems = n;
+            ItemID = b;
+        }
+
+        public ItemStack()
+        {
+        }
+
+        public void Write(Packet p)
+        {
+            p.WriteByte(ItemID);
+            p.WriteInt(NumberItems);
+        }
+        public ItemStack Read(Packet p)
+        {
+            byte ID = p.ReadByte();
+            int num = p.ReadInt();
+            return new ItemStack(num, ID);
         }
     }
 }

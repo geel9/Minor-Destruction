@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace MiningGameserver
+namespace MiningGameServer
 {
     public static class ServerConsole
     {

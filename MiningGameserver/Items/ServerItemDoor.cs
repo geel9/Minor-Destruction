@@ -1,6 +1,6 @@
 ﻿namespace MiningGameServer.Items
 {
-    public class ServerItemDoor : MiningGameserver.Items.ServerItem
+    public class ServerItemDoor : MiningGameServer.Items.ServerItem
     {
         public ServerItemDoor(): base()
         {
