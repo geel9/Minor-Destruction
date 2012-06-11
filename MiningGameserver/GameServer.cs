@@ -301,10 +301,10 @@ namespace MiningGameServer
 
             List<ServerEntityDroppedItem> droppedItemsToRemove = new List<ServerEntityDroppedItem>();
 
-            foreach(ServerEntityDroppedItem item in DroppedItems)
+            foreach (ServerEntityDroppedItem item in DroppedItems)
             {
                 item.Update();
-                if(item.ShouldRemove)
+                if (item.ShouldRemove)
                     droppedItemsToRemove.Add(item);
             }
             foreach (ServerEntityDroppedItem item in droppedItemsToRemove)
@@ -370,9 +370,11 @@ namespace MiningGameServer
         {
             switch ((GameEvents)eventID)
             {
-                case GameEvents.Player_KeyPress:
-                    char characterPressing = p.ReadChar();
-                    bool isPressing = p.ReadBool();
+                case GameEvents.Player_Drop_Item:
+                    ServerItem inHand = player.GetPlayerItemInHand();
+                    if (inHand == null)
+                        break;
+                    player.DropItem();
                     break;
 
                 case GameEvents.Player_Use_Item:
@@ -452,15 +454,16 @@ namespace MiningGameServer
             return retIDs[0];
         }
 
-        public static void DropItem(ItemStack stack, Vector2 position)
+        public static void DropItem(ItemStack stack, Vector2 position, Vector2 velocity = default(Vector2), NetworkPlayer dropper = null)
         {
             short index = GetFreeDroppedItemIndex();
             if (index == -1)
                 return;
 
-            Vector2 velocity = new Vector2(Random.Next(-5, 6), -3);
+            if (velocity == default(Vector2))
+                velocity = new Vector2(Random.Next(-5, 6), -3);
 
-            var item = new ServerEntityDroppedItem((int)position.X, (int)position.Y, velocity, stack, index);
+            var item = new ServerEntityDroppedItem((int)position.X, (int)position.Y, velocity, stack, index) { Dropper = dropper };
             DroppedItems.Add(item);
 
             Packet8SCItemDropped pack = new Packet8SCItemDropped(position, velocity, index, stack.ItemID);
@@ -492,7 +495,8 @@ namespace MiningGameServer
             Player_Aim_And_Position,
             Player_Direction,
             Player_Animation,
-            Player_Change_Name
+            Player_Change_Name,
+            Player_Drop_Item
         }
     }
 }

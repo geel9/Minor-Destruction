@@ -508,11 +508,48 @@ namespace MiningGameServer
             }
         }
 
+        public void RemoveItemAt(int slot)
+        {
+            if (slot >= PlayerInventory.Count || slot < 0)
+                return;
+            PlayerInventory.RemoveAt(slot);
+
+            Packet p = new Packet1SCGameEvent(GameServer.GameEvents.Player_Inventory_Remove, (byte)slot);
+            GameServer.ServerNetworkManager.SendPacket(p, NetConnection);
+
+            SendEquippedItemUpdate();
+        }
+
         public ServerItem GetPlayerItemInHand()
         {
-            if (PlayerInventorySelected >= PlayerInventory.Count) PlayerInventorySelected = -1;
+            if (PlayerInventorySelected >= PlayerInventory.Count)
+                PlayerInventorySelected = PlayerInventory.Count - 1;
             if (PlayerInventorySelected == -1) return null;
             return ServerItem.GetItem(PlayerInventory[PlayerInventorySelected].ItemID);
+        }
+
+        public ItemStack GetPlayerItemStackInHand()
+        {
+            if (PlayerInventorySelected >= PlayerInventory.Count)
+                PlayerInventorySelected = PlayerInventory.Count - 1;
+            if (PlayerInventorySelected == -1) return new ItemStack();
+            return PlayerInventory[PlayerInventorySelected];
+        }
+
+        public void DropItem()
+        {
+            ItemStack inHand = GetPlayerItemStackInHand();
+            if (inHand.ItemID == 0)
+                return;
+            Vector2 velocity = new Vector2(5, -2);
+            int xPos = BoundBox.Right;
+            if (FacingLeft)
+            {
+                velocity.X *= -1;
+                xPos = BoundBox.Left;
+            }
+            GameServer.DropItem(inHand, new Vector2(xPos, EntityPosition.Y), velocity, this);
+            RemoveItemAt(PlayerInventorySelected);
         }
 
         public void PickupItem(ItemStack item)

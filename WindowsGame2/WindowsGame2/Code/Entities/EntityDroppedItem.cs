@@ -51,7 +51,8 @@ namespace MiningGame.Code.Entities
 
             if (HitTest(MovingTowards) || ++timeFlying >= 120)
             {
-                Main.SoundManager.PlaySound("collectitem");
+                if (MovingTowards == GameWorld.ThePlayer.PlayerEntity)
+                    Main.SoundManager.PlaySound("collectitem");
                 ShouldDestroy = true;
             }
             base.Update(time);

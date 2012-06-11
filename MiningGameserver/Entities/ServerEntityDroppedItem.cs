@@ -30,6 +30,8 @@ namespace MiningGameServer.Entities
 
         private int _timeAlive = 0;
 
+        public NetworkPlayer Dropper = null;
+
         public void Delete()
         {
             ShouldRemove = true;
@@ -54,6 +56,11 @@ namespace MiningGameServer.Entities
             double closestDist = -1;
             foreach (NetworkPlayer player in GameServer.NetworkPlayers)
             {
+
+                //Dropping an item takes longer to pick up.
+                if (Dropper != null && player == Dropper && _timeAlive < 60)
+                    continue;
+
                 float dX = player.EntityPosition.X - EntityPosition.X;
                 float dY = player.EntityPosition.Y - EntityPosition.Y;
                 double dist = Math.Sqrt((dX * dX) + (dY * dY));

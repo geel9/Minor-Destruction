@@ -169,6 +169,13 @@ namespace MiningGame.Code
             }, MouseButton.Right);
 
             InputManager.BindKey(() =>
+                                     {
+                                         if (InterfaceManager.blocking) return;
+                                         Packet1CSGameEvent p = new Packet1CSGameEvent(GameServer.GameEvents.Player_Drop_Item);
+                                         Main.clientNetworkManager.SendPacket(p);
+                                     }, Keys.F);
+
+            InputManager.BindKey(() =>
             {
                 if (InterfaceManager.blocking) return;
                 Vector2 aim = PlayerEntity.GetBlockAimingAt();
