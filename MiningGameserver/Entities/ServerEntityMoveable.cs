@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using MiningGameServer;
 using MiningGameServer.Blocks;
+using MiningGameServer.Shapes;
 using MiningGameServer.Structs;
 
 namespace MiningGameServer.Entities
@@ -17,7 +18,7 @@ namespace MiningGameServer.Entities
         internal int TimeFalling;
         internal bool Falling;
 
-        internal List<Vector2> RectangleHitsTiles(AABB rect)
+        internal List<Vector2> RectangleHitsTiles(ShapeAABB rect)
         {
             List<Vector2> ret = new List<Vector2>();
             //PToV simply turns a Point into a Vector2
@@ -79,9 +80,9 @@ namespace MiningGameServer.Entities
                 //A wall
                 Rectangle blockBB = block.GetBlockBoundBox((int)newTile.X, (int)newTile.Y);
 
-                AABB thisAABB = BoundBox;
-                AABB blockAABB = new AABB(blockBB);
-                AABBResult collide = thisAABB.AxisCollide(blockAABB);
+                ShapeAABB thisAABB = BoundBox;
+                ShapeAABB blockAABB = new ShapeAABB(blockBB);
+                AABBCollisionResult collide = thisAABB.CollideAABB(blockAABB);
 
                 if (!collide.IsIntersecting) continue;
 

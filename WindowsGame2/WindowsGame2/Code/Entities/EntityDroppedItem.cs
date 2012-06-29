@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using MiningGame.Code.Items;
 using MiningGame.Code.Managers;
 using MiningGame.Code.Structs;
+using MiningGameServer.Shapes;
 using MiningGameServer.Structs;
 using ItemStack = MiningGame.Code.Items.ItemStack;
 
@@ -26,11 +27,11 @@ namespace MiningGame.Code.Entities
         private const int ItemWidth = 10;
         private const int ItemHeight = 10;
 
-        public override AABB BoundBox
+        public override ShapeAABB BoundBox
         {
             get
             {
-                return new AABB((int)EntityPosition.X - ItemWidth / 2, (int)EntityPosition.Y - ItemHeight / 2, ItemWidth, ItemHeight);
+                return new ShapeAABB((int)EntityPosition.X - ItemWidth / 2, (int)EntityPosition.Y - ItemHeight / 2, ItemWidth, ItemHeight);
             }
         }
 
@@ -65,9 +66,6 @@ namespace MiningGame.Code.Entities
             Vector2 drawScale = new Vector2(ItemWidth / (float)SpriteTexture.Width, ItemHeight / (float)SpriteTexture.Height);
 
             Vector2 minus = new Vector2(SpriteTexture.Width / 2, SpriteTexture.Height / 2) * drawScale;
-
-            float s = (float)Math.Sin(_timeAlive / 4) * 3;
-            minus.Y += s;
 
             sb.Draw(AssetManager.GetTexture(i.GetAsset()), EntityPosition - minus - CameraManager.cameraPosition, null, Color.White, 0f, Vector2.Zero, drawScale, Microsoft.Xna.Framework.Graphics.SpriteEffects.None, 0f);
         }

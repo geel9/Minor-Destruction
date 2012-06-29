@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using MiningGameServer.Items;
 using MiningGameServer.Packets;
+using MiningGameServer.Shapes;
 using MiningGameServer.Structs;
 
 namespace MiningGameServer.Entities
@@ -20,11 +21,11 @@ namespace MiningGameServer.Entities
 
         public bool ShouldRemove;
 
-        public override AABB BoundBox
+        public override ShapeAABB BoundBox
         {
             get
             {
-                return new AABB((int)EntityPosition.X - ItemWidth / 2, (int)EntityPosition.Y - ItemHeight / 2, ItemWidth, ItemHeight);
+                return new ShapeAABB((int)EntityPosition.X - ItemWidth / 2, (int)EntityPosition.Y - ItemHeight / 2, ItemWidth, ItemHeight);
             }
         }
 

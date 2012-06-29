@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using MiningGame.Code.Structs;
+using MiningGameServer.Shapes;
 using MiningGameServer.Structs;
 
 namespace MiningGame.Code.Managers
@@ -65,7 +66,7 @@ namespace MiningGame.Code.Managers
             if (cameraPosition.Y < min.Y) cameraPosition.Y = min.Y;
         }
 
-        public static bool inCamera(Vector2 position, AABB dimensions)
+        public static bool inCamera(Vector2 position, ShapeAABB dimensions)
         {
             Rectangle r = new Rectangle((int)position.X, (int)position.Y, dimensions.Width, dimensions.Height);
             return (r.Intersects(cameraBoundBox) || cameraBoundBox.Contains(r) || r.Contains(cameraBoundBox));

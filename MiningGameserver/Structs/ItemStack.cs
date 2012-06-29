@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using MiningGameServer.Items;
 using MiningGameServer.Packets;
 using MiningGameServer.Interfaces;
 
@@ -11,6 +12,10 @@ namespace MiningGameServer.Structs
     {
         public int NumberItems;
         public byte ItemID;
+        public ServerItem Item
+        {
+            get { return ServerItem.GetItem(ItemID); }
+        }
 
         public ItemStack(int number = 0, byte id = 0)
         {

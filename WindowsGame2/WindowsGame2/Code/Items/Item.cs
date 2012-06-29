@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using MiningGameServer.ItemAttributes;
 using MiningGameServer.Packets;
 using MiningGameServer.Interfaces;
 
@@ -99,6 +100,11 @@ namespace MiningGame.Code.Items
         public short GetBlockID()
         {
             return _blockID;
+        }
+
+        public virtual ItemAttribute[] GetDefaultAttributes()
+        {
+            return new ItemAttribute[0];
         }
 
         private string _itemName;

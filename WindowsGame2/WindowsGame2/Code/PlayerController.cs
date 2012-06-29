@@ -77,8 +77,8 @@ namespace MiningGame.Code
                 if (InterfaceManager.blocking) return;
                 leftPressed = true;
                 SendMovementFlags();
-               //PlayerEntity.TorsoAnimateable.StartLooping("player_run_start", "player_run_end");
-              //  PlayerEntity.LegsAnimateable.StartLooping("player_run_start", "player_run_end");
+                //PlayerEntity.TorsoAnimateable.StartLooping("player_run_start", "player_run_end");
+                //  PlayerEntity.LegsAnimateable.StartLooping("player_run_start", "player_run_end");
             }, Keys.A);
 
             InputManager.BindKey(() =>
@@ -86,15 +86,15 @@ namespace MiningGame.Code
                 if (InterfaceManager.blocking) return;
                 rightPressed = true;
                 SendMovementFlags();
-               // PlayerEntity.TorsoAnimateable.StartLooping("player_run_start", "player_run_end");
-               // PlayerEntity.LegsAnimateable.StartLooping("player_run_start", "player_run_end");
+                // PlayerEntity.TorsoAnimateable.StartLooping("player_run_start", "player_run_end");
+                // PlayerEntity.LegsAnimateable.StartLooping("player_run_start", "player_run_end");
                 //PlayerEntity.FacingLeft = false;
             }, Keys.D);
 
             InputManager.BindMouse(() =>
                                        {
-                                           short angle = (short) ((float) PlayerAimAngle).RToD();
-                                           if(angle != PlayerAimAngle)
+                                           short angle = (short)((float)PlayerAimAngle).RToD();
+                                           if (angle != PlayerAimAngle)
                                                SendMovementFlags();
                                        }, MouseButton.Movement, true, true);
 
@@ -102,16 +102,16 @@ namespace MiningGame.Code
                                      {
                                          leftPressed = false;
                                          SendMovementFlags();
-                                        // PlayerEntity.TorsoAnimateable.StartLooping("player_idle", "player_idle");
-                                        // PlayerEntity.LegsAnimateable.StartLooping("player_idle", "player_idle");
+                                         // PlayerEntity.TorsoAnimateable.StartLooping("player_idle", "player_idle");
+                                         // PlayerEntity.LegsAnimateable.StartLooping("player_idle", "player_idle");
                                      }, Keys.A, true, false);
 
             InputManager.BindKey(() =>
                                      {
                                          rightPressed = false;
                                          SendMovementFlags();
-                                      //   PlayerEntity.TorsoAnimateable.StartLooping("player_idle", "player_idle");
-                                      //   PlayerEntity.LegsAnimateable.StartLooping("player_idle", "player_idle");
+                                         //   PlayerEntity.TorsoAnimateable.StartLooping("player_idle", "player_idle");
+                                         //   PlayerEntity.LegsAnimateable.StartLooping("player_idle", "player_idle");
                                      }, Keys.D, true, false);
 
             InputManager.BindKey(() =>

@@ -345,15 +345,11 @@ namespace MiningGameServer
 
                     packet.WriteByte(p.PlayerID);
                     packet.WriteByte(realUpdateMask);
-                    if ((p.UpdateMask & (int)PlayerUpdateFlags.Player_Position_X) != 0)
+                    if ((p.UpdateMask & (int)PlayerUpdateFlags.Player_Position) != 0)
                     {
                         packet.WriteShort((short)p.EntityPosition.X);
-                    }
-                    if ((p.UpdateMask & (int)PlayerUpdateFlags.Player_Position_Y) != 0)
-                    {
                         packet.WriteShort((short)p.EntityPosition.Y);
                     }
-
                     if ((p.UpdateMask & (int)PlayerUpdateFlags.Player_Movement_Flags) != 0)
                     {
                         packet.WriteByte(p.MovementFlags);
@@ -393,7 +389,7 @@ namespace MiningGameServer
                     break;
 
                 case GameEvents.Player_Inventory_Selection_Change:
-                    player.PlayerInventorySelected = p.ReadByte();
+                    player.SetPlayerEquippedSlot(p.ReadByte());
                     player.SendEquippedItemUpdate();
                     break;
 

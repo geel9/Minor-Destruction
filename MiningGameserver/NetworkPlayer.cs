@@ -3,13 +3,16 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Lidgren.Network;
 using MiningGameServer.ExtensionMethods;
+using MiningGameServer.ItemAttributes;
 using MiningGameServer.Packets;
+using MiningGameServer.Shapes;
 using MiningGameServer.Structs;
 using MiningGameServer;
 using MiningGameServer.Blocks;
 using MiningGameServer.Entities;
 using MiningGameServer.Items;
 using MiningGameServer.Packets;
+using MiningGameServer.Shapes;
 using ItemStack = MiningGameServer.Structs.ItemStack;
 
 namespace MiningGameServer
@@ -34,21 +37,38 @@ namespace MiningGameServer
             }
         }
 
-        public override AABB BoundBox
+        public override ShapeAABB BoundBox
         {
             get
             {
-                return new AABB((int)EntityPosition.X - PlayerWidth / 2, (int)EntityPosition.Y - PlayerHeight / 2, PlayerWidth, PlayerHeight);
+                return new ShapeAABB((int)EntityPosition.X - PlayerWidth / 2, (int)EntityPosition.Y - PlayerHeight / 2, PlayerWidth, PlayerHeight);
             }
         }
 
         public NetConnection NetConnection;
         public List<char> PressedKeys = new List<char>();
         public List<ItemStack> PlayerInventory = new List<ItemStack>();
+
+        public List<PlayerStatBuff> ActiveBuffs = new List<PlayerStatBuff>();
+        public PlayerStatBuff EffectiveBuff
+        {
+            get
+            {
+                PlayerStatBuff ret = new PlayerStatBuff();
+                foreach (PlayerStatBuff buff in ActiveBuffs)
+                {
+                    ret.AttackSpeed += buff.AttackSpeed;
+                    ret.AttackStrength += buff.AttackStrength;
+                    ret.MoveSpeed += buff.MoveSpeed;
+                    ret.MaxHealth += buff.MaxHealth;
+                }
+                return ret;
+            }
+        }
+
         private int _jumpTimer;
         public int _attackTimer;
         public float PlayerAimAngle = 0;
-        public int PlayerInventorySelected;
         public bool FacingLeft = false;
 
         public bool LeftPressed
@@ -81,6 +101,15 @@ namespace MiningGameServer
             get { return (OldMovementFlags & (int)PlayerMovementFlag.Attack_Pressed) != 0; }
         }
 
+        private int _PlayerInventorySelected = -1;
+        public int PlayerInventorySelected
+        {
+            get { return _PlayerInventorySelected; }
+            set
+            {
+                _PlayerInventorySelected = value;
+            }
+        }
 
         public byte MovementFlags, OldMovementFlags;
 
@@ -101,10 +130,7 @@ namespace MiningGameServer
             NetConnection = connection;
             //PlayerEntity = new ServerPlayerEntity(playerPos, playerID, name);
             UpdateMask |= 1;
-            UpdateMask |= (int)
-            PlayerUpdateFlags.Player_Position_X;
-            UpdateMask |= (int)
-            PlayerUpdateFlags.Player_Position_Y;
+            UpdateMask |= (int)PlayerUpdateFlags.Player_Position;
 
             this.PlayerID = playerID;
             this.EntityPosition = playerPos;
@@ -209,15 +235,17 @@ namespace MiningGameServer
                     _jumpTimer = 20;
                 }
             }
+
+            float PlayerRunSpeed = (float) (3 + EffectiveBuff.MoveSpeed);
             if (LeftPressed)
             {
-                EntityVelocity.X = MathHelper.Clamp(EntityVelocity.X - 3, -3, 3);
+                EntityVelocity.X = MathHelper.Clamp(EntityVelocity.X - PlayerRunSpeed, -PlayerRunSpeed, PlayerRunSpeed);
                 FacingLeft = true;
             }
 
             if (RightPressed)
             {
-                EntityVelocity.X = MathHelper.Clamp(EntityVelocity.X + 3, -3, 3);
+                EntityVelocity.X = MathHelper.Clamp(EntityVelocity.X + PlayerRunSpeed, -PlayerRunSpeed, PlayerRunSpeed);
                 FacingLeft = false;
             }
 
@@ -255,10 +283,7 @@ namespace MiningGameServer
             if (oldPos != EntityPosition)
             {
                 UpdateMask |= (int)PlayerUpdateFlags.Player_Update;
-                if (oldPos.X != EntityPosition.X)
-                    UpdateMask |= (int)PlayerUpdateFlags.Player_Position_X;
-                if (oldPos.Y != EntityPosition.Y)
-                    UpdateMask |= (int)PlayerUpdateFlags.Player_Position_Y;
+                UpdateMask |= (int)PlayerUpdateFlags.Player_Position;
             }
             OldMovementFlags = MovementFlags;
         }
@@ -284,7 +309,7 @@ namespace MiningGameServer
         private void AttackSword()
         {
             int leftX = FacingLeft ? BoundBox.Left - 15 : BoundBox.Right;
-            AABB bound = new AABB(new Rectangle(leftX, (int)BoundBox.Top + 5, 15, PlayerHeight - 6));
+            ShapeAABB bound = new ShapeAABB(new Rectangle(leftX, (int)BoundBox.Top + 5, 15, PlayerHeight - 6));
             List<Vector2> newTiles = RectangleHitsTiles(bound);
 
             foreach (Vector2 v in newTiles)
@@ -292,7 +317,7 @@ namespace MiningGameServer
                 BlockData block = GameServer.GetBlockAt(v.X, v.Y);
                 if (block.ID != 0)
                 {
-                    AABB bound2 = new AABB(block.Block.GetBlockBoundBox((int)v.X, (int)v.Y));
+                    ShapeAABB bound2 = new ShapeAABB(block.Block.GetBlockBoundBox((int)v.X, (int)v.Y));
                     if (bound2.Intersects(bound))
                     {
                         GameServer.SetBlock((int)v.X, (int)v.Y, 0);
@@ -342,7 +367,7 @@ namespace MiningGameServer
             {
                 if (p == this) continue;
 
-                AABBResult collide = p.BoundBox.AxisCollide(BoundBox);
+                AABBCollisionResult collide = p.BoundBox.CollideAABB(BoundBox);
                 if (!collide.IsIntersecting) continue;
 
                 if (collide.XSmaller)
@@ -374,9 +399,9 @@ namespace MiningGameServer
                 //A wall
                 Rectangle blockBB = block.GetBlockBoundBox((int)newTile.X, (int)newTile.Y);
 
-                AABB thisAABB = BoundBox;
-                AABB blockAABB = new AABB(blockBB);
-                AABBResult collide = thisAABB.AxisCollide(blockAABB);
+                ShapeAABB thisAABB = BoundBox;
+                ShapeAABB blockAABB = new ShapeAABB(blockBB);
+                AABBCollisionResult collide = thisAABB.CollideAABB(blockAABB);
 
                 if (!collide.IsIntersecting || collide.X == 0 || collide.Y == 0) continue;
 
@@ -508,6 +533,26 @@ namespace MiningGameServer
             }
         }
 
+        public void SetPlayerEquippedSlot(int slot)
+        {
+            int oldSlot = PlayerInventorySelected;
+            PlayerInventorySelected = slot;
+
+            if (oldSlot < PlayerInventory.Count && oldSlot >= 0)
+            {
+                foreach (ItemAttribute i in PlayerInventory[oldSlot].Item.GetDefaultAttributes())
+                {
+                    i.OnItemDequipped(this, oldSlot);
+                }
+            }
+
+            if (slot >= PlayerInventory.Count || slot < 0) return;
+            foreach (ItemAttribute i in PlayerInventory[slot].Item.GetDefaultAttributes())
+            {
+                i.OnItemEquipped(this, slot);
+            }
+        }
+
         public void RemoveItemAt(int slot)
         {
             if (slot >= PlayerInventory.Count || slot < 0)
@@ -523,7 +568,7 @@ namespace MiningGameServer
         public ServerItem GetPlayerItemInHand()
         {
             if (PlayerInventorySelected >= PlayerInventory.Count)
-                PlayerInventorySelected = PlayerInventory.Count - 1;
+                SetPlayerEquippedSlot(PlayerInventory.Count - 1);
             if (PlayerInventorySelected == -1) return null;
             return ServerItem.GetItem(PlayerInventory[PlayerInventorySelected].ItemID);
         }
@@ -531,9 +576,33 @@ namespace MiningGameServer
         public ItemStack GetPlayerItemStackInHand()
         {
             if (PlayerInventorySelected >= PlayerInventory.Count)
-                PlayerInventorySelected = PlayerInventory.Count - 1;
+                SetPlayerEquippedSlot(PlayerInventory.Count - 1);
             if (PlayerInventorySelected == -1) return new ItemStack();
             return PlayerInventory[PlayerInventorySelected];
+        }
+
+        public void DequipItem(int slot)
+        {
+            if (slot >= PlayerInventory.Count || slot < 0) return;
+            ItemStack dequipping = PlayerInventory[slot];
+            ServerItem dequippingItem = dequipping.Item;
+
+            foreach (ItemAttribute attribute in dequippingItem.GetDefaultAttributes())
+            {
+                attribute.OnItemDequipped(this, slot);
+            }
+        }
+
+        public void EquipItem(int slot)
+        {
+            if (slot >= PlayerInventory.Count || slot < 0) return;
+            ItemStack equipping = PlayerInventory[slot];
+            ServerItem equippingItem = equipping.Item;
+
+            foreach (ItemAttribute attribute in equippingItem.GetDefaultAttributes())
+            {
+                attribute.OnItemEquipped(this, slot);
+            }
         }
 
         public void DropItem()
@@ -563,6 +632,7 @@ namespace MiningGameServer
                 GameServer.ServerNetworkManager.SendPacket(pack, NetConnection);
                 return;
             }
+
             PlayerInventory.Add(item);
 
 

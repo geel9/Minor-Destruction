@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using MiningGameServer.ItemAttributes;
 
 namespace MiningGame.Code.Items
 {
@@ -15,6 +16,12 @@ namespace MiningGame.Code.Items
 
         public override void OnItemUsed(int x, int y)
         {
+        }
+
+        public override ItemAttribute[] GetDefaultAttributes()
+        {
+            return new ItemAttribute[0];
+            return new ItemAttribute[] { ItemAttribute.GetAttributeOfID(1, 250), ItemAttribute.GetAttributeOfID(3, 200), ItemAttribute.GetAttributeOfID(2, 1) };
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using MiningGameServer.Shapes;
 using MiningGameServer.Structs;
 
 namespace MiningGameServer.Entities
@@ -13,11 +14,11 @@ namespace MiningGameServer.Entities
 
         public float Rotation;
 
-        public virtual AABB BoundBox
+        public virtual ShapeAABB BoundBox
         {
             get
             {
-                return new AABB(EntityPosition.X, EntityPosition.Y, 0, 0);
+                return new ShapeAABB(EntityPosition.X, EntityPosition.Y, 0, 0);
             }
         }
 

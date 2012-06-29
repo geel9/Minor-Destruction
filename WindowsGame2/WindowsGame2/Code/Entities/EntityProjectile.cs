@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MiningGame.Code.Blocks;
+using MiningGame.Code.Interfaces;
 using MiningGame.ExtensionMethods;
+using MiningGameServer.Shapes;
 using MiningGameServer.Structs;
 
 namespace MiningGame.Code.Entities
@@ -16,6 +18,8 @@ namespace MiningGame.Code.Entities
         public byte ProjectileID;
 
         public bool ShouldDestroy = false;
+
+        public int UpdateTicks = 0;
 
 
         public new float Rotation
@@ -33,7 +37,7 @@ namespace MiningGame.Code.Entities
 
         internal Vector2 LastPosition = Vector2.Zero;
 
-        internal List<Vector2> RectangleHitsTiles(AABB rect)
+        internal List<Vector2> RectangleHitsTiles(ShapeAABB rect)
         {
             List<Vector2> ret = new List<Vector2>();
             //PToV simply turns a Point into a Vector2
@@ -71,7 +75,7 @@ namespace MiningGame.Code.Entities
             //Didn't want to make a new BoundBox so this'll do. Gets the tiles the player will be in with his velocity.
             EntityPosition += EntityVelocity;
             Vector2 newEntityPosition = EntityPosition;
-            AABB newRectTest = BoundBox;
+            ShapeAABB newRectTest = BoundBox;
             List<Vector2> newTilesHitting = RectangleHitsTiles(newRectTest);
             EntityPosition -= EntityVelocity;
 
@@ -96,9 +100,9 @@ namespace MiningGame.Code.Entities
                 //A wall
                 Rectangle blockBB = block.GetBlockBoundBox((int)newTile.X, (int)newTile.Y);
 
-                AABB thisAABB = newRectTest;
-                AABB blockAABB = new AABB(blockBB);
-                AABBResult collide = thisAABB.AxisCollide(blockAABB);
+                ShapeAABB thisAABB = newRectTest;
+                ShapeAABB blockAABB = new ShapeAABB(blockBB);
+                AABBCollisionResult collide = thisAABB.CollideAABB(blockAABB);
                 if (!collide.IsIntersecting) continue;
 
                 if (collide.XSmaller)
@@ -146,6 +150,11 @@ namespace MiningGame.Code.Entities
 
         public void Update(GameTime time)
         {
+            UpdateTicks++;
+            if (UpdateTicks == 30)
+            {
+                ChatInterface.AddChat(new ChatEntry("GAYASS", "ID: " + ProjectileID + " Pos: (" + EntityPosition.X + ", " + EntityPosition.Y + ") R: " + Rotation, Color.Red, false));
+            }
             EntityMovement();
             Rotation = (float)((float)Math.Atan2(EntityPosition.Y - LastPosition.Y, EntityPosition.X - LastPosition.X) +
                     90.DToR());

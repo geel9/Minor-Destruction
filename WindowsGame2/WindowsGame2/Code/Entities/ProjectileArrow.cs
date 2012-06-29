@@ -5,6 +5,7 @@ using MiningGame.Code.Blocks;
 using MiningGame.Code.Managers;
 using MiningGame.ExtensionMethods;
 using MiningGameServer;
+using MiningGameServer.Shapes;
 using MiningGameServer.Structs;
 
 namespace MiningGame.Code.Entities
@@ -25,7 +26,7 @@ namespace MiningGame.Code.Entities
             //Didn't want to make a new BoundBox so this'll do. Gets the tiles the player will be in with his velocity.
             EntityPosition += EntityVelocity;
             Vector2 newEntityPosition = EntityPosition;
-            AABB newRectTest = BoundBox;
+            ShapeAABB newRectTest = BoundBox;
             List<Vector2> newTilesHitting = RectangleHitsTiles(newRectTest);
             EntityPosition -= EntityVelocity;
 
@@ -50,9 +51,9 @@ namespace MiningGame.Code.Entities
                 //A wall
                 Rectangle blockBB = block.GetBlockBoundBox((int)newTile.X, (int)newTile.Y);
 
-                AABB thisAABB = newRectTest;
-                AABB blockAABB = new AABB(blockBB);
-                AABBResult collide = thisAABB.AxisCollide(blockAABB);
+                ShapeAABB thisAABB = newRectTest;
+                ShapeAABB blockAABB = new ShapeAABB(blockBB);
+                AABBCollisionResult collide = thisAABB.CollideAABB(blockAABB);
                 if (!collide.IsIntersecting) continue;
 
 

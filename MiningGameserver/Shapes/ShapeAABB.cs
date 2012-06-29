@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 
-namespace MiningGameServer.Structs
+namespace MiningGameServer.Shapes
 {
-    public class AABB
+    public class ShapeAABB : Shape
     {
         public int Width = 0;
         public int Height = 0;
@@ -31,9 +31,7 @@ namespace MiningGameServer.Structs
             get { return (int)(Center.Y + Height / 2); }
         }
 
-        
-
-        public AABB(Rectangle r, float rotation = 0)
+        public ShapeAABB(Rectangle r, float rotation = 0)
         {
             Center = new Vector2(r.Center.X, r.Center.Y);
             Width = r.Width;
@@ -46,10 +44,10 @@ namespace MiningGameServer.Structs
             Vector2 bottomLeft = new Vector2(topLeft.X, r.Bottom);
             Vector2 bottomRight = new Vector2(topRight.X, bottomLeft.Y);
 
-            topLeft = AABB.RotateAroundOrigin(topLeft, Center, rotation);
-            topRight = AABB.RotateAroundOrigin(topRight, Center, rotation);
-            bottomLeft = AABB.RotateAroundOrigin(bottomLeft, Center, rotation);
-            bottomRight = AABB.RotateAroundOrigin(bottomRight, Center, rotation);
+            topLeft = ShapeAABB.RotateAroundOrigin(topLeft, Center, rotation);
+            topRight = ShapeAABB.RotateAroundOrigin(topRight, Center, rotation);
+            bottomLeft = ShapeAABB.RotateAroundOrigin(bottomLeft, Center, rotation);
+            bottomRight = ShapeAABB.RotateAroundOrigin(bottomRight, Center, rotation);
 
             float topLeftX = topLeft.X;
             float topLeftY = topLeft.Y;
@@ -74,14 +72,14 @@ namespace MiningGameServer.Structs
             Height = (int)(bottomRightY - topLeftY);
             Center = new Vector2(topLeftX + Width / 2, topLeftY + Height / 2);
         }
-        public AABB(float x, float y, float width, float height, float rotation = 0) :
+        public ShapeAABB(float x, float y, float width, float height, float rotation = 0) :
             this(new Rectangle((int)x, (int)y, (int)width, (int)height), rotation)
         {
         }
 
-        public AABBResult AxisCollide(AABB bound2)
+        public override AABBCollisionResult CollideAABB(ShapeAABB bound2)
         {
-            AABB bound1 = this;
+            ShapeAABB bound1 = this;
 
             Vector2 bound1HalfWidths = new Vector2(bound1.Width / 2, bound1.Height / 2);
             Vector2 bound2HalfWidths = new Vector2(bound2.Width / 2, bound2.Height / 2);
@@ -91,36 +89,27 @@ namespace MiningGameServer.Structs
             float multY = (bound1.Center.Y < bound2.Center.Y) ? -1 : 1;
             float multX = (bound1.Center.X < bound2.Center.X) ? -1 : 1;
 
-            int xCDist = (int) Math.Abs(bound2.Center.X - bound1.Center.X);
+            int xCDist = (int)Math.Abs(bound2.Center.X - bound1.Center.X);
             int yCDist = (int)Math.Abs(bound2.Center.Y - bound1.Center.Y);
             xMove = bound1HalfWidths.X + bound2HalfWidths.X - xCDist;
             yMove = bound1HalfWidths.Y + bound2HalfWidths.Y - yCDist;
-            /*
-            if (bound1.Center.X < bound2.Center.X)
-            {
-                xMove = bound1HalfWidths[0].X - bound2HalfWidths[0].X;
-            }
-            else if (bound1.Center.X >= bound2.Center.X)
-            {
-                xMove = bound2HalfWidths[0].X - bound1HalfWidths[0].X;
-            }
-
-            if (bound1.Center.Y < bound2.Center.Y)
-            {
-                yMove = bound1HalfWidths[1].Y - bound2HalfWidths[1].Y;
-            }
-            else if (bound1.Center.Y >= bound2.Center.Y)
-            {
-                yMove = bound2HalfWidths[1].Y - bound1HalfWidths[1].Y;
-            }*/
-
             //Not colliding. SAT.
-            if (yMove < 0 || xMove < 0) return new AABBResult(0, 0, false, false);
+            if (yMove < 0 || xMove < 0) return new AABBCollisionResult(0, 0, false, false);
 
             //if (yMove < xMove && yMove > 0) xMove = 0;
             //else if (xMove < yMove && xMove > 0) yMove = 0;
 
-            return new AABBResult((int) (xMove * multX), (int) (yMove * multY), xMove < yMove, true);
+            return new AABBCollisionResult((int)(xMove * multX), (int)(yMove * multY), xMove < yMove, true);
+        }
+
+        public override RayCollisionResult CollideRay(ShapeRay collidingWith)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override SegmentCollisionResult CollideLineSegment(ShapeLineSegment collidingWith)
+        {
+            throw new NotImplementedException();
         }
 
         public static Vector2 RotateAroundOrigin(Vector2 point, Vector2 origin, double angle)
@@ -135,12 +124,12 @@ namespace MiningGameServer.Structs
             return ret;
         }
 
-        public bool Intersects(AABB boundBox)
+        public bool Intersects(ShapeAABB boundBox)
         {
-            return AxisCollide(boundBox).IsIntersecting;
+            return CollideAABB(boundBox).IsIntersecting;
         }
 
-        public bool Contains(AABB boundBox)
+        public bool Contains(ShapeAABB boundBox)
         {
             if (boundBox.Width >= Width || boundBox.Height >= Height) return false;
 
@@ -154,7 +143,7 @@ namespace MiningGameServer.Structs
             return new Rectangle(Left, Top, Width, Height);
         }
     }
-    public struct AABBResult
+    public struct AABBCollisionResult
     {
         public int X, Y;
         public bool XSmaller;
@@ -163,7 +152,7 @@ namespace MiningGameServer.Structs
         {
             get
             {
-                if(X == Y)
+                if (X == Y)
                     return new Vector2(X, Y);
                 return XSmaller ? new Vector2(X, 0) : new Vector2(0, Y);
             }
@@ -180,7 +169,7 @@ namespace MiningGameServer.Structs
             }
         }
 
-        public AABBResult(int X, int Y, bool XSmaller, bool intersecting)
+        public AABBCollisionResult(int X, int Y, bool XSmaller, bool intersecting)
         {
             this.X = X;
             this.Y = Y;

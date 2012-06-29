@@ -366,6 +366,7 @@ namespace MiningGame.Code
                     item = DroppedItemOfID(droppedID);
                     if (item == null || player == null) break;
                     item.MovingTowards = player;
+                    item.DroppedItemID = (short)-1;
                     break;
 
                 case 10:
@@ -406,14 +407,11 @@ namespace MiningGame.Code
                 if (player == null) player = new PlayerEntity(Vector2.Zero, (byte)playerID);
                 byte updateMask = p.ReadByte();
 
-                if ((updateMask & (int)PlayerUpdateFlags.Player_Position_X) != 0)
+                if ((updateMask & (int)PlayerUpdateFlags.Player_Position) != 0)
                 {
                     short x = p.ReadShort();
-                    player.EntityPosition.X = x;
-                }
-                if ((updateMask & (int)PlayerUpdateFlags.Player_Position_Y) != 0)
-                {
                     short y = p.ReadShort();
+                    player.EntityPosition.X = x;
                     player.EntityPosition.Y = y;
                 }
                 if ((updateMask & (int)PlayerUpdateFlags.Player_Movement_Flags) != 0)

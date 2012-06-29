@@ -15,6 +15,7 @@ using System.Text.RegularExpressions;
 using System.Diagnostics;
 using MiningGameServer;
 using MiningGameServer.Packets;
+using MiningGameServer.Shapes;
 using MiningGameServer.Structs;
 using MiningGameServer;
 using GeeUI.Views;
@@ -75,6 +76,10 @@ namespace MiningGame.Code
             graphics.PreferredBackBufferWidth = 800;
             isActive = IsActive;
             ServerConsole.OnConsoleOutput = s => ConsoleManager.Log("Server: " + s, Color.LightBlue);
+
+            /* one = new ShapeLineSegment(new Vector2(0, 6),  new Vector2(10, 5));
+            ShapeLineSegment two = new ShapeLineSegment(new Vector2(5, 10), new Vector2(6, 0));
+            one.CollideLineSegment(two);*/
         }
 
         protected override void Initialize()

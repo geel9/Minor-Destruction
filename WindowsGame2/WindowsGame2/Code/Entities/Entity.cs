@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MiningGame.Code.Managers;
 using MiningGame.Code.CInterfaces;
 using MiningGame.ExtensionMethods;
+using MiningGameServer.Shapes;
 using MiningGameServer.Structs;
 
 namespace MiningGame.Code.Entities
@@ -28,18 +29,18 @@ namespace MiningGame.Code.Entities
 
         public static int EntIndex = 0;
 
-        public virtual AABB BoundBox
+        public virtual ShapeAABB BoundBox
         {
             get
             {
                 if (SpriteTexture != null)
-                    return new AABB(
+                    return new ShapeAABB(
                         (int)EntityPosition.X - (SpriteTexture.Width / 2),
                         (int)EntityPosition.Y - (SpriteTexture.Height / 2),
                         (int)(SpriteTexture.Width * Scale),
                         (int)(SpriteTexture.Height * Scale), Rotation);
 
-                    return new AABB(1, 1, 1, 1, Rotation);
+                    return new ShapeAABB(1, 1, 1, 1, Rotation);
             }
         }
 

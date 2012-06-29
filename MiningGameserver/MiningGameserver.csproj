@@ -57,6 +57,11 @@
     <Compile Include="ExtensionMethods\ExtensionMethods.cs" />
     <Compile Include="GameServer.cs" />
     <Compile Include="Interfaces\INetTransferable.cs" />
+    <Compile Include="ItemAttributes\AttributeHealthBuff.cs" />
+    <Compile Include="ItemAttributes\AttributeNoCrits.cs" />
+    <Compile Include="ItemAttributes\AttributeSpeedBuff.cs" />
+    <Compile Include="ItemAttributes\ItemAttribute.cs" />
+    <Compile Include="ItemAttributes\PlayerStatBuff.cs" />
     <Compile Include="Items\ServerItem.cs" />
     <Compile Include="Items\ServerItemBow.cs" />
     <Compile Include="Items\ServerItemCoal.cs" />
@@ -154,7 +159,11 @@
     <Compile Include="ServerCommands\ServerCommands.cs" />
     <Compile Include="ServerConsole.cs" />
     <Compile Include="ServerNetworkManager.cs" />
-    <Compile Include="Structs\AABB.cs" />
+    <Compile Include="Shapes\Shape.cs" />
+    <Compile Include="Shapes\ShapeAABB.cs" />
+    <Compile Include="Shapes\ShapeLine.cs" />
+    <Compile Include="Shapes\ShapeLineSegment.cs" />
+    <Compile Include="Shapes\ShapeRay.cs" />
     <Compile Include="Structs\ItemStack.cs" />
   </ItemGroup>
   <ItemGroup>

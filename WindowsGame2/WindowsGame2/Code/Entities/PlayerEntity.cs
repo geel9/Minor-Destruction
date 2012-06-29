@@ -6,6 +6,7 @@ using MiningGame.Code.Items;
 using MiningGame.Code.Managers;
 using Microsoft.Xna.Framework.Graphics;
 using MiningGame.ExtensionMethods;
+using MiningGameServer.Shapes;
 using MiningGameServer.Structs;
 using MiningGame.Code.Structs;
 
@@ -43,11 +44,11 @@ namespace MiningGame.Code.Entities
 
         private Vector2 _oldPlayerPos = new Vector2();
 
-        public override AABB BoundBox
+        public override ShapeAABB BoundBox
         {
             get
             {
-                return new AABB((int)EntityPosition.X - PlayerWidth / 2, (int)EntityPosition.Y - PlayerHeight / 2, PlayerWidth, PlayerHeight);
+                return new ShapeAABB((int)EntityPosition.X - PlayerWidth / 2, (int)EntityPosition.Y - PlayerHeight / 2, PlayerWidth, PlayerHeight);
             }
         }
 
@@ -110,7 +111,7 @@ namespace MiningGame.Code.Entities
             ConsoleManager.setVariableValue("window_title", (int)aimingAt.X + ", " + (int)aimingAt.Y);
 
             int leftX = FacingLeft ? BoundBox.Left - 15 : BoundBox.Right;
-            AABB bound = new AABB(new Rectangle(leftX, (int)BoundBox.Top + 3, 15, PlayerHeight - 6));
+            ShapeAABB bound = new ShapeAABB(new Rectangle(leftX, (int)BoundBox.Top + 3, 15, PlayerHeight - 6));
 
             Vector2 measure = AssetManager.GetFont("Console").MeasureString(PlayerName);
             sb.DrawString(AssetManager.GetFont("Console"), PlayerName, EntityPosition - new Vector2(measure.X / 2, 30) - CameraManager.cameraPosition, Color.White);
