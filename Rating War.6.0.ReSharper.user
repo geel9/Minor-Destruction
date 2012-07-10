@@ -22,7 +22,6 @@
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:GameWorld.cs" caret="16927" fromTop="41" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Managers/f:ClientNetworkManager.cs" caret="4619" fromTop="26" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Interfaces/f:InGameInterface.cs" caret="654" fromTop="23" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Items/f:ItemBow.cs" caret="536" fromTop="11" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Items/f:Item.cs" caret="2891" fromTop="39" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Interfaces/f:ChatInterface.cs" caret="4491" fromTop="20" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Managers/f:InterfaceManager.cs" caret="519" fromTop="18" />
@@ -30,10 +29,10 @@
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:PlayerController.cs" caret="11626" fromTop="24" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Structs/f:Convar.cs" caret="291" fromTop="12" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Interfaces/f:Console.cs" caret="654" fromTop="22" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Managers/f:ConsoleManager.cs" caret="19393" fromTop="29" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Managers/f:ConsoleManager.cs" caret="878" fromTop="27" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Items/f:ItemBow.cs" caret="943" fromTop="21" />
     </RecentFiles>
     <RecentEdits>
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Managers/f:ConsoleManager.cs" caret="19436" fromTop="9" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Managers/f:ConsoleManager.cs" caret="19436" fromTop="16" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Managers/f:ConsoleManager.cs" caret="19436" fromTop="0" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Managers/f:ConsoleManager.cs" caret="1040" fromTop="20" />
@@ -63,6 +62,7 @@
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Managers/f:ConsoleManager.cs" caret="19385" fromTop="22" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Managers/f:ConsoleManager.cs" caret="19385" fromTop="10" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Managers/f:ConsoleManager.cs" caret="19393" fromTop="29" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Items/f:ItemBow.cs" caret="942" fromTop="21" />
     </RecentEdits>
   </RecentFiles>
   <CompletionStatisticsManager>

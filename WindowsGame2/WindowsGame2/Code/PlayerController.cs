@@ -13,7 +13,7 @@ using MiningGameServer.Packets;
 
 namespace MiningGame.Code
 {
-    public class PlayerController : UpdatableAndDrawable, IConsoleExtender
+    public class PlayerController : UpdatableAndDrawable
     {
         public int PlayerInventorySelected = -1;
         public List<ItemStack> PlayerInventory = new List<ItemStack>();

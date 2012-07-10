@@ -8,7 +8,7 @@ using MiningGameServer.ItemAttributes;
 
 namespace MiningGame.Code.Items
 {
-    public class ItemBow : Item, IConsoleExtender
+    public class ItemBow : Item
     {
         public ItemBow():
             base()
@@ -24,11 +24,6 @@ namespace MiningGame.Code.Items
         {
             return new ItemAttribute[0];
             return new ItemAttribute[] { ItemAttribute.GetAttributeOfID(1, 250), ItemAttribute.GetAttributeOfID(3, 200), ItemAttribute.GetAttributeOfID(2, 1) };
-        }
-
-        public static void ConsoleInit()
-        {
-            ConsoleManager.AddConCommand("test", "lol", l =>{ });
         }
     }
 }

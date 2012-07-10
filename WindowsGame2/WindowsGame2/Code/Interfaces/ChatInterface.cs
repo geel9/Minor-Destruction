@@ -11,7 +11,7 @@ using MiningGameServer;
 using MiningGameServer.Packets;
 namespace MiningGame.Code.Interfaces
 {
-    public class ChatInterface : Interface, IConsoleExtender
+    public class ChatInterface : Interface
     {
         private static List<ChatEntry> chatEntries = new List<ChatEntry>();
         public static TextFieldView ChatEntryField = null;

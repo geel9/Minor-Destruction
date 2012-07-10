@@ -15,7 +15,7 @@ using MiningGameServer.Packets;
 
 namespace MiningGame.Code.Managers
 {
-    public class ClientNetworkManager : IConsoleExtender
+    public class ClientNetworkManager
     {
         public NetClient NetClient = null;
 
@@ -82,7 +82,7 @@ namespace MiningGame.Code.Managers
         public void Connect(string ip, int port)
         {
             Regex regex = new Regex("\\d+?\\.\\d+?\\.\\d+?\\.\\d+?");
-            if(!regex.IsMatch(ip))
+            if (!regex.IsMatch(ip))
             {
                 IPHostEntry entry = Dns.GetHostEntry(ip);
                 if (entry.AddressList.Length > 0)
@@ -132,17 +132,16 @@ namespace MiningGame.Code.Managers
 
         public static void ConsoleInit()
         {
-            ConsoleManager.AddConCommand("connect", "Connect to a server", ls =>
+            ConsoleManager.AddConCommandArgs("connect", "Connect to a server", ls =>
             {
-                if (ls.Length != 2) return;
 
                 string ip = ls[0];
                 int port = Convert.ToInt32(ls[1]);
                 Main.clientNetworkManager.Connect(ip, port);
-            });
+            }, 2);
 
-            ConsoleManager.AddConCommand("disconnect", "Disconnect from the server", ls => Main.clientNetworkManager.Disconnect());
+            ConsoleManager.AddConCommand("disconnect", "Disconnect from the server", Main.clientNetworkManager.Disconnect);
         }
-      
+
     }
 }

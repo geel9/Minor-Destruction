@@ -89,13 +89,13 @@ namespace MiningGame.Code
             ConsoleManager.Log("Width: " + graphics.PreferredBackBufferWidth + " Height: " + graphics.PreferredBackBufferHeight);
             ConsoleManager.AddConVar("window_title", "Window title", "Mining thing");
 
-            ConsoleManager.AddConCommand("reset_textures", "Reload the textures", ls => LoadTextures());
+            ConsoleManager.AddConCommand("reset_textures", "Reload the textures", LoadTextures);
 
-            ConsoleManager.AddConCommand("host", "Host a game", (string[] ls) =>
+            ConsoleManager.AddConCommandArgs("host", "Host a game", (string[] ls) =>
             {
                 int port = Convert.ToInt32(ls[0]);
                 GameServer = new GameServer(port);
-            });
+            }, 1);
 
             Center = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
             PlayerBindManager.InitBinds();

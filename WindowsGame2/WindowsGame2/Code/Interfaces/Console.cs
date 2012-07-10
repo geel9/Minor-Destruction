@@ -17,7 +17,7 @@ using MiningGame.Code.Managers;
 using MiningGame.Code.Interfaces;
 namespace MiningGame.Code.Entities
 {
-    public class Console : Interface, IConsoleExtender
+    public class Console : Interface
     {
 
         const long FLAG_CHEATS = 1;
@@ -263,7 +263,7 @@ namespace MiningGame.Code.Entities
 
         public static void ConsoleInit()
         {
-            ConsoleManager.AddConCommand("toggleconsole", "Toggle the console", (string[] ls) =>
+            ConsoleManager.AddConCommand("toggleconsole", "Toggle the console", () =>
             {
                 if (Main.console.Shown || (!Main.console.Shown && !InterfaceManager.blocking))
                     Main.console.ToggleShown();

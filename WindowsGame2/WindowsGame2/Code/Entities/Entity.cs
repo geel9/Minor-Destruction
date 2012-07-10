@@ -10,7 +10,7 @@ using MiningGameServer.Structs;
 
 namespace MiningGame.Code.Entities
 {
-    public class Entity : Animateable, UpdatableAndDrawable, IConsoleExtender
+    public class Entity : Animateable, UpdatableAndDrawable
     {
         protected bool Paused
         {
