@@ -61,13 +61,13 @@ namespace MiningGameServer.Entities
 
         public Vector2 GetEntityTile()
         {
-            return new Vector2(BoundBox.Center.X / GameServer.BlockWidth, (BoundBox.Bottom - 1) / GameServer.BlockHeight);
+            return new Vector2(BoundBox.Center.X / GameServer.BlockSize, (BoundBox.Bottom - 1) / GameServer.BlockSize);
         }
 
         public virtual void EntityMovement()
         {
             if (ShouldDestroy) return;
-            if (BoundBox.Left < 0 || BoundBox.Top < 0 || BoundBox.Right > GameServer.BlockWidth * GameServer.WorldSizeX || BoundBox.Bottom > GameServer.BlockHeight * GameServer.WorldSizeY)
+            if (BoundBox.Left < 0 || BoundBox.Top < 0 || BoundBox.Right > GameServer.BlockSize * GameServer.WorldSizeX || BoundBox.Bottom > GameServer.BlockSize * GameServer.WorldSizeY)
             {
                 ShouldDestroy = true;
                 return;

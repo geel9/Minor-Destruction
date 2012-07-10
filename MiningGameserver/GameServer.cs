@@ -31,7 +31,7 @@ namespace MiningGameServer
 
         public static List<Vector3> ScheduledUpdates = new List<Vector3>();
 
-        public static int BlockHeight = 16, BlockWidth = 16;
+        public static int BlockSize = 24;
         public static ServerNetworkManager ServerNetworkManager;
 
         public GameServer(int port)
@@ -468,7 +468,7 @@ namespace MiningGameServer
 
         public static Vector2 AbsoluteToTile(Vector2 tile)
         {
-            return new Vector2((int)(tile.X / BlockWidth), (int)(tile.Y / BlockHeight));
+            return new Vector2((int)(tile.X / BlockSize), (int)(tile.Y / BlockSize));
         }
 
         public enum GameEvents : byte

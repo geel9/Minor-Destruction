@@ -86,7 +86,7 @@ namespace MiningGame.Code.Entities
         public override void EntityMovement()
         {
             if (ShouldDestroy) return;
-            if (BoundBox.Left < 0 || BoundBox.Top < 0 || BoundBox.Right > GameWorld.BlockWidth * GameWorld.WorldSizeX || BoundBox.Bottom > GameWorld.BlockHeight * GameWorld.WorldSizeY)
+            if (BoundBox.Left < 0 || BoundBox.Top < 0 || BoundBox.Right > GameWorld.BlockSize * GameWorld.WorldSizeX || BoundBox.Bottom > GameWorld.BlockSize * GameWorld.WorldSizeY)
             {
                 ShouldDestroy = true;
                 return;

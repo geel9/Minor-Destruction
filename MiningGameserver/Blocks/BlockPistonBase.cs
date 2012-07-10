@@ -20,8 +20,8 @@ namespace MiningGameServer.Blocks
             if (placer == null)
                 return;
 
-            int realX = x * 16;
-            int realY = y * 16;
+            int realX = x * GameServer.BlockSize;
+            int realY = y * GameServer.BlockSize;
             int diffX = (int)(placer.EntityPosition.X - realX);
             int diffY = (int)(placer.EntityPosition.Y - realY);
 

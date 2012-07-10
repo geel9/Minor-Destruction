@@ -84,12 +84,12 @@ namespace MiningGame.Code.Entities
             Vector2 aimingAt = GetBlockAimingAt();
 
             short BlockID = GameWorld.GetBlockAt(aimingAt.X, aimingAt.Y).ID;
-            Rectangle drawBB = new Rectangle((int)aimingAt.X * GameWorld.BlockWidth, (int)aimingAt.Y * GameWorld.BlockHeight, GameWorld.BlockWidth, GameWorld.BlockHeight);
+            Rectangle drawBB = new Rectangle((int)aimingAt.X * GameWorld.BlockSize, (int)aimingAt.Y * GameWorld.BlockSize, GameWorld.BlockSize, GameWorld.BlockSize);
             Item inHand = GameWorld.ThePlayer.GetPlayerItemInHand();
             short itemBlockID = 0;
             if(inHand != null)
                 itemBlockID = inHand.GetBlockID();
-            Vector2 blockDrawPos = aimingAt*GameWorld.BlockHeight;
+            Vector2 blockDrawPos = aimingAt*GameWorld.BlockSize;
             if (BlockID == 0)
             {
                 if (itemBlockID != 0)

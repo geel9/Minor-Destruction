@@ -156,7 +156,7 @@ namespace MiningGameServer.Blocks
 
         public virtual Rectangle GetBlockBoundBox(int X, int Y)
         {
-            return new Rectangle(X * GameServer.BlockWidth, Y * GameServer.BlockHeight, GameServer.BlockWidth, GameServer.BlockHeight);
+            return new Rectangle(X * GameServer.BlockSize, Y * GameServer.BlockSize, GameServer.BlockSize, GameServer.BlockSize);
         }
 
         public virtual void OnBlockTouched(int X, int Y, int side, ServerEntityMoveable toucher)

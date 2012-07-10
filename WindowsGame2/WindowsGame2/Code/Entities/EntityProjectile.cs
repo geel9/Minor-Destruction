@@ -59,13 +59,13 @@ namespace MiningGame.Code.Entities
 
         public Vector2 GetEntityTile()
         {
-            return new Vector2(BoundBox.Center.X / GameWorld.BlockWidth, (BoundBox.Bottom - 1) / GameWorld.BlockHeight);
+            return new Vector2(BoundBox.Center.X / GameWorld.BlockSize, (BoundBox.Bottom - 1) / GameWorld.BlockSize);
         }
 
         public virtual void EntityMovement()
         {
             if (ShouldDestroy) return;
-            if (BoundBox.Left < 0 || BoundBox.Top < 0 || BoundBox.Right > GameWorld.BlockWidth * GameWorld.WorldSizeX || BoundBox.Bottom > GameWorld.BlockHeight * GameWorld.WorldSizeY)
+            if (BoundBox.Left < 0 || BoundBox.Top < 0 || BoundBox.Right > GameWorld.BlockSize * GameWorld.WorldSizeX || BoundBox.Bottom > GameWorld.BlockSize * GameWorld.WorldSizeY)
             {
                 ShouldDestroy = true;
                 return;
@@ -143,7 +143,7 @@ namespace MiningGame.Code.Entities
             List<Vector2> hits = RectangleHitsTiles(BoundBox);
             foreach (Vector2 vec in hits)
             {
-                //DrawManager.Draw_Outline(new Vector2(vec.X * GameWorld.BlockWidth + (GameWorld.BlockWidth / 2), vec.Y * GameWorld.BlockHeight + (GameWorld.BlockHeight / 2)) - CameraManager.cameraPosition, GameWorld.BlockWidth, GameWorld.BlockHeight, Color.Red, sb);
+                //DrawManager.Draw_Outline(new Vector2(vec.X * GameWorld.BlockSize + (GameWorld.BlockSize / 2), vec.Y * GameWorld.BlockSize + (GameWorld.BlockSize / 2)) - CameraManager.cameraPosition, GameWorld.BlockSize, GameWorld.BlockSize, Color.Red, sb);
             }
             base.Draw(sb);
         }

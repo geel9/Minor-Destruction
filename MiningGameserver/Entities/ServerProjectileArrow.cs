@@ -99,8 +99,8 @@ namespace MiningGameServer.Entities
                     if (dropID != 0 && num > 0)
                     {
                         ItemStack stack = new ItemStack(num, dropID);
-                        Vector2 pos = newTile * GameServer.BlockHeight;
-                        pos += new Vector2(GameServer.BlockHeight / 2);
+                        Vector2 pos = newTile * GameServer.BlockSize;
+                        pos += new Vector2(GameServer.BlockSize / 2);
                         GameServer.DropItem(stack, pos);
                     }
                     break;
@@ -146,7 +146,7 @@ namespace MiningGameServer.Entities
         public override void EntityMovement()
         {
             if (ShouldDestroy) return;
-            if (BoundBox.Left < 0 || BoundBox.Top < 0 || BoundBox.Right > GameServer.BlockWidth * GameServer.WorldSizeX || BoundBox.Bottom > GameServer.BlockHeight * GameServer.WorldSizeY)
+            if (BoundBox.Left < 0 || BoundBox.Top < 0 || BoundBox.Right > GameServer.BlockSize * GameServer.WorldSizeX || BoundBox.Bottom > GameServer.BlockSize * GameServer.WorldSizeY)
             {
                 ShouldDestroy = true;
                 return;

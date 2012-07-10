@@ -47,25 +47,24 @@ namespace MiningGame.Code.Interfaces
                 Host();
             };
 
-            PlayerNameTextField = new TextFieldView(p, new Vector2(5, 10),
-                                                        AssetManager.GetFont("Console"))
-                                          {
-                                              Width = 180,
-                                              Height = 20,
-                                              MultiLine = false
-                                          };
+            PlayerNameTextField = new TextFieldView(p, new Vector2(5, 10), AssetManager.GetFont("Console"))
+            {
+                Width = 180,
+                Height = 20,
+                MultiLine = false
+            };
             ServerIPTextField = new TextFieldView(p, new Vector2(5, 110), AssetManager.GetFont("Console"))
-                                    {
-                                        Width = 180,
-                                        Height = 20,
-                                        MultiLine = false
-                                    };
+            {
+                Width = 180,
+                Height = 20,
+                MultiLine = false
+            };
             ServerPortTextField = new TextFieldView(p, new Vector2(5, 160), AssetManager.GetFont("Console"))
-                                      {
-                                          Width = 180,
-                                          Height = 20,
-                                          MultiLine = false
-                                      };
+            {
+                Width = 180,
+                Height = 20,
+                MultiLine = false
+            };
 
             //AnimationEditorButton = new ButtonView(Main.Center - new Vector2(0, 200), "Animation editor", AssetManager.GetFont("Console"), () => { destroy(); AnimationEditorInterface ae = new AnimationEditorInterface(); ae.initialize(1); });
 

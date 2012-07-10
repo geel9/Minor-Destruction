@@ -19,7 +19,7 @@ namespace MiningGame.Code
     public class GameWorld : UpdatableAndDrawable
     {
         public const int WorldSizeX = GameServer.WorldSizeX, WorldSizeY = GameServer.WorldSizeY;
-        public const int BlockWidth = 16, BlockHeight = 16, PlayerVision = 4;
+        public const int BlockSize = 24, PlayerVision = 4;
         public static Random Random = new Random();
 
         public static List<PlayerEntity> OtherPlayers = new List<PlayerEntity>();
@@ -150,10 +150,10 @@ namespace MiningGame.Code
             if (ThePlayer.PlayerEntity == null) return;
             Vector2 playerTile = AbsoluteToTile(ThePlayer.PlayerEntity.EntityPosition);
             Rectangle cameraBounds = CameraManager.cameraBoundBox;
-            int blockStartX = (int)MathHelper.Clamp(cameraBounds.Left / BlockWidth, 0, WorldSizeX - 1);
-            int blockStartY = (int)MathHelper.Clamp(cameraBounds.Top / BlockHeight, 0, WorldSizeY - 1);
-            int blockEndX = (int)MathHelper.Clamp((cameraBounds.Right / BlockWidth) + 1, 0, WorldSizeX);
-            int blockEndY = (int)MathHelper.Clamp((cameraBounds.Bottom / BlockHeight) + 1, 0, WorldSizeY);
+            int blockStartX = (int)MathHelper.Clamp(cameraBounds.Left / BlockSize, 0, WorldSizeX - 1);
+            int blockStartY = (int)MathHelper.Clamp(cameraBounds.Top / BlockSize, 0, WorldSizeY - 1);
+            int blockEndX = (int)MathHelper.Clamp((cameraBounds.Right / BlockSize) + 1, 0, WorldSizeX);
+            int blockEndY = (int)MathHelper.Clamp((cameraBounds.Bottom / BlockSize) + 1, 0, WorldSizeY);
 
             Vector2 mousePos = InputManager.GetMousePosV();
             Vector2 blockMouseOver = AbsoluteToTile(mousePos);
@@ -173,17 +173,17 @@ namespace MiningGame.Code
                     {
                         backColor = Main.BackColor;
                     }
-                    Vector2 drawPos = new Vector2(x * BlockWidth + (BlockWidth / 2), y * BlockHeight + (BlockHeight / 2));
+                    Vector2 drawPos = new Vector2(x * BlockSize + (BlockSize / 2), y * BlockSize + (BlockSize / 2));
                     drawPos -= CameraManager.cameraPosition;
                     BlockData blockID = WorldBlocks[x, y];
                     int render = ShouldRenderBlock(x, y);
                     if (render > 0)
                     {
                         if (y < 10)
-                            DrawManager.DrawBox(drawPos, BlockWidth, BlockHeight, backColor, sb);
+                            DrawManager.DrawBox(drawPos, BlockSize, BlockSize, backColor, sb);
                         else
                         {
-                            sb.Draw(backTexture, drawPos - new Vector2(BlockWidth / 2, BlockHeight / 2), Color.White);
+                            sb.Draw(backTexture, drawPos - new Vector2(BlockSize / 2, BlockSize / 2), null, Color.White, 0f, Vector2.Zero, (BlockSize / 16f), SpriteEffects.None, 0f);
                         }
 
                         if (blockID.ID != 0)
@@ -196,19 +196,19 @@ namespace MiningGame.Code
                             {
                                 BlockRenderer renderer = block.RenderBlock(x, y, sb);
                                 if (renderer != null)
-                                    sb.Draw(renderer.Texture, drawPos, null, Color.White, renderer.Rotation, new Vector2(BlockWidth / 2, BlockHeight / 2), (flag ? digMult : 1), renderer.Effects, 0);
+                                    sb.Draw(renderer.Texture, drawPos - new Vector2(BlockSize / 2, BlockSize / 2), null, Color.White, renderer.Rotation, Vector2.Zero, (flag ? digMult : (BlockSize / 16f)), renderer.Effects, 0);
                             }
                             else
                             {
                                 Color color = block.GetBlockRenderColor();
-                                //DrawManager.Draw_Box(drawPos, blockWidth * (flag ? digMult : 1), blockHeight * (flag ? digMult : 1), color, sb, 0f);
+                                //DrawManager.Draw_Box(drawPos, BlockSize * (flag ? digMult : 1), BlockSize * (flag ? digMult : 1), color, sb, 0f);
                             }
                         }
                     }
                     else
                     {
                         //if (blockID != 0)
-                        DrawManager.DrawBox(drawPos, BlockWidth, BlockHeight, Color.Black, sb, 0f);
+                        DrawManager.DrawBox(drawPos, BlockSize, BlockSize, Color.Black, sb, 0f);
                     }
                 }
             }
@@ -248,7 +248,7 @@ namespace MiningGame.Code
 
         public static Vector2 AbsoluteToTile(Vector2 tile)
         {
-            return new Vector2((int)(tile.X / BlockWidth), (int)(tile.Y / BlockHeight));
+            return new Vector2((int)(tile.X / BlockSize), (int)(tile.Y / BlockSize));
         }
 
         public static void SetBlock(int x, int y, short blockID, bool notify = true, byte metaData = 0)

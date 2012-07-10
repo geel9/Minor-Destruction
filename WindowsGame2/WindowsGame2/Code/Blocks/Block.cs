@@ -58,7 +58,7 @@ namespace MiningGame.Code.Blocks
             _onBlockTouched = (x, y, side, entity) => { };
             _getBlockDrop = (int x, int y) => { return (byte)0; };
             _getBlockDropNum = (x, y) => { return 0; };
-            _getBlockBB = (x, y) => { Vector2 pos = new Vector2(x * GameWorld.BlockWidth, y * GameWorld.BlockHeight); return new Rectangle((int)pos.X, (int)pos.Y, GameWorld.BlockWidth, GameWorld.BlockHeight); };
+            _getBlockBB = (x, y) => { Vector2 pos = new Vector2(x * GameWorld.BlockSize, y * GameWorld.BlockSize); return new Rectangle((int)pos.X, (int)pos.Y, GameWorld.BlockSize, GameWorld.BlockSize); };
 */
         }
 
@@ -164,7 +164,7 @@ namespace MiningGame.Code.Blocks
 
         public virtual Rectangle GetBlockBoundBox(int X, int Y)
         {
-            return new Rectangle(X * GameWorld.BlockWidth, Y * GameWorld.BlockHeight, GameWorld.BlockWidth, GameWorld.BlockHeight);
+            return new Rectangle(X * GameWorld.BlockSize, Y * GameWorld.BlockSize, GameWorld.BlockSize, GameWorld.BlockSize);
         }
 
         public virtual void OnBlockTouched(int X, int Y, int side, Entities.EntityMoveable toucher)

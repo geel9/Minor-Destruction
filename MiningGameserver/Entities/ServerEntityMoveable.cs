@@ -44,15 +44,15 @@ namespace MiningGameServer.Entities
 
         public Vector2 GetEntityTile()
         {
-            return new Vector2(BoundBox.Center.X / GameServer.BlockWidth, (BoundBox.Bottom - 1) / GameServer.BlockHeight);
+            return new Vector2(BoundBox.Center.X / GameServer.BlockSize, (BoundBox.Bottom - 1) / GameServer.BlockSize);
         }
 
         public virtual void EntityMovement()
         {
             if (BoundBox.Left < 0) EntityPosition.X = BoundBox.Width / 2 + 1;
             if (BoundBox.Top < 0) EntityPosition.Y = BoundBox.Height / 2 + 1;
-            if (BoundBox.Right > GameServer.BlockWidth * GameServer.WorldSizeX) EntityPosition.X = GameServer.BlockWidth * GameServer.WorldSizeX - (BoundBox.Width / 2);
-            if (BoundBox.Bottom > GameServer.BlockHeight * GameServer.WorldSizeY) EntityPosition.Y = GameServer.BlockHeight * GameServer.WorldSizeY - (BoundBox.Height / 2);
+            if (BoundBox.Right > GameServer.BlockSize * GameServer.WorldSizeX) EntityPosition.X = GameServer.BlockSize * GameServer.WorldSizeX - (BoundBox.Width / 2);
+            if (BoundBox.Bottom > GameServer.BlockSize * GameServer.WorldSizeY) EntityPosition.Y = GameServer.BlockSize * GameServer.WorldSizeY - (BoundBox.Height / 2);
             List<Vector2> tilesHitting = RectangleHitsTiles(BoundBox);
 
             //Didn't want to make a new BoundBox so this'll do. Gets the tiles the player will be in with his velocity.

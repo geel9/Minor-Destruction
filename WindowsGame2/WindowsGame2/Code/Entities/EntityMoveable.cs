@@ -43,15 +43,15 @@ namespace MiningGame.Code.Entities
 
         public Vector2 GetEntityTile()
         {
-            return new Vector2(BoundBox.Center.X / GameWorld.BlockWidth, (BoundBox.Bottom - 1) / GameWorld.BlockHeight);
+            return new Vector2(BoundBox.Center.X / GameWorld.BlockSize, (BoundBox.Bottom - 1) / GameWorld.BlockSize);
         }
 
         public virtual void EntityMovement()
         {
             if (BoundBox.Left < 0) EntityPosition.X = BoundBox.Width / 2 + 1;
             if (BoundBox.Top < 0) EntityPosition.Y = BoundBox.Height / 2 + 1;
-            if (BoundBox.Right > GameWorld.BlockWidth * GameWorld.WorldSizeX) EntityPosition.X = GameWorld.BlockWidth * GameWorld.WorldSizeX - (BoundBox.Width / 2);
-            if (BoundBox.Bottom > GameWorld.BlockHeight * GameWorld.WorldSizeY) EntityPosition.Y = GameWorld.BlockHeight * GameWorld.WorldSizeY - (BoundBox.Height / 2);
+            if (BoundBox.Right > GameWorld.BlockSize * GameWorld.WorldSizeX) EntityPosition.X = GameWorld.BlockSize * GameWorld.WorldSizeX - (BoundBox.Width / 2);
+            if (BoundBox.Bottom > GameWorld.BlockSize * GameWorld.WorldSizeY) EntityPosition.Y = GameWorld.BlockSize * GameWorld.WorldSizeY - (BoundBox.Height / 2);
             List<Vector2> tilesHitting = RectangleHitsTiles(BoundBox);
 
             //Didn't want to make a new BoundBox so this'll do. Gets the tiles the player will be in with his velocity.
@@ -136,7 +136,7 @@ namespace MiningGame.Code.Entities
             List<Vector2> hits = RectangleHitsTiles(BoundBox);
             foreach (Vector2 vec in hits)
             {
-                //DrawManager.DrawOutline(new Vector2(vec.X * GameWorld.BlockWidth + (GameWorld.BlockWidth / 2), vec.Y * GameWorld.BlockHeight + (GameWorld.BlockHeight / 2)) - CameraManager.cameraPosition, GameWorld.BlockWidth, GameWorld.BlockHeight, Color.Red, sb);
+                //DrawManager.DrawOutline(new Vector2(vec.X * GameWorld.BlockSize + (GameWorld.BlockSize / 2), vec.Y * GameWorld.BlockSize + (GameWorld.BlockSize / 2)) - CameraManager.cameraPosition, GameWorld.BlockSize, GameWorld.BlockSize, Color.Red, sb);
             }
 
             base.Draw(sb);

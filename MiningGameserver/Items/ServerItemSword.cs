@@ -18,7 +18,7 @@ namespace MiningGameServer.Items
         public override void OnItemUsed(int x, int y, NetworkPlayer user)
         {
             return;
-            Vector2 pos = new Vector2(x, y)*GameServer.BlockHeight;
+            Vector2 pos = new Vector2(x, y)*GameServer.BlockSize;
             GameServer.DropItem(new ItemStack(1, 1), pos );
             base.OnItemUsed(x, y, user);
         }

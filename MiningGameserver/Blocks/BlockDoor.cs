@@ -16,10 +16,10 @@ namespace MiningGameServer.Blocks
 
         public override Rectangle GetBlockBoundBox(int x, int y)
         {
-            Vector2 pos = new Vector2(x * GameServer.BlockWidth, y * GameServer.BlockHeight);
+            Vector2 pos = new Vector2(x * GameServer.BlockSize, y * GameServer.BlockSize);
             byte md = GameServer.GetBlockAt(x, y).MetaData;
             if (md != 1)
-                return new Rectangle((int)pos.X, (int)pos.Y, 7, GameServer.BlockHeight);
+                return new Rectangle((int)pos.X, (int)pos.Y, 7, GameServer.BlockSize);
             //It's open, so you can walk through it.
             return new Rectangle(0, 0, 0, 0);
         }

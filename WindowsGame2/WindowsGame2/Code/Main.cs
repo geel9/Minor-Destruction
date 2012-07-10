@@ -170,8 +170,8 @@ namespace MiningGame.Code
         {
             isActive = this.IsActive;
             Window.Title = ConsoleManager.GetVariableValue("window_title");
-            int tileX = (int)InputManager.GetMousePosV().X / GameWorld.BlockWidth;
-            int tileY = (int)InputManager.GetMousePosV().Y / GameWorld.BlockHeight;;
+            int tileX = (int)InputManager.GetMousePosV().X / GameWorld.BlockSize;
+            int tileY = (int)InputManager.GetMousePosV().Y / GameWorld.BlockSize;;
             GeeUI.GeeUI.Update(gameTime);
             clientNetworkManager.Update(gameTime);
 
