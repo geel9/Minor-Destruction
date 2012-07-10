@@ -10,7 +10,7 @@ using MiningGameServer.Structs;
 
 namespace MiningGame.Code.Entities
 {
-    public class Entity : Animateable, UpdatableAndDrawable
+    public class Entity : Animateable, UpdatableAndDrawable, IConsoleExtender
     {
         protected bool Paused
         {
@@ -111,7 +111,7 @@ namespace MiningGame.Code.Entities
         {
             Color white = Color.White;
             white.A = Alpha;
-            if (ConsoleManager.getVariableBool("draw_hitboxes"))
+            if (ConsoleManager.GetVariableBool("draw_hitboxes"))
             {
                 DrawManager.DrawOutline(EntityPosition - (CameraManager.cameraPosition), BoundBox.Width, BoundBox.Height, Color.Yellow, sb);
             }
@@ -147,6 +147,11 @@ namespace MiningGame.Code.Entities
         public bool inCamera()
         {
             return CameraManager.inCamera(EntityPosition, BoundBox);
+        }
+
+        public static void ConsoleInit()
+        {
+            ConsoleManager.AddConVar("draw_hitboxes", "If 1, hitboxes are drawn.", "0");
         }
     }
 }

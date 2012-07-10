@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using MiningGame.Code.CInterfaces;
 using MiningGame.Code.Items;
 using MiningGame.Code.Structs;
 using System.Net;
@@ -14,7 +15,7 @@ using MiningGameServer.Packets;
 
 namespace MiningGame.Code.Managers
 {
-    public class ClientNetworkManager
+    public class ClientNetworkManager : IConsoleExtender
     {
         public NetClient NetClient = null;
 
@@ -108,7 +109,7 @@ namespace MiningGame.Code.Managers
             Main.theWorld = new GameWorld();
             InGameInterface i = new InGameInterface();
             i.initialize(1);
-            string name = ConsoleManager.getVariableValue("player_name");
+            string name = ConsoleManager.GetVariableValue("player_name");
             ConsoleManager.Log("Connected! Name:" + name);
             Packet0CSPlayerConnect packet = new Packet0CSPlayerConnect(name);
             SendPacket(packet);
@@ -129,6 +130,19 @@ namespace MiningGame.Code.Managers
             }
         }
 
+        public static void ConsoleInit()
+        {
+            ConsoleManager.AddConCommand("connect", "Connect to a server", ls =>
+            {
+                if (ls.Length != 2) return;
+
+                string ip = ls[0];
+                int port = Convert.ToInt32(ls[1]);
+                Main.clientNetworkManager.Connect(ip, port);
+            });
+
+            ConsoleManager.AddConCommand("disconnect", "Disconnect from the server", ls => Main.clientNetworkManager.Disconnect());
+        }
       
     }
 }

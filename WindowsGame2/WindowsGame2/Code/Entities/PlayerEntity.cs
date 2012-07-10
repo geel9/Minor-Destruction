@@ -108,7 +108,7 @@ namespace MiningGame.Code.Entities
                                         drawBB.Height, Color.White, sb);
             }
 
-            ConsoleManager.setVariableValue("window_title", (int)aimingAt.X + ", " + (int)aimingAt.Y);
+            ConsoleManager.SetVariableValue("window_title", (int)aimingAt.X + ", " + (int)aimingAt.Y);
 
             int leftX = FacingLeft ? BoundBox.Left - 15 : BoundBox.Right;
             ShapeAABB bound = new ShapeAABB(new Rectangle(leftX, (int)BoundBox.Top + 3, 15, PlayerHeight - 6));

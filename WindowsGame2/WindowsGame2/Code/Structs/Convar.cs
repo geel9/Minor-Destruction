@@ -7,19 +7,19 @@ namespace MiningGame.Code.Structs
 {
     public struct Convar
     {
-        public Action<string[]> lambda;
-        public string description;
-        public string value;
-        public string name;
-        public long flags;
+        public Action<string> Lambda;
+        public string Description;
+        public string Value;
+        public string Name;
+        public long Flags;
 
-        public Convar(Action<string[]> lambda, string description, string defaultValue, string name, long flags = 0)
+        public Convar(Action<string> lambda, string description, string defaultValue, string name, long flags = 0)
         {
-            this.lambda = lambda;
-            this.description = description;
-            this.value = defaultValue;
-            this.name = name;
-            this.flags = flags;
+            this.Lambda = lambda;
+            this.Description = description;
+            this.Value = defaultValue;
+            this.Name = name;
+            this.Flags = flags;
         }
 
     }

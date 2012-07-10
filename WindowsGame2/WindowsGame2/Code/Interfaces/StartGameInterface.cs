@@ -76,7 +76,7 @@ namespace MiningGame.Code.Interfaces
 
         public void Host()
         {
-            ConsoleManager.setVariableValue("player_name", PlayerNameTextField.Text);
+            ConsoleManager.SetVariableValue("player_name", PlayerNameTextField.Text);
             ConsoleManager.ConsoleInput("host " + ServerPortTextField.Text);
             ConsoleManager.ConsoleInput("connect 127.0.0.1 " + ServerPortTextField.Text);
             destroy();
@@ -84,7 +84,7 @@ namespace MiningGame.Code.Interfaces
 
         public void Connect()
         {
-            ConsoleManager.setVariableValue("player_name", PlayerNameTextField.Text);
+            ConsoleManager.SetVariableValue("player_name", PlayerNameTextField.Text);
             ConsoleManager.ConsoleInput("connect " + ServerIPTextField.Text + " " + ServerPortTextField.Text);
             destroy();
         }

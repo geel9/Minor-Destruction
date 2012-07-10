@@ -133,6 +133,7 @@
     <Compile Include="Code\Blocks\BlockPistonArm.cs" />
     <Compile Include="Code\Blocks\BlockPistonBase.cs" />
     <Compile Include="Code\CInterfaces\Drawable.cs" />
+    <Compile Include="Code\CInterfaces\IConsoleExtender.cs" />
     <Compile Include="Code\CInterfaces\Updatable.cs" />
     <Compile Include="Code\CInterfaces\UpdatableAndDrawable.cs" />
     <Compile Include="Code\Entities\AnimationControlPointUI.cs" />

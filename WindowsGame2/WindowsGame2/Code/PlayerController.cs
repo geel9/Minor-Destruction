@@ -13,7 +13,7 @@ using MiningGameServer.Packets;
 
 namespace MiningGame.Code
 {
-    public class PlayerController : UpdatableAndDrawable
+    public class PlayerController : UpdatableAndDrawable, IConsoleExtender
     {
         public int PlayerInventorySelected = -1;
         public List<ItemStack> PlayerInventory = new List<ItemStack>();
@@ -306,6 +306,18 @@ namespace MiningGame.Code
         public bool inCamera()
         {
             return true;
+        }
+
+        public static void ConsoleInit()
+        {
+            ConsoleManager.AddConVar("player_name", "Your name in a server", "Player_" + Main.R.Next(0, 1000), l =>
+            {
+                if (Main.clientNetworkManager.IsConnected())
+                {
+                    Packet1CSGameEvent packet = new Packet1CSGameEvent(GameServer.GameEvents.Player_Change_Name, l[0]);
+                    Main.clientNetworkManager.SendPacket(packet);
+                }
+            });
         }
 
         #endregion

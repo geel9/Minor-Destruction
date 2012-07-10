@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using MiningGame.Code.CInterfaces;
 using MiningGame.Code.Structs;
 using MiningGame.Code.Entities;
 using Microsoft.Xna.Framework;
@@ -15,65 +17,102 @@ namespace MiningGame.Code.Managers
 {
     public static class ConsoleManager
     {
-        const long FLAG_CHEATS = 1;
-        const long FLAG_HIDDEN = 2;
-        const long FLAG_LOCKED = 4;
+        private const long FlagCheats = 1;
+        private const long FlagHidden = 2;
+        private const long FlagLocked = 4;
 
-        public static List<ConCommand> commands = new List<ConCommand>();
-        public static List<Convar> variables = new List<Convar>();
-        public static List<LogText> logs = new List<LogText>();
-
+        public static List<ConCommand> Commands = new List<ConCommand>();
+        public static List<Convar> Variables = new List<Convar>();
 
         public static string output = "";
         public static int lines = 10;
         public static int offset = 0;
         public static int logNum = 0;
 
-        public static void addConCommand(string name, string description, Action<string[]> lambda, long flags = 0)
+        public static void AddConCommand(string name, string description, Action lambda, long flags = 0)
         {
-            if (!isCommand(name))
-            {
-                ConCommand cc = new ConCommand(lambda, description, name, flags);
-                commands.Add(cc);
-            }
+            if (IsCommand(name)) return;
+            //Using ConCommand for both argument and no argument concommands,
+            //So it expects an Action<string>. So we just make a new Action that calls the passed in Action.
+            //HOORAY!
+            ConCommand cc = new ConCommand(l => lambda(), description, name, flags);
+            Commands.Add(cc);
         }
 
-        public static void addConVar(string name, string description, string DefaultValue, Action<string[]> lambda = null, long flags = 0)
+        public static void AddConCommandArgs(string name, string description, Action<string[]> lambda, int numArguments, long flags = 0)
         {
-            if (!isVariable(name))
+            if (IsCommand(name)) return;
+
+            ConCommand cc = new ConCommand(lambda, description, name, flags);
+            cc.SetArgNumOne(numArguments);
+            Commands.Add(cc);
+        }
+
+        public static void AddConCommandArgsMinMax(string name, string description, Action<string[]> lambda, int minArguments, int maxArguments, long flags = 0)
+        {
+            if (IsCommand(name)) return;
+
+            ConCommand cc = new ConCommand(lambda, description, name, flags);
+            cc.SetArgNumMinMax(minArguments, maxArguments);
+            Commands.Add(cc);
+        }
+
+        public static void AddConCommandArgsMult(string name, string description, Action<string[]> lambda, int[] argumentNums, long flags = 0)
+        {
+            if (IsCommand(name)) return;
+
+            ConCommand cc = new ConCommand(lambda, description, name, flags);
+            cc.SetArgNumMultiple(argumentNums);
+            Commands.Add(cc);
+        }
+
+        public static void AddConVar(string name, string description, string DefaultValue,
+                                     Action<string> lambda = null, long flags = 0)
+        {
+            if (!IsVariable(name))
             {
                 Convar cv = new Convar(lambda, description, DefaultValue, name, flags);
-                variables.Add(cv);
+                Variables.Add(cv);
             }
         }
 
-        public static bool isCommand(string command)
+        public static bool IsCommand(string command)
         {
-            foreach (ConCommand c in commands)
+            foreach (ConCommand c in Commands)
             {
-                if (command == c.name)
+                if (command == c.Name)
                     return true;
             }
             return false;
         }
 
-        public static bool isVariable(string var)
+        public static bool IsVariable(string var)
         {
-            foreach (Convar c in variables)
+            foreach (Convar c in Variables)
             {
-                if (var == c.name)
+                if (var == c.Name)
                     return true;
             }
             return false;
         }
 
-        public static void executeCommand(string name, string[] arguments)
+        public static void ExecuteCommand(string name, string[] arguments)
         {
             bool cheats = true;
-            bool needsCheats = (getFlags(name) & FLAG_CHEATS) > 0;
+            bool needsCheats = (GetFlags(name) & FlagCheats) > 0;
             if ((!needsCheats && !cheats) || cheats)
             {
-                getCommand(name).lambda(arguments);
+                ConCommand command = GetCommand(name);
+                if (!command.HasArgs || command.IsInArgNums(arguments.Length))
+                {
+                    command.Lambda(arguments);
+                }
+                else
+                {
+                    string amount = command.PossibleArgNums.Aggregate("", (current, argNum) => current + (argNum + "/"));
+                    amount = amount.TrimEnd('/');
+                    Log("Expected (" + amount + ") arguments.");
+                }
             }
             else
             {
@@ -81,18 +120,18 @@ namespace MiningGame.Code.Managers
             }
         }
 
-        public static void executeVariable(string name, string[] arguments)
+        public static void ExecuteVariable(string name, string[] arguments)
         {
             bool cheats = true;
-            bool needsCheats = (getFlags(name) & FLAG_CHEATS) > 0;
-            Convar c = variables[variables.IndexOf(getVariable(name))];
+            bool needsCheats = (GetFlags(name) & FlagCheats) > 0;
+            Convar c = Variables[Variables.IndexOf(GetVariable(name))];
             if (arguments.Length > 0)
             {
                 if ((!needsCheats && !cheats) || cheats)
                 {
-                    setVariableValue(name, ListToString(arguments, " "));
-                    if (c.lambda != null)
-                        c.lambda(arguments);
+                    SetVariableValue(name, ListToString(arguments, " "));
+                    if (c.Lambda != null)
+                        c.Lambda(arguments.Aggregate((current, argument) => current + argument));
                 }
                 else
                 {
@@ -105,85 +144,85 @@ namespace MiningGame.Code.Managers
             }
         }
 
-        public static string getVariableValue(string name)
+        public static string GetVariableValue(string name)
         {
-            return getVariable(name).value;
+            return GetVariable(name).Value;
         }
 
-        public static bool getVariableBool(string name)
+        public static bool GetVariableBool(string name)
         {
-            return getVariable(name).value.Replace(" ", "") == "1" ? true : false;
+            return GetVariable(name).Value.Replace(" ", "") == "1" ? true : false;
         }
 
-        public static float getVariableFloat(string name)
+        public static float GetVariableFloat(string name)
         {
-            return (float)Convert.ToDouble(getVariable(name).value);
+            return (float)Convert.ToDouble(GetVariable(name).Value);
         }
 
-        public static double getVariableDouble(string name)
+        public static double GetVariableDouble(string name)
         {
-            return Convert.ToDouble(getVariable(name).value);
+            return Convert.ToDouble(GetVariable(name).Value);
         }
 
-        public static int getVariableInt(string name)
+        public static int GetVariableInt(string name)
         {
-            return Convert.ToInt32(getVariable(name).value);
+            return Convert.ToInt32(GetVariable(name).Value);
         }
 
-        public static string getFlagString(string name)
+        public static string GetFlagString(string name)
         {
-            long flags = getFlags(name);
+            long flags = GetFlags(name);
             string ret = "";
 
-            ret += (flags & FLAG_CHEATS) > 0 ? "FLAG_CHEATS " : "";
-            ret += (flags & FLAG_HIDDEN) > 0 ? "FLAG_HIDDEN " : "";
-            ret += (flags & FLAG_LOCKED) > 0 ? "FLAG_LOCKED " : "";
+            ret += (flags & FlagCheats) > 0 ? "FLAG_CHEATS " : "";
+            ret += (flags & FlagHidden) > 0 ? "FLAG_HIDDEN " : "";
+            ret += (flags & FlagLocked) > 0 ? "FLAG_LOCKED " : "";
 
             return ret;
         }
 
-        public static long getFlags(string name)
+        public static long GetFlags(string name)
         {
-            if (isVariable(name))
+            if (IsVariable(name))
             {
-                return getVariable(name).flags;
+                return GetVariable(name).Flags;
             }
-            else if (isCommand(name))
+            else if (IsCommand(name))
             {
-                return getCommand(name).flags;
+                return GetCommand(name).Flags;
             }
             else
                 return 0;
         }
 
-        public static void setVariableValue(string name, string value)
+        public static void SetVariableValue(string name, string value)
         {
-            Convar c = getVariable(name);
+            Convar c = GetVariable(name);
             Convar c2 = c;
-            c2.value = value;
-            variables.Add(c2);
-            variables.Remove(c);
+            c2.Value = value;
+            Variables.Add(c2);
+            Variables.Remove(c);
         }
 
-        public static ConCommand getCommand(string name)
+        public static ConCommand GetCommand(string name)
         {
-            foreach (ConCommand c in commands)
+            foreach (ConCommand c in Commands)
             {
-                if (c.name == name)
+                if (c.Name == name)
                 {
                     return c;
                 }
             }
-            return new ConCommand((string[] l) => { }, "", "");
+            return new ConCommand(l => { }, "", "");
         }
 
-        public static Convar getVariable(string name)
+        public static Convar GetVariable(string name)
         {
             try
             {
-                foreach (Convar c in variables)
+                foreach (Convar c in Variables)
                 {
-                    if (c.name == name)
+                    if (c.Name == name)
                     {
                         return c;
                     }
@@ -191,9 +230,9 @@ namespace MiningGame.Code.Managers
             }
             catch (Exception)
             {
-                return new Convar((string[] l) => { }, "", "", "");
+                return new Convar(l => { }, "", "", "");
             }
-            return new Convar((string[] l) => { }, "", "", "");
+            return new Convar(l => { }, "", "", "");
         }
 
         public static string Align(string one, string two, int dist, string delimiter = " ")
@@ -210,22 +249,7 @@ namespace MiningGame.Code.Managers
             return ret;
         }
 
-        public static List<LogText> GetLog()
-        {
-            List<LogText> ll = new List<LogText>();
-            for (int i = 0; i < lines; i++)
-            {
-                //Get the lines according to the offset; we'd get the first 4 lines here if offset = 0, but if offset = 1, we'd get lines 2-5.
-                if ((i + offset) < logs.Count)
-                {
-                    ll.Add(logs[i + offset]);
-                }
-            }
-
-            return ll;
-        }
-
-        public static string[] removeFromList(string[] list, string remove)
+        public static string[] RemoveFromList(string[] list, string remove)
         {
             List<string> ret = new List<string>();
             foreach (string s in list)
@@ -236,7 +260,8 @@ namespace MiningGame.Code.Managers
             return ret.ToArray();
         }
 
-        public static string ListToString(IEnumerable<string> list, string delimiter, int limit = 1000, string breakString = "...")
+        public static string ListToString(IEnumerable<string> list, string delimiter, int limit = 1000,
+                                          string breakString = "...")
         {
             string ret = "";
             int num = 0;
@@ -283,7 +308,7 @@ namespace MiningGame.Code.Managers
 
         }
 
-        public static string[] splitConsoleInput_Semicolons(string input)
+        public static string[] SplitConsoleInputSemicolons(string input)
         {
             List<string> ret = new List<string>();
             string curCommand = "";
@@ -323,7 +348,7 @@ namespace MiningGame.Code.Managers
             return ret.ToArray();
         }
 
-        public static string[] splitConsoleInput_Arguments(string input)
+        public static string[] SplitConsoleInputArguments(string input)
         {
             List<string> ret = new List<string>();
             string curCommand = "";
@@ -354,7 +379,7 @@ namespace MiningGame.Code.Managers
                     ret.Add(curCommand.Trim());
                     curCommand = "";
                 }
-                if(addChar)
+                if (addChar)
                 {
                     curCommand += c;
                 }
@@ -368,48 +393,153 @@ namespace MiningGame.Code.Managers
             return ret.ToArray();
         }
 
-        private static bool BelongsToServer(string command)
-        {
-            /*if(GameServer.ServerNetworkManager.NetServer.Status != MiningGameServer.lNetPeerStatus.Running)
-            {
-                return false;
-            }*/
-            return MiningGameServer.ServerConsole.Consume(command);
-        }
-
         public static void ConsoleInput(string input2, bool silent = false)
         {
-            string[] cons = splitConsoleInput_Semicolons(input2);
+            string[] cons = SplitConsoleInputSemicolons(input2);
             foreach (string input in cons)
             {
-                string[] inputs = splitConsoleInput_Arguments(input);
-                inputs = removeFromList(inputs, " ");
+                string[] inputs = SplitConsoleInputArguments(input);
+                inputs = RemoveFromList(inputs, " ");
                 string command = inputs[0];
-                
+
                 if (!silent)
                     Log(">" + input);
 
-                if(MiningGameServer.ServerConsole.IsCommand(command))
+                if (ServerConsole.IsCommand(command))
                 {
                     MiningGameServer.ServerConsole.ExecuteCommand(command, inputs.Skip(1).ToArray());
                     continue;
                 }
 
-                else if (MiningGameServer.ServerConsole.IsVariable(command))
+                if (ServerConsole.IsVariable(command))
                 {
                     MiningGameServer.ServerConsole.ExecuteVariable(command, inputs.Skip(1).ToArray());
                     continue;
                 }
-
-                else if (isCommand(command))
+                if (IsCommand(command))
                 {
-                    executeCommand(command, inputs.Skip(1).ToArray<string>());
+                    ExecuteCommand(command, inputs.Skip(1).ToArray());
                 }
-                else if (isVariable(command))
+                else if (IsVariable(command))
                 {
-                    executeVariable(command, inputs.Skip(1).ToArray<string>());
+                    ExecuteVariable(command, inputs.Skip(1).ToArray());
                 }
             }
+        }
+
+        public static void InitConsole()
+        {
+            /*This piece of code gets all the classes that have a 
+              ConsoleInit() method and executes it. Essentially,
+              this allows you to define console variables/commands in the classes
+              that they relate to, instead of all in a big chunk somewhere.
+              Before, they were all define in a big method in Main.cs. Ew. */
+            Assembly a = Assembly.GetExecutingAssembly();
+            foreach (Type t in a.GetTypes())
+            {
+                MethodInfo info = t.GetMethod("ConsoleInit");
+                //t implements IConsoleExtender
+                if (info != null)
+                    info.Invoke(t, new object[0]);
+            }
+        }
+
+        public static void ConsoleInit()
+        {
+            AddConCommandArgs("exec", "Execute a file in the config folder", ls =>
+            {
+                string execContents =
+                    FileReaderManager.ReadFileContents(DirectoryManager.CONFIG + ls[0] + (!ls[0].Contains(".cfg") ? ".cfg" : ""));
+                if (execContents != "")
+                {
+                    foreach (string command in execContents.Replace("\r", "").Split('\n'))
+                    {
+                        ConsoleInput(command, true);
+                    }
+                }
+                else
+                {
+                    Log(
+                        "Could not find file/file was empty: " +
+                        ls[0]);
+                }
+            }, 1);
+
+            AddConCommandArgsMinMax("bind", "Bind a key", ls =>
+                                                    {
+
+                                                        if (ls.Length == 1)
+                                                        {
+                                                            string key = ls[0];
+                                                            foreach (PlayerBind bind in PlayerBindManager.PlayerBinds)
+                                                            {
+                                                                if (bind.buttonBoundName.Replace("^", "") ==
+                                                                    key.Replace("^", ""))
+                                                                    Log(key + " is bound to: \"" +
+                                                                        bind.consoleCommandOnPressed);
+                                                            }
+                                                        }
+                                                        else if (ls.Length == 2)
+                                                        {
+                                                            string key = ls[0];
+                                                            string command = ls[1];
+                                                            PlayerBindManager.BindButton(key, command);
+                                                        }
+                                                        else
+                                                        {
+                                                            Log("Usage: bind [key] ([command])");
+                                                            return;
+                                                        }
+                                                    }, 1, 2);
+
+            AddConCommand("list", "List console commands and variables", () =>
+            {
+                Log(
+                    "Name                Description                Flags");
+                Log(
+                    "----------------------------------------------------");
+                foreach (ConCommand c in Commands)
+                {
+                    string r = Align(c.Name,
+                                    c.Description, 20);
+                    string flags = GetFlagString(c.Name);
+                    string r2 = Align(r, flags, 20);
+                    if ((c.Flags & FlagHidden) == 0)
+                        Log(r2);
+                }
+                foreach (Convar c in Variables)
+                {
+                    string r = Align(c.Name,
+                                    c.Description, 20);
+                    string flags = GetFlagString(c.Name);
+                    string r2 = Align(r, flags, 20);
+                    if ((c.Flags & FlagHidden) == 0)
+                        Log(r2);
+                }
+            });
+
+            AddConCommandArgs("help", "RECURSION", ls =>
+            {
+                string name = ls[0];
+                string description = "";
+                bool isVar = IsVariable(name);
+                long flags = GetFlags(name);
+                bool cheats = (flags & FlagCheats) > 0;
+                bool hidden = (flags & FlagHidden) > 0;
+                bool locked = (flags & FlagLocked) > 0;
+                if (isVar)
+                {
+                    description = GetVariable(name).Description;
+                }
+                else if (IsCommand(name))
+                {
+                    description = GetCommand(name).Description;
+                }
+                Log(name + ": " + description +
+                    ((isVar) ? "(value: " + GetVariableValue(name) + ")" : "") +
+                    " cheats: " + cheats + " hidden: " + hidden + " locked: " +
+                    locked);
+            }, 1);
         }
     }
 }

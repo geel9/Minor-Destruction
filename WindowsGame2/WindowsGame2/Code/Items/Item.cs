@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using MiningGame.Code.CInterfaces;
 using MiningGameServer.ItemAttributes;
 using MiningGameServer.Packets;
 using MiningGameServer.Interfaces;

@@ -5,19 +5,20 @@ using System.Text;
 using GeeUI.Views;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MiningGame.Code.CInterfaces;
 using MiningGame.Code.Managers;
 using MiningGameServer;
 using MiningGameServer.Packets;
 namespace MiningGame.Code.Interfaces
 {
-    public class ChatInterface : Interface
+    public class ChatInterface : Interface, IConsoleExtender
     {
         private static List<ChatEntry> chatEntries = new List<ChatEntry>();
         public static TextFieldView ChatEntryField = null;
         public static TextFieldView ChatLogField = null;
         public static bool ChatEntryMode = false;
 
-        private static bool shouldClearT = false;
+        private static bool _shouldClearT = false;
 
         public static View MainView;
 
@@ -62,10 +63,10 @@ namespace MiningGame.Code.Interfaces
         {
             //MainView.Active = ChatEntryMode;
             blocking = ChatEntryMode;
-            if(ChatEntryMode && shouldClearT)
+            if(ChatEntryMode && _shouldClearT)
             {
                 ChatEntryField.ClearText();
-                shouldClearT = false;
+                _shouldClearT = false;
             }
             base.Update(time);
         }
@@ -75,7 +76,7 @@ namespace MiningGame.Code.Interfaces
             ChatEntryMode = true;
             MainView.Active = ChatEntryField.Selected = ChatEntryField.Active = ChatLogField.Active = true;
             ChatEntryField.ClearText();
-            shouldClearT = true;
+            _shouldClearT = true;
         }
 
         public static void HideChatEntry()
@@ -94,6 +95,23 @@ namespace MiningGame.Code.Interfaces
             ChatLogField.ReEvaluateOffset();
         }
 
+        public static void ConsoleInit()
+        {
+            ConsoleManager.AddConCommand("showchat", "Show the chat window", () =>
+            {
+                if (!InterfaceManager.blocking && Main.clientNetworkManager.NetClient != null)
+                {
+                    ShowChatEntry();
+                }
+            });
+            ConsoleManager.AddConCommand("hidechat", "Hide the chat window", HideChatEntry);
+
+            ConsoleManager.AddConCommandArgs("say", "Say something", ls =>
+            {
+                Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_Chat, false, ls[0]);
+                Main.clientNetworkManager.SendPacket(pack);
+            }, 1);
+        }
     }
 
     public class ChatEntry

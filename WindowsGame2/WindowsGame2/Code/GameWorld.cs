@@ -383,7 +383,7 @@ namespace MiningGame.Code
                 case 255:
                     id = p.ReadByte();
                     ConsoleManager.Log("My id is " + id);
-                    ThePlayer.PlayerEntity = new PlayerEntity(new Vector2(0, 0), id, ConsoleManager.getVariableValue("player_name"));
+                    ThePlayer.PlayerEntity = new PlayerEntity(new Vector2(0, 0), id, ConsoleManager.GetVariableValue("player_name"));
                     break;
             }
         }
