@@ -188,6 +188,7 @@ namespace MiningGame.Code
             }
             string inventory = "\nInventory: \n";
 
+
             Item inI = ThePlayer.GetPlayerItemInHand();
             if (inI != null)
             {
