@@ -36,7 +36,6 @@ namespace MiningGame.Code
         public const long FLAG_HIDDEN = 2;
         public const long FLAG_LOCKED = 4;
 
-
         public static GraphicsDeviceManager graphics;
         public static SpriteBatch spriteBatch;
 
