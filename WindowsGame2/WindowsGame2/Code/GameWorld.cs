@@ -88,31 +88,6 @@ namespace MiningGame.Code
             return ret;
         }
 
-        public static bool IsBlockLit(int x, int y)
-        {
-            return true;
-        }
-
-        public static int GetBlockLitLevel(int x, int y)
-        {
-            return 2;
-        }
-
-        public static bool IsBlockFullyLit(int x, int y)
-        {
-            return true;
-            Vector2 playerTile = AbsoluteToTile(ThePlayer.PlayerEntity.EntityPosition);
-            float xDist = Math.Abs(playerTile.X - x);
-            float yDist = Math.Abs(playerTile.Y - y);
-            return true || (xDist < PlayerVision && yDist < PlayerVision);
-        }
-
-        public static int ShouldRenderBlock(int x, int y)
-        {
-            return 2;
-            //return getBlockLitLevel(x, y);
-        }
-
         public static BlockData GetBlockAt(int x, int y)
         {
             return (x >= 0 && y >= 0 && x < WorldSizeX && y < WorldSizeY) ? WorldBlocks[x, y] : new BlockData();
@@ -131,10 +106,10 @@ namespace MiningGame.Code
                 CameraManager.setCameraPositionCenterMin(ThePlayer.PlayerEntity.EntityPosition, Vector2.Zero);
 
             List<EntityDroppedItem> toRemove = new List<EntityDroppedItem>();
-            foreach(EntityDroppedItem item in DroppedItems)
+            foreach (EntityDroppedItem item in DroppedItems)
             {
                 item.Update(time);
-                if(item.ShouldDestroy)
+                if (item.ShouldDestroy)
                     toRemove.Add(item);
             }
 
@@ -169,47 +144,46 @@ namespace MiningGame.Code
                 {
                     Color backColor = Color.SandyBrown;
                     Texture2D backTexture = AssetManager.GetTexture("background_1");
-                    if (y < 10)
+                    if (y < 30)
                     {
                         backColor = Main.BackColor;
                     }
                     Vector2 drawPos = new Vector2(x * BlockSize + (BlockSize / 2), y * BlockSize + (BlockSize / 2));
                     drawPos -= CameraManager.cameraPosition;
                     BlockData blockID = WorldBlocks[x, y];
-                    int render = ShouldRenderBlock(x, y);
-                    if (render > 0)
+
+                    bool drawBackground = true;
+
+                    if (blockID.ID != 0)
                     {
-                        if (y < 10)
-                            DrawManager.DrawBox(drawPos, BlockSize, BlockSize, backColor, sb);
+                        drawBackground = false;
+                        Block block = blockID.Block;
+                        bool flag = (x == curDig.X && y == curDig.Y);
+
+                        BlockRenderer renderer = block.RenderBlock(x, y, sb);
+
+                        if (renderer != null)
+                        {
+                            sb.Draw(renderer.Texture, drawPos - new Vector2(BlockSize / 2, BlockSize / 2), null, Color.White,
+                                    renderer.Rotation, Vector2.Zero, (flag ? digMult : (BlockSize / 16f)),
+                                    renderer.Effects, 0);
+                            if (renderer.Transparent)
+                                drawBackground = true;
+                        }
                         else
                         {
-                            sb.Draw(backTexture, drawPos - new Vector2(BlockSize / 2, BlockSize / 2), null, Color.White, 0f, Vector2.Zero, (BlockSize / 16f), SpriteEffects.None, 0f);
-                        }
-
-                        if (blockID.ID != 0)
-                        {
-                            Block block = blockID.Block;
-                            bool flag = (x == curDig.X && y == curDig.Y);
-                            bool flagHide = block.GetBlockHide() && render == 1;
-
-                            if (block.GetBlockRenderSpecial() || y < 10)
-                            {
-                                BlockRenderer renderer = block.RenderBlock(x, y, sb);
-                                if (renderer != null)
-                                    sb.Draw(renderer.Texture, drawPos - new Vector2(BlockSize / 2, BlockSize / 2), null, Color.White, renderer.Rotation, Vector2.Zero, (flag ? digMult : (BlockSize / 16f)), renderer.Effects, 0);
-                            }
-                            else
-                            {
-                                Color color = block.GetBlockRenderColor();
-                                //DrawManager.Draw_Box(drawPos, BlockSize * (flag ? digMult : 1), BlockSize * (flag ? digMult : 1), color, sb, 0f);
-                            }
+                            drawBackground = true;
                         }
                     }
-                    else
+
+                    if (drawBackground)
                     {
-                        //if (blockID != 0)
-                        DrawManager.DrawBox(drawPos, BlockSize, BlockSize, Color.Black, sb, 0f);
+                        if (y < 20)
+                            DrawManager.DrawBox(drawPos, BlockSize, BlockSize, backColor, sb);
+                        else
+                            sb.Draw(backTexture, drawPos - new Vector2(BlockSize / 2, BlockSize / 2), null, Color.White, 0f, Vector2.Zero, (BlockSize / 16f), SpriteEffects.None, 0f);
                     }
+
                 }
             }
             string inventory = "\nInventory: \n";
@@ -237,7 +211,7 @@ namespace MiningGame.Code
                 oth.Draw(sb);
             }
 
-            foreach(EntityDroppedItem item in DroppedItems)
+            foreach (EntityDroppedItem item in DroppedItems)
                 item.Draw(sb);
 
             foreach (EntityProjectile projectile in GameProjectiles)

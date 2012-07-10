@@ -69,7 +69,7 @@ namespace MiningGameServer
             //Place the base level of dirt
             for (int x = 0; x < WorldSizeX; x++)
             {
-                for (int y = 10; y < WorldSizeY; y++)
+                for (int y = 20; y < WorldSizeY; y++)
                 {
                     SetBlock(x, y, 2);
                 }
@@ -88,7 +88,7 @@ namespace MiningGameServer
         {
             for (int x = 0; x < WorldSizeX; x++)
             {
-                for (int y = 15; y < WorldSizeY; y++)
+                for (int y = 40; y < WorldSizeY; y++)
                 {
                     int randomDoOre = Random.Next(0, 50);
 
@@ -152,7 +152,7 @@ namespace MiningGameServer
         {
             for (int x = 0; x < WorldSizeX; x++)
             {
-                for (int y = 15; y < WorldSizeY; y++)
+                for (int y = 45; y < WorldSizeY; y++)
                 {
                     int randCaves = Random.Next(0, 500);
                     int randCavesWidth = Random.Next(2, 5);

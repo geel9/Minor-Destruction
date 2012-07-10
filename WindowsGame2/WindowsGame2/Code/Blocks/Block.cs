@@ -269,6 +269,7 @@ namespace MiningGame.Code.Blocks
         public SpriteEffects Effects = SpriteEffects.None;
         public float Rotation = 0f;
         public Vector2 Origin = Vector2.Zero;
+        public bool Transparent = false;
 
         public BlockRenderer(Texture2D texture)
         {
@@ -290,6 +291,12 @@ namespace MiningGame.Code.Blocks
             :this(texture, effects)
         {
             this.Rotation = rotation;
+        }
+        public BlockRenderer(Texture2D texture, SpriteEffects effects, float rotation, bool transparent)
+            : this(texture, effects)
+        {
+            this.Rotation = rotation;
+            this.Transparent = transparent;
         }
     }
 
