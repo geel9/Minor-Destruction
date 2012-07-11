@@ -14,7 +14,7 @@ namespace MiningGame.Code.Blocks
         public BlockPistonArm()
             : base()
         {
-            this.SetBlockName("Piston arm").SetBlockID(21).SetBlockRenderSpecial(true);
+            this.SetBlockName("Piston arm").SetBlockID(6).SetBlockRenderSpecial(true);
         }
 
         public override BlockRenderer RenderBlock(int x, int y, Microsoft.Xna.Framework.Graphics.SpriteBatch sb)

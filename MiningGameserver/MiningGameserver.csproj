@@ -48,6 +48,7 @@
     <Compile Include="Blocks\BlockIron.cs" />
     <Compile Include="Blocks\BlockPistonArm.cs" />
     <Compile Include="Blocks\BlockPistonBase.cs" />
+    <Compile Include="Blocks\BlockRock.cs" />
     <Compile Include="ConversionManager.cs" />
     <Compile Include="Entities\ServerEntity.cs" />
     <Compile Include="Entities\ServerEntityDroppedItem.cs" />
@@ -138,6 +139,7 @@
     <Compile Include="Lidgren\NetUtility.cs" />
     <Compile Include="Lidgren\SenderChannelBase.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="Managers\ReflectionManager.cs" />
     <Compile Include="NetworkPlayer.cs" />
     <Compile Include="Packets\Packet.cs" />
     <Compile Include="Packets\Packet0CSPlayerConnect.cs" />
@@ -170,7 +172,6 @@
     <None Include="Blocks\BlockCoal.csO" />
     <None Include="Blocks\BlockGrass.csO" />
     <None Include="Blocks\BlockLadder.csO" />
-    <None Include="Blocks\BlockRock.csO" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

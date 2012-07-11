@@ -9,7 +9,7 @@ namespace MiningGameServer.Blocks
     {
         public BlockPistonArm() :base()
         {
-            this.SetBlockName("Piston arm").SetBlockPistonable(false).SetBlockID(21);
+            this.SetBlockName("Piston arm").SetBlockPistonable(false).SetBlockID(6);
         }
     }
 }

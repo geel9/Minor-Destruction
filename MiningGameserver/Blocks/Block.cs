@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Xna.Framework;
 using MiningGameServer;
+using MiningGameServer.Managers;
 using MiningGameServer.Packets;
 using MiningGameServer.Entities;
 using MiningGameServer.Interfaces;
@@ -29,14 +31,11 @@ namespace MiningGameServer.Blocks
 
         public static void GenerateBlocks()
         {
-            Assembly a = Assembly.GetExecutingAssembly();
-            foreach (Type t in a.GetTypes())
+            Type[] types = ReflectionManager.GetAllSubClassesOf<Block>(true);
+            foreach (Type t in types)
             {
-                if (t.IsSubclassOf(typeof(Block)) || t == typeof(Block))
-                {
-                    Block b = (Block)Activator.CreateInstance(t);
-                    b.FinalizeBlock();
-                }
+                Block b = (Block)Activator.CreateInstance(t);
+                b.FinalizeBlock();
             }
         }
 
@@ -82,7 +81,7 @@ namespace MiningGameServer.Blocks
 
         private void BlockRemoved(int x, int y)
         {
-            GameServer.UnscheduleUpdate(x, y);
+
         }
 
 
@@ -170,7 +169,7 @@ namespace MiningGameServer.Blocks
 
         public virtual void OnBlockRemoved(int x, int y)
         {
-
+            GameServer.UnscheduleUpdate(x, y);
         }
 
         public virtual void OnBlockUsed(int x, int y)
@@ -275,7 +274,7 @@ namespace MiningGameServer.Blocks
 
         public BlockData Read(Packet p)
         {
-            return new BlockData{ID = p.ReadShort(), MetaData = p.ReadByte()};
+            return new BlockData { ID = p.ReadShort(), MetaData = p.ReadByte() };
         }
     }
 }

@@ -12,7 +12,7 @@ namespace MiningGameServer.Blocks
         public BlockPistonBase()
             : base()
         {
-            SetBlockID(20).SetBlockName("Piston Base").SetBlockPistonable(false);
+            SetBlockID(5).SetBlockName("Piston Base").SetBlockPistonable(false);
         }
 
         public override void OnBlockPlaced(int x, int y, bool notify, NetworkPlayer placer = null)

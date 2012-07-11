@@ -4,7 +4,7 @@
     {
         public ServerItemDirt() : base()
         {
-            SetName("Dirt").SetDescription("Dirty boy!").SetID(1).SetValue(1).SetBlockID(2);
+            SetName("Dirt").SetDescription("Dirty boy!").SetID(1).SetValue(1).SetBlockID(1);
         }
     }
 }

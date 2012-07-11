@@ -11,7 +11,7 @@ namespace MiningGameServer.Blocks
     {
         public BlockDoor()
         {
-            SetBlockID(11).SetBlockName("Door").SetBlockPistonable(false);
+            SetBlockID(4).SetBlockName("Door").SetBlockPistonable(false);
         }
 
         public override Rectangle GetBlockBoundBox(int x, int y)

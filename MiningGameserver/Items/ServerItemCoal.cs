@@ -8,7 +8,7 @@ namespace MiningGameServer.Items
     public class ServerItemCoal : MiningGameServer.Items.ServerItem
     {
         public ServerItemCoal() : base(){
-            SetName("Coal").SetDescription("Useful to those who like fire.").SetID(3).SetValue(7).SetBlockID(4);
+            SetName("Coal").SetDescription("Useful to those who like fire.").SetID(3).SetValue(7).SetBlockID(2);
         }
     }
 }

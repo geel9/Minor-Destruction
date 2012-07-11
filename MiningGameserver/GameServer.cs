@@ -71,7 +71,7 @@ namespace MiningGameServer
             {
                 for (int y = 20; y < WorldSizeY; y++)
                 {
-                    SetBlock(x, y, 2);
+                    SetBlock(x, y, 1);
                 }
             }
 
@@ -88,13 +88,13 @@ namespace MiningGameServer
         {
             for (int x = 0; x < WorldSizeX; x++)
             {
-                for (int y = 40; y < WorldSizeY; y++)
+                for (int y = 22; y < WorldSizeY; y++)
                 {
                     int randomDoOre = Random.Next(0, 50);
 
                     if (randomDoOre == 0)
                     {
-                        GenerateOreVein(x, y, 5, x, y);
+                        GenerateOreVein(x, y, 3, x, y);
                     }
                 }
             }
@@ -103,7 +103,7 @@ namespace MiningGameServer
         public static void GenerateOreVein(int x, int y, byte id, int startX, int startY)
         {
             short blockID = GetBlockAt(x, y).ID;
-            if (blockID == 2)
+            if (blockID == 1)
             {
                 SetBlock(x, y, id);
                 int dist = (int)Math.Sqrt(((x - startX) * (x - startX)) + ((y - startY) * (y - startY)));
@@ -114,13 +114,13 @@ namespace MiningGameServer
                     short blockLeft = GetBlockAt(x - 1, y).ID;
                     short blockRight = GetBlockAt(x + 1, y).ID;
 
-                    if ((blockUp == 0 || blockUp == 2) && Random.Next(0, 5) == 0)
+                    if ((blockUp == 0 || blockUp == 1) && Random.Next(0, 5) == 0)
                         GenerateOreVein(x, y - 1, id, startX, startY);
-                    if ((blockDown == 0 || blockDown == 2) && Random.Next(0, 5) == 0)
+                    if ((blockDown == 0 || blockDown == 1) && Random.Next(0, 5) == 0)
                         GenerateOreVein(x, y + 1, id, startX, startY);
-                    if ((blockLeft == 0 || blockLeft == 2) && Random.Next(0, 5) == 0)
+                    if ((blockLeft == 0 || blockLeft == 1) && Random.Next(0, 5) == 0)
                         GenerateOreVein(x - 1, y, id, startX, startY);
-                    if ((blockRight == 0 || blockRight == 2) && Random.Next(0, 5) == 0)
+                    if ((blockRight == 0 || blockRight == 1) && Random.Next(0, 5) == 0)
                         GenerateOreVein(x + 1, y, id, startX, startY);
                 }
                 else

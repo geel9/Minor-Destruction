@@ -11,7 +11,7 @@ namespace MiningGame.Code.Blocks
         public BlockDirt()
             : base()
         {
-            this.SetBlockRenderSpecial(true).SetBlockID(2).SetBlockName("Dirt");
+            this.SetBlockRenderSpecial(true).SetBlockID(1).SetBlockName("Dirt");
         }
 
         public override BlockRenderer RenderBlock(int x, int y, Microsoft.Xna.Framework.Graphics.SpriteBatch sb)

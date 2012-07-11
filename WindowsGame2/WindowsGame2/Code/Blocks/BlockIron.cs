@@ -6,7 +6,7 @@ namespace MiningGame.Code.Blocks
     {
         public BlockIron() : base()
         {
-            this.SetBlockRenderSpecial(true).SetBlockID(5).SetBlockName("Iron");
+            this.SetBlockRenderSpecial(true).SetBlockID(3).SetBlockName("Iron");
         }
 
         public override BlockRenderer RenderBlock(int x, int y, Microsoft.Xna.Framework.Graphics.SpriteBatch sb)

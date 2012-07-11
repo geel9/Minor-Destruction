@@ -10,7 +10,7 @@ namespace MiningGame.Code.Blocks
     {
         public BlockRock() : base()
         {
-            this.SetBlockRenderSpecial(true).SetBlockID(3).SetBlockName("Rock");
+            this.SetBlockRenderSpecial(true).SetBlockID(2).SetBlockName("Rock");
         }
 
         public override BlockRenderer RenderBlock(int x, int y, Microsoft.Xna.Framework.Graphics.SpriteBatch sb)

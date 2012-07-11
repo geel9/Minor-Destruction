@@ -1,6 +1,14 @@
 # Build Folders (you can keep bin if you'd like, to store dlls and pdbs)
 obj
 
+#Table builder
+BlockItemTableBuilder/bin/Debug
+BlockItemTableBuilder/bin/Release/Content
+BlockItemTableBuilder/bin/Release/*.dll
+BlockItemTableBuilder/bin/Release/*.pdb
+BlockItemTableBuilder/bin/Release/WindowsGame2.exe
+BlockItemTableBuilder/bin/Release/*.vshost.exe
+
 #Resharper
 _ReSharper.Rating War
 

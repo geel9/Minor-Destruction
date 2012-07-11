@@ -9,7 +9,7 @@ namespace MiningGameServer.Items
     {
         public ServerItemRock() : base()
         {
-            SetName("Rock").SetDescription("UGH BLUGH.").SetID(2).SetValue(2).SetBlockID(3);
+            SetName("Rock").SetDescription("UGH BLUGH.").SetID(2).SetValue(2).SetBlockID(2);
         }
     }
 }

@@ -5,7 +5,7 @@
         public ServerItemPlank()
             : base()
         {
-            SetName("Plank").SetDescription("Planks!").SetID(6).SetValue(1).SetBlockID(200);
+            SetName("Plank").SetDescription("Planks!").SetID(6).SetValue(1).SetBlockID(0);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace MiningGame.Code.Items
     {
         public ItemIron() : base()
         {
-            SetName("Iron").SetDescription("I am iron man").SetValue(7).SetAsset("iron").SetID(4).SetBlockID(5);
+            SetName("Iron").SetDescription("I am iron man").SetValue(7).SetAsset("iron").SetID(4).SetBlockID(3);
         }
         public override void OnItemUsed(int x, int y)
         {

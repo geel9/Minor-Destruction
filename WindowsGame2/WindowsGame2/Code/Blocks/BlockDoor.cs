@@ -13,7 +13,7 @@ namespace MiningGame.Code.Blocks
         public BlockDoor()
             : base()
         {
-            this.SetBlockID(11).SetBlockName("Door").SetBlockRenderSpecial(true);
+            this.SetBlockID(4).SetBlockName("Door").SetBlockRenderSpecial(true);
         }
 
         private Texture2D GetTexture(int x, int y)

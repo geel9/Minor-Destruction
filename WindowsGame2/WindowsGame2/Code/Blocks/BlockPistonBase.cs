@@ -13,7 +13,7 @@ namespace MiningGame.Code.Blocks
     {
         public BlockPistonBase()
         {
-            SetBlockID(20).SetBlockName("Piston Base").SetBlockRenderSpecial(true);
+            SetBlockID(5).SetBlockName("Piston Base").SetBlockRenderSpecial(true);
         }
 
         public override BlockRenderer RenderBlock(int x, int y, Microsoft.Xna.Framework.Graphics.SpriteBatch sb)

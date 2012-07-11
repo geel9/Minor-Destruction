@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using MiningGameServer;
 using MiningGameServer.ItemAttributes;
 using MiningGameServer.Items;
+using MiningGameServer.Managers;
 
 namespace MiningGameServer.Items
 {
@@ -10,18 +13,40 @@ namespace MiningGameServer.Items
     {
         public static List<ServerItem> Items = new List<ServerItem>();
 
+        public static string GenerateItemHTMLTable()
+        {
+            string pre = "<html><body>" +
+                         "<table border='1'>" +
+                         "<tr><th>ID</th>" +
+                         "<th>Name</th></tr>";
+            string end = "</table></body></html>";
+            string mid = "";
+            ServerItem[] items = Items.ToArray();
+            Array.Sort(items, (x, y) => x.GetItemID() - y.GetItemID());
+
+            foreach (ServerItem i in items)
+            {
+                if (i.GetItemID() == 0) continue;
+                mid += "<tr><td>" +
+                       i.GetItemID() +
+                       "</td><td>" +
+                       i.GetName() +
+                       "</td></tr>";
+            }
+
+            return pre + mid + end;
+        }
+
         public static void MakeItems()
         {
-            Items.Clear();
-            new ServerItemDirt();
-            new ServerItemRock();
-            new ServerItemCoal();
-            new ServerItemIron();
-            new ServerItemDoor();
-            new ServerItemPlank();
-            new ServerItemDino();
-            new ServerItemBow();
-            new ServerItemSword();
+            Items = new List<ServerItem>();
+            //Replacing the manual method of adding them
+            //With reflection.
+            Type[] types = ReflectionManager.GetAllSubClassesOf<ServerItem>();
+            foreach(Type t in types)
+            {
+                ReflectionManager.CallConstructor(t);
+            }
         }
 
         protected ServerItem()
@@ -38,6 +63,12 @@ namespace MiningGameServer.Items
         public ServerItem SetName(string name)
         {
             _itemName = name;
+            return this;
+        }
+
+        public ServerItem SetMaxStack(int max)
+        {
+            _maxStack = max;
             return this;
         }
      
@@ -68,6 +99,11 @@ namespace MiningGameServer.Items
         public int GetValue()
         {
             return _itemWorth;
+        }
+
+        public int GetMaxStack()
+        {
+            return _maxStack;
         }
 
         public string GetName()
@@ -110,5 +146,6 @@ namespace MiningGameServer.Items
         private string _itemDescription;
         private byte _itemID;
         private short _blockID = 0;
+        private int _maxStack = 20;
     }
 }

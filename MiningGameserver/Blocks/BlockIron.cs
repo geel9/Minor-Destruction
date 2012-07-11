@@ -10,7 +10,7 @@ namespace MiningGameServer.Blocks
         public BlockIron()
             : base()
         {
-            SetBlockID(5).SetBlockName("Iron");
+            SetBlockID(3).SetBlockName("Iron");
         }
 
         public override byte GetItemDrop(int x, int y)

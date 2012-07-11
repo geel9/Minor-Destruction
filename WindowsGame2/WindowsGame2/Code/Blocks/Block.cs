@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using System.Reflection;
 using Microsoft.Xna.Framework;
+using MiningGame.Code.Managers;
 using MiningGameServer;
 
 namespace MiningGame.Code.Blocks
@@ -26,14 +27,11 @@ namespace MiningGame.Code.Blocks
 
         public static void GenerateBlocks()
         {
-            Assembly a = Assembly.GetExecutingAssembly();
-            foreach (Type t in a.GetTypes())
+            Type[] types = ReflectionManager.GetAllSubClassesOf<Block>(true);
+            foreach (Type t in types)
             {
-                if (t.IsSubclassOf(typeof(Block)) || t == typeof(Block))
-                {
-                    Block b = (Block)Activator.CreateInstance(t);
-                    b.FinalizeBlock();
-                }
+                Block b = (Block)Activator.CreateInstance(t);
+                b.FinalizeBlock();
             }
         }
 
@@ -277,18 +275,18 @@ namespace MiningGame.Code.Blocks
         }
 
         public BlockRenderer(Texture2D texture, SpriteEffects effects)
-            :this(texture)
+            : this(texture)
         {
             this.Effects = effects;
         }
 
         public BlockRenderer(Texture2D texture, float rotation)
-            :this(texture)
+            : this(texture)
         {
             this.Rotation = rotation;
         }
         public BlockRenderer(Texture2D texture, SpriteEffects effects, float rotation)
-            :this(texture, effects)
+            : this(texture, effects)
         {
             this.Rotation = rotation;
         }
