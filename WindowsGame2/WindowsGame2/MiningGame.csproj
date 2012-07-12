@@ -161,6 +161,8 @@
     <Compile Include="Code\Managers\JSONManager.cs" />
     <Compile Include="Code\Managers\PlayerBindManager.cs" />
     <Compile Include="Code\Managers\ReflectionManager.cs" />
+    <Compile Include="Code\PlayerClasses\PlayerClass.cs" />
+    <Compile Include="Code\PlayerClasses\PlayerInventory.cs" />
     <Compile Include="Code\PlayerController.cs" />
     <Compile Include="Code\Structs\AnimationControlPoint.cs" />
     <Compile Include="Code\Structs\BlockConnection.cs" />

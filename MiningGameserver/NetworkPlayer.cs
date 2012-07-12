@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Lidgren.Network;
 using MiningGameServer.ExtensionMethods;
 using MiningGameServer.ItemAttributes;
 using MiningGameServer.Packets;
+using MiningGameServer.PlayerClasses;
 using MiningGameServer.Shapes;
 using MiningGameServer.Structs;
 using MiningGameServer;
@@ -47,7 +49,8 @@ namespace MiningGameServer
 
         public NetConnection NetConnection;
         public List<char> PressedKeys = new List<char>();
-        public List<ItemStack> PlayerInventory = new List<ItemStack>();
+
+        public PlayerInventory Inventory;
 
         public List<PlayerStatBuff> ActiveBuffs = new List<PlayerStatBuff>();
         public PlayerStatBuff EffectiveBuff
@@ -67,7 +70,7 @@ namespace MiningGameServer
         }
 
         private int _jumpTimer;
-        public int _attackTimer;
+        public int AttackTimer;
         public float PlayerAimAngle = 0;
         public bool FacingLeft = false;
 
@@ -101,15 +104,7 @@ namespace MiningGameServer
             get { return (OldMovementFlags & (int)PlayerMovementFlag.Attack_Pressed) != 0; }
         }
 
-        private int _PlayerInventorySelected = -1;
-        public int PlayerInventorySelected
-        {
-            get { return _PlayerInventorySelected; }
-            set
-            {
-                _PlayerInventorySelected = value;
-            }
-        }
+        
 
         public byte MovementFlags, OldMovementFlags;
 
@@ -138,11 +133,12 @@ namespace MiningGameServer
             EntityVelocity.X = 3;
 
             PlayerBlockCache = new BlockData[GameServer.WorldSizeX, GameServer.WorldSizeY];
+            
+            Inventory = new PlayerInventory(this);
+
             for (int x = 0; x < GameServer.WorldSizeX; x++)
-            {
                 for (int y = 0; y < GameServer.WorldSizeY; y++)
                     PlayerBlockCache[x, y] = new BlockData();
-            }
         }
 
         public void UpdateCache()
@@ -213,13 +209,11 @@ namespace MiningGameServer
                 EntityPosition = new Vector2(50, 50);
                 EntityVelocity = Vector2.Zero;
             }
-            else
-
-                if (_jumpTimer > 0) _jumpTimer--;
-            if (_attackTimer > 0)
+            else if (_jumpTimer > 0) _jumpTimer--;
+            if (AttackTimer > 0)
             {
-                _attackTimer--;
-                if (_attackTimer == 5)
+                AttackTimer--;
+                if (AttackTimer == 5)
                 {
                     UpdateMask |= (int)PlayerUpdateFlags.Player_Update;
                     UpdateMask |= (int)PlayerUpdateFlags.Player_Movement_Flags;
@@ -236,7 +230,7 @@ namespace MiningGameServer
                 }
             }
 
-            float PlayerRunSpeed = (float) (3 + EffectiveBuff.MoveSpeed);
+            float PlayerRunSpeed = (float)(3 + EffectiveBuff.MoveSpeed);
             if (LeftPressed)
             {
                 EntityVelocity.X = MathHelper.Clamp(EntityVelocity.X - PlayerRunSpeed, -PlayerRunSpeed, PlayerRunSpeed);
@@ -265,11 +259,11 @@ namespace MiningGameServer
 
             if (OldAttackPressed && !AttackPressed)
             {
-                if (_attackTimer <= 0)
+                if (AttackTimer <= 0)
                 {
                     if (_timeHeldAttack == 0)
                         _timeHeldAttack = 1;
-                    _attackTimer = 20;
+                    AttackTimer = 20;
                     Attack();
                 }
                 _timeHeldAttack = 0;
@@ -290,7 +284,7 @@ namespace MiningGameServer
 
         private void Attack()
         {
-            ServerItem inHand = GetPlayerItemInHand();
+            ServerItem inHand = Inventory.GetPlayerItemInHand();
             if (inHand != null)
             {
                 Packet6SCPlayerAttack packet6 = new Packet6SCPlayerAttack(PlayerID);
@@ -485,129 +479,32 @@ namespace MiningGameServer
                 Falling = true;
         }
 
-        public bool HasItem(byte id)
-        {
-            return GetPlayerItemStackFromInventory(id).ItemID == id;
-        }
-
-        public ItemStack GetPlayerItemStackFromInventory(byte id)
-        {
-            return PlayerInventory.Where(x => x.ItemID == id).FirstOrDefault();
-        }
-
-        public int GetNumItemInInventory(byte id)
-        {
-            return PlayerInventory.Where(x => x.ItemID == id).FirstOrDefault().NumberItems;
-        }
+        
 
         public void SendEquippedItemUpdate()
         {
-            ServerItem i = GetPlayerItemInHand();
+            ServerItem i = Inventory.GetPlayerItemInHand();
             byte itemID = 0;
             if (i != null)
                 itemID = i.GetItemID();
+
             Packet7SCPlayerCurItemChanged packet7 = new Packet7SCPlayerCurItemChanged(PlayerID, itemID);
             GameServer.ServerNetworkManager.SendPacket(packet7);
         }
-
-        public void RemoveItems(byte itemID, int numToRemove)
-        {
-            if (GetNumItemInInventory(itemID) == 0) return;
-            ItemStack i = GetPlayerItemStackFromInventory(itemID);
-            int index = PlayerInventory.IndexOf(i);
-            i.NumberItems -= numToRemove;
-            if (i.NumberItems <= 0)
-            {
-                if (index < PlayerInventorySelected)
-                    PlayerInventorySelected++;
-                PlayerInventory.RemoveAt(index);
-                Packet p = new Packet1SCGameEvent(GameServer.GameEvents.Player_Inventory_Remove, (byte)index);
-                GameServer.ServerNetworkManager.SendPacket(p, NetConnection);
-                SendEquippedItemUpdate();
-            }
-            else
-            {
-                PlayerInventory[index] = i;
-                Packet pack = new Packet1SCGameEvent(GameServer.GameEvents.Player_Inventory_Update, (byte)index, (byte)i.ItemID, i.NumberItems);
-                GameServer.ServerNetworkManager.SendPacket(pack, NetConnection);
-            }
-        }
+        
+        
 
         public void SetPlayerEquippedSlot(int slot)
         {
-            int oldSlot = PlayerInventorySelected;
-            PlayerInventorySelected = slot;
-
-            if (oldSlot < PlayerInventory.Count && oldSlot >= 0)
-            {
-                foreach (ItemAttribute i in PlayerInventory[oldSlot].Item.GetDefaultAttributes())
-                {
-                    i.OnItemDequipped(this, oldSlot);
-                }
-            }
-
-            if (slot >= PlayerInventory.Count || slot < 0) return;
-            foreach (ItemAttribute i in PlayerInventory[slot].Item.GetDefaultAttributes())
-            {
-                i.OnItemEquipped(this, slot);
-            }
-        }
-
-        public void RemoveItemAt(int slot)
-        {
-            if (slot >= PlayerInventory.Count || slot < 0)
-                return;
-            PlayerInventory.RemoveAt(slot);
-
-            Packet p = new Packet1SCGameEvent(GameServer.GameEvents.Player_Inventory_Remove, (byte)slot);
-            GameServer.ServerNetworkManager.SendPacket(p, NetConnection);
-
+            int oldSlot = Inventory.PlayerInventorySelected;
+            Inventory.PlayerInventorySelected = slot;
             SendEquippedItemUpdate();
         }
 
-        public ServerItem GetPlayerItemInHand()
-        {
-            if (PlayerInventorySelected >= PlayerInventory.Count)
-                SetPlayerEquippedSlot(PlayerInventory.Count - 1);
-            if (PlayerInventorySelected == -1) return null;
-            return ServerItem.GetItem(PlayerInventory[PlayerInventorySelected].ItemID);
-        }
-
-        public ItemStack GetPlayerItemStackInHand()
-        {
-            if (PlayerInventorySelected >= PlayerInventory.Count)
-                SetPlayerEquippedSlot(PlayerInventory.Count - 1);
-            if (PlayerInventorySelected == -1) return new ItemStack();
-            return PlayerInventory[PlayerInventorySelected];
-        }
-
-        public void DequipItem(int slot)
-        {
-            if (slot >= PlayerInventory.Count || slot < 0) return;
-            ItemStack dequipping = PlayerInventory[slot];
-            ServerItem dequippingItem = dequipping.Item;
-
-            foreach (ItemAttribute attribute in dequippingItem.GetDefaultAttributes())
-            {
-                attribute.OnItemDequipped(this, slot);
-            }
-        }
-
-        public void EquipItem(int slot)
-        {
-            if (slot >= PlayerInventory.Count || slot < 0) return;
-            ItemStack equipping = PlayerInventory[slot];
-            ServerItem equippingItem = equipping.Item;
-
-            foreach (ItemAttribute attribute in equippingItem.GetDefaultAttributes())
-            {
-                attribute.OnItemEquipped(this, slot);
-            }
-        }
 
         public void DropItem()
         {
-            ItemStack inHand = GetPlayerItemStackInHand();
+            ItemStack inHand = Inventory.GetPlayerItemStackInHand();
             if (inHand.ItemID == 0)
                 return;
             Vector2 velocity = new Vector2(5, -2);
@@ -618,29 +515,9 @@ namespace MiningGameServer
                 xPos = BoundBox.Left;
             }
             GameServer.DropItem(inHand, new Vector2(xPos, EntityPosition.Y), velocity, this);
-            RemoveItemAt(PlayerInventorySelected);
+            Inventory.RemoveItemAt(Inventory.PlayerInventorySelected);
         }
 
-        public void PickupItem(ItemStack item)
-        {
-            for (int i = 0; i < PlayerInventory.Count; i++)
-            {
-                ItemStack it = PlayerInventory[i];
-                if (it.ItemID != item.ItemID) continue;
-                PlayerInventory[i] = new ItemStack(it.NumberItems + item.NumberItems, it.ItemID);
-                Packet pack = new Packet1SCGameEvent(GameServer.GameEvents.Player_Inventory_Update, (byte)i, (byte)PlayerInventory[i].ItemID, PlayerInventory[i].NumberItems);
-                GameServer.ServerNetworkManager.SendPacket(pack, NetConnection);
-                return;
-            }
-
-            PlayerInventory.Add(item);
-
-
-            Packet p = new Packet1SCGameEvent(GameServer.GameEvents.Player_Inventory_Add);
-            p.WriteNT(item);
-            GameServer.ServerNetworkManager.SendPacket(p, NetConnection);
-
-            SendEquippedItemUpdate();
-        }
+        
     }
 }

@@ -42,7 +42,7 @@ namespace MiningGameServer.Entities
         {
             var packet = new Packet9SCItemPickedUp(DroppedItemID, picker.PlayerID);
             GameServer.ServerNetworkManager.SendPacket(packet);
-            picker.PickupItem(Stack);
+            picker.Inventory.PickupItem(Stack);
         }
 
         public override void Update()

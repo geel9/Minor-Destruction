@@ -19,7 +19,7 @@ namespace MiningGameServer.Items
         {
             return;
             Vector2 pos = new Vector2(x, y)*GameServer.BlockSize;
-            GameServer.DropItem(new ItemStack(1, 1), pos );
+            GameServer.DropItem(new ItemStack(1, 1), pos);
             base.OnItemUsed(x, y, user);
         }
     }

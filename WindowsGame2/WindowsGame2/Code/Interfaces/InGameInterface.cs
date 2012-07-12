@@ -59,9 +59,9 @@ namespace MiningGame.Code.Interfaces
                 b.OnMouseOver += (sender, e) =>
                 {
                     return;
-                    AttributesView.Active = false;
+                    /*AttributesView.Active = false;
                     int pos = offset + i1;
-                    if (pos >= GameWorld.ThePlayer.PlayerInventory.Count) return;
+                    if (pos >= GameWorld.ThePlayer.Inventory.Count) return;
 
                     AttributesView.Active = true;
                     AttributesView.Position = InputManager.GetMousePosV();
@@ -70,7 +70,7 @@ namespace MiningGame.Code.Interfaces
                         AttributesView.RemoveChild(v);
                     }
 
-                    ItemStack itemStack = GameWorld.ThePlayer.PlayerInventory[pos];
+                    ItemStack itemStack = GameWorld.ThePlayer.Inventory[pos];
                     Item item = Item.GetItem(itemStack.ItemID);
                     int yPos = 0;
                     foreach (ItemAttribute attribute in item.GetDefaultAttributes())
@@ -91,7 +91,7 @@ namespace MiningGame.Code.Interfaces
                                 textview.TextColor = Color.Green;
                                 break;
                         }
-                    }
+                    }*/
                 };
 
                 b.OnMouseOff += (sender, e) =>
@@ -130,10 +130,11 @@ namespace MiningGame.Code.Interfaces
                 ((TextView)buttons[i].Children[1]).Text = "";
             }
 
-            for (int i = offset; i < GameWorld.ThePlayer.PlayerInventory.Count; i++)
+            for (int i = offset; i < offset + 9; i++)
             {
-                ItemStack itemStack = GameWorld.ThePlayer.PlayerInventory[i];
+                ItemStack itemStack = GameWorld.ThePlayer.Inventory.Inventory[i];
                 Item item = Item.GetItem(itemStack.ItemID);
+                if (item == null) continue;
                 Texture2D tex = AssetManager.GetTexture(item.GetAsset());
                 ((ImageView)buttons[i - offset].ButtonContentview).Texture = tex;
                 ((TextView)buttons[i].Children[1]).Text = itemStack.NumberItems > 0
@@ -173,7 +174,7 @@ namespace MiningGame.Code.Interfaces
         {
             int b = i + offset;
             curSelected = b;
-            GameWorld.ThePlayer.PlayerInventorySelected = b;
+            GameWorld.ThePlayer.Inventory.PlayerInventorySelected = b;
             Packet p = new Packet1CSGameEvent(GameServer.GameEvents.Player_Inventory_Selection_Change, (byte)b);
             Main.clientNetworkManager.SendPacket(p);
 

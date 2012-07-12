@@ -367,7 +367,7 @@ namespace MiningGameServer
             switch ((GameEvents)eventID)
             {
                 case GameEvents.Player_Drop_Item:
-                    ServerItem inHand = player.GetPlayerItemInHand();
+                    ServerItem inHand = player.Inventory.GetPlayerItemInHand();
                     if (inHand == null)
                         break;
                     player.DropItem();
@@ -376,7 +376,7 @@ namespace MiningGameServer
                 case GameEvents.Player_Use_Item:
                     short x = p.ReadShort();
                     short y = p.ReadShort();
-                    ServerItem itemInHand = player.GetPlayerItemInHand();
+                    ServerItem itemInHand = player.Inventory.GetPlayerItemInHand();
                     if (itemInHand == null) break;
                     itemInHand.OnItemUsed(x, y, player);
                     break;
@@ -484,7 +484,6 @@ namespace MiningGameServer
             Player_Position,
             Player_Inventory_Selection_Change,
             Player_Inventory_Update,
-            Player_Inventory_Add,
             Player_Inventory_Remove,
             Player_Use_Item,
             Player_Use_Block,

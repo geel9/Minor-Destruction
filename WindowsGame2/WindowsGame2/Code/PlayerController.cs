@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GeeUI.Managers;
 using MiningGame.Code.CInterfaces;
@@ -7,6 +8,7 @@ using MiningGame.Code.Managers;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using MiningGame.Code.Entities;
+using MiningGame.Code.PlayerClasses;
 using MiningGame.ExtensionMethods;
 using MiningGameServer;
 using MiningGameServer.Packets;
@@ -15,8 +17,7 @@ namespace MiningGame.Code
 {
     public class PlayerController : UpdatableAndDrawable
     {
-        public int PlayerInventorySelected = -1;
-        public List<ItemStack> PlayerInventory = new List<ItemStack>();
+        public PlayerInventory Inventory;
 
         public PlayerEntity PlayerEntity;
         private const int PlayerSpeedX = 2;
@@ -50,11 +51,12 @@ namespace MiningGame.Code
         public PlayerController()
         {
             PlayerEntity = new PlayerEntity(new Vector2(-100, -100), 0);
+            Inventory = new PlayerInventory(this);
         }
 
         public void SendMovementFlags()
         {
-            Packet packet;// = new Packet4CSPlayerMovementFlags(MovementFlags);
+            Packet packet;
 
             short angle = PlayerEntity.GetAimingAngle();
             if (angle != PlayerAimAngle)
@@ -77,8 +79,6 @@ namespace MiningGame.Code
                 if (InterfaceManager.blocking) return;
                 leftPressed = true;
                 SendMovementFlags();
-                //PlayerEntity.TorsoAnimateable.StartLooping("player_run_start", "player_run_end");
-                //  PlayerEntity.LegsAnimateable.StartLooping("player_run_start", "player_run_end");
             }, Keys.A);
 
             InputManager.BindKey(() =>
@@ -86,9 +86,6 @@ namespace MiningGame.Code
                 if (InterfaceManager.blocking) return;
                 rightPressed = true;
                 SendMovementFlags();
-                // PlayerEntity.TorsoAnimateable.StartLooping("player_run_start", "player_run_end");
-                // PlayerEntity.LegsAnimateable.StartLooping("player_run_start", "player_run_end");
-                //PlayerEntity.FacingLeft = false;
             }, Keys.D);
 
             InputManager.BindMouse(() =>
@@ -102,16 +99,12 @@ namespace MiningGame.Code
                                      {
                                          leftPressed = false;
                                          SendMovementFlags();
-                                         // PlayerEntity.TorsoAnimateable.StartLooping("player_idle", "player_idle");
-                                         // PlayerEntity.LegsAnimateable.StartLooping("player_idle", "player_idle");
                                      }, Keys.A, true, false);
 
             InputManager.BindKey(() =>
                                      {
                                          rightPressed = false;
                                          SendMovementFlags();
-                                         //   PlayerEntity.TorsoAnimateable.StartLooping("player_idle", "player_idle");
-                                         //   PlayerEntity.LegsAnimateable.StartLooping("player_idle", "player_idle");
                                      }, Keys.D, true, false);
 
             InputManager.BindKey(() =>
@@ -141,8 +134,6 @@ namespace MiningGame.Code
 
             InputManager.BindKey(() =>
             {
-                //Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_KeyPress, 's', (bool)false);
-                // Main.clientNetworkManager.SendPacket(pack);
             }, Keys.S, true, false);
 
             InputManager.BindMouse(() =>
@@ -161,7 +152,7 @@ namespace MiningGame.Code
             InputManager.BindMouse(() =>
             {
                 if (InterfaceManager.blocking || InputManager.GetMousePos().Y <= 50) return;
-                Item i = GetPlayerItemInHand();
+                Item i = Inventory.GetPlayerItemInHand();
                 if (i == null) return;
                 Vector2 aim = PlayerEntity.GetBlockAimingAt();
                 Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_Use_Item, (short)aim.X, (short)aim.Y);
@@ -194,59 +185,7 @@ namespace MiningGame.Code
             }, MouseButton.Middle);
         }
 
-        public bool HasItem(byte id)
-        {
-            return GetPlayerItemStackFromInventory(id).ItemID == id;
-        }
 
-        public ItemStack GetPlayerItemStackFromInventory(byte id)
-        {
-            return PlayerInventory.Where(x => x.ItemID == id).FirstOrDefault();
-        }
-
-        public int GetNumItemInInventory(byte id)
-        {
-            return PlayerInventory.Where(x => x.ItemID == id).FirstOrDefault().NumberItems;
-        }
-
-        public void RemoveItems(byte itemID, int numToRemove)
-        {
-            if (GetNumItemInInventory(itemID) < numToRemove) return;
-            ItemStack i = GetPlayerItemStackFromInventory(itemID);
-            int index = PlayerInventory.IndexOf(i);
-            i.NumberItems -= numToRemove;
-            if (i.NumberItems == 0)
-            {
-                if (index < PlayerInventorySelected) PlayerInventorySelected++;
-                PlayerInventory.RemoveAt(index);
-            }
-            else
-            {
-                PlayerInventory[index] = i;
-            }
-        }
-
-        public Item GetPlayerItemInHand()
-        {
-            if (PlayerInventorySelected >= PlayerInventory.Count) PlayerInventorySelected = -1;
-            if (PlayerInventorySelected == -1) return null;
-            return Item.GetItem(PlayerInventory[PlayerInventorySelected].ItemID);
-        }
-
-        public void PickupItem(ItemStack item)
-        {
-            for (int i = 0; i < PlayerInventory.Count; i++)
-            {
-                ItemStack it = PlayerInventory[i];
-                if (it.ItemID == item.ItemID)
-                {
-                    PlayerInventory[i] = new ItemStack(it.NumberItems + item.NumberItems, it.ItemID);
-                    //playerInventory.Clear();
-                    return;
-                }
-            }
-            PlayerInventory.Add(item);
-        }
 
         public int TimeSinceLastServerUpdate = 0;
 
@@ -267,8 +206,6 @@ namespace MiningGame.Code
             if (PlayerEntity.PlayerID != -1)
                 PlayerEntity.Draw(sb);
         }
-
-
 
         #region interfaces
         public void addToUpdateList()

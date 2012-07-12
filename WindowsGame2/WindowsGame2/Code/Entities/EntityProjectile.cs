@@ -153,7 +153,7 @@ namespace MiningGame.Code.Entities
             UpdateTicks++;
             if (UpdateTicks == 30)
             {
-                ChatInterface.AddChat(new ChatEntry("GAYASS", "ID: " + ProjectileID + " Pos: (" + EntityPosition.X + ", " + EntityPosition.Y + ") R: " + Rotation, Color.Red, false));
+                ChatInterface.AddChat(new ChatEntry("DEBUG", "ID: " + ProjectileID + " Pos: (" + EntityPosition.X + ", " + EntityPosition.Y + ") R: " + Rotation, Color.Red, false));
             }
             EntityMovement();
             Rotation = (float)((float)Math.Atan2(EntityPosition.Y - LastPosition.Y, EntityPosition.X - LastPosition.X) +

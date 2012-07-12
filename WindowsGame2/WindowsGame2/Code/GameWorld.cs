@@ -186,24 +186,6 @@ namespace MiningGame.Code
 
                 }
             }
-            string inventory = "\nInventory: \n";
-
-            Item inI = ThePlayer.GetPlayerItemInHand();
-            if (inI != null)
-            {
-                inventory = "\n\nItem in hand: " + inI.GetName() + "\n" + inventory;
-            }
-            else
-            {
-                inventory = "\n\nItem in hand: nothing\n" + inventory;
-            }
-            foreach (ItemStack i in ThePlayer.PlayerInventory)
-            {
-                Item item = Item.GetItem(i.ItemID);
-                inventory += item.GetName() + ": " + i.NumberItems + "\n";
-            }
-            if (ThePlayer.PlayerInventory.Count == 0)
-                inventory += "Nothing!\n";
 
             ThePlayer.Draw(sb);
             foreach (PlayerEntity oth in OtherPlayers)
@@ -526,19 +508,14 @@ namespace MiningGame.Code
                     byte index = p.ReadByte();
                     byte id = p.ReadByte();
                     int num = p.ReadInt();
-                    if (index < ThePlayer.PlayerInventory.Count)
+                    if (index < ThePlayer.Inventory.Inventory.Length)
                     {
-                        ThePlayer.PlayerInventory[index] = new ItemStack(num, id);
+                        ThePlayer.Inventory.SetItem(index, new ItemStack(num, id));
                     }
                     break;
 
-                case GameServer.GameEvents.Player_Inventory_Add:
-                    ItemStack it = p.ReadNT<ItemStack>();
-                    ThePlayer.PlayerInventory.Add(it);
-                    break;
-
                 case GameServer.GameEvents.Player_Inventory_Remove:
-                    ThePlayer.PlayerInventory.RemoveAt(p.ReadByte());
+                    ThePlayer.Inventory.RemoveItemAt(p.ReadByte());
                     break;
 
                 case GameServer.GameEvents.Player_Change_Name:

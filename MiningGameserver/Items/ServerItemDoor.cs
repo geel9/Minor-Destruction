@@ -1,10 +1,11 @@
 ﻿namespace MiningGameServer.Items
 {
-    public class ServerItemDoor : MiningGameServer.Items.ServerItem
+    public class ServerItemDoor : ServerItem
     {
         public ServerItemDoor(): base()
         {
             SetName("Door").SetDescription("Doorange you glad I didn't say banana?").SetID(5).SetValue(1);
+            InventorySection = 1;
         }
         public override void OnItemUsed(int x, int y, NetworkPlayer player)
         {

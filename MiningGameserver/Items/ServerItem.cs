@@ -127,7 +127,7 @@ namespace MiningGameServer.Items
             if(block == 0 && _blockID != 0)
             {
                 GameServer.SetBlock(user, x, y, _blockID);
-                user.RemoveItems(_itemID, 1);
+                user.Inventory.RemoveItems(_itemID, 1);
             }
         }
 
@@ -147,5 +147,6 @@ namespace MiningGameServer.Items
         private byte _itemID;
         private short _blockID = 0;
         private int _maxStack = 20;
+        public int InventorySection = 0;
     }
 }

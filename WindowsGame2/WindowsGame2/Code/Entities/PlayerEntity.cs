@@ -85,7 +85,7 @@ namespace MiningGame.Code.Entities
 
             short BlockID = GameWorld.GetBlockAt(aimingAt.X, aimingAt.Y).ID;
             Rectangle drawBB = new Rectangle((int)aimingAt.X * GameWorld.BlockSize, (int)aimingAt.Y * GameWorld.BlockSize, GameWorld.BlockSize, GameWorld.BlockSize);
-            Item inHand = GameWorld.ThePlayer.GetPlayerItemInHand();
+            Item inHand = GameWorld.ThePlayer.Inventory.GetPlayerItemInHand();
             short itemBlockID = 0;
             if(inHand != null)
                 itemBlockID = inHand.GetBlockID();

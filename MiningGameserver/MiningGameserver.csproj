@@ -157,6 +157,7 @@
     <Compile Include="Packets\Packet7SCPlayerCurItemChanged.cs" />
     <Compile Include="Packets\Packet8SCItemDropped.cs" />
     <Compile Include="Packets\Packet9SCItemPickedUp.cs" />
+    <Compile Include="PlayerInventory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerCommands\ServerCommands.cs" />
     <Compile Include="ServerConsole.cs" />
