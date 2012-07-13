@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using MiningGame.Code.Entities;
 using MiningGameServer.Packets;
 using MiningGameServer.Shapes;
 
-namespace MiningGame.Code.PlayerClasses
+namespace MiningGameServer.Player
 {
     public class PlayerClass
     {
-        public PlayerEntity Player;
+        public NetworkPlayer NetworkPlayer;
 
         public virtual ShapeAABB BoundBox
         {
@@ -23,7 +21,7 @@ namespace MiningGame.Code.PlayerClasses
         }
 
         //1 = destroyer, 0 = FUCK YOU GO DIE DON'T USE 0 IDIOT
-        public static Type[] PlayerClasses = new Type[]{ typeof(PlayerClass), typeof(PlayerClassDestroyer)};
+        public static Type[] PlayerClasses = new Type[] { typeof(PlayerClass), typeof(PlayerClassDestroyer) };
 
         public virtual void OnDeath()
         {
@@ -35,26 +33,24 @@ namespace MiningGame.Code.PlayerClasses
             
         }
 
-        public virtual void Update(GameTime time)
+        public virtual float GetPlayerWalkVelocity()
+        {
+            return 3;
+        }
+
+        public virtual void Update_PrePhys(GameTime time)
         {
             
         }
 
-        public virtual void Draw_Pre(SpriteBatch sb)
-        {
-            
-        }
-
-        public virtual void Draw_Post(SpriteBatch sb)
+        public virtual void Update_PostPhys(GameTime time)
         {
 
         }
 
         //This is so that each class can have as much data defining their state as necessary.
         //Generally it'll only be 1-2 bytes. Read is on the client, Write is on the server side.
-        public virtual void ReadState(Packet p)
-        {
-            
+        public virtual void WriteState(Packet p){
         }
     }
 }

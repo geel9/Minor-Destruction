@@ -15,43 +15,6 @@ namespace MiningGame.Code.PlayerClasses
         public int PlayerInventorySelected = 0;
         public PlayerController PlayerController;
 
-        private int EndOfRaw
-        {
-            get { return _armorSize + _bagSize; }
-        }
-
-        private int FreeRawSpace
-        {
-            get
-            {
-                for (int i = _armorSize; i <= EndOfRaw; i++)
-                {
-                    ItemStack cur = Inventory[i];
-                    if (cur.ItemID == 0)
-                    {
-                        return EndOfRaw - i;
-                    }
-                }
-                return 0;
-            }
-        }
-
-        private int FreeRefinedSpace
-        {
-            get
-            {
-                for (int i = EndOfRaw + 1; i <= EndOfRaw + _bagSize + 1; i++)
-                {
-                    ItemStack cur = Inventory[i];
-                    if (cur.ItemID == 0)
-                    {
-                        return (EndOfRaw + _bagSize + 1) - i;
-                    }
-                }
-                return 0;
-            }
-        }
-
         public PlayerInventory(PlayerController player)
         {
             PlayerController = player;
@@ -60,7 +23,7 @@ namespace MiningGame.Code.PlayerClasses
 
         public void SetBagSize(int size)
         {
-            Inventory = new ItemStack[_armorSize + (2 * size)];
+            Inventory = new ItemStack[_armorSize + size];
             for (int i = 0; i < Inventory.Length; i++)
             {
                 Inventory[i] = new ItemStack();

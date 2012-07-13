@@ -135,7 +135,7 @@
     <Compile Include="Lidgren\SenderChannelBase.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Managers\ReflectionManager.cs" />
-    <Compile Include="NetworkPlayer.cs" />
+    <Compile Include="Player\NetworkPlayer.cs" />
     <Compile Include="Packets\Packet.cs" />
     <Compile Include="Packets\Packet0CSPlayerConnect.cs" />
     <Compile Include="Packets\Packet0SCPlayerConnect.cs" />
@@ -153,7 +153,9 @@
     <Compile Include="Packets\Packet7SCPlayerCurItemChanged.cs" />
     <Compile Include="Packets\Packet8SCItemDropped.cs" />
     <Compile Include="Packets\Packet9SCItemPickedUp.cs" />
-    <Compile Include="PlayerInventory.cs" />
+    <Compile Include="Player\PlayerClass.cs" />
+    <Compile Include="Player\PlayerClassDestroyer.cs" />
+    <Compile Include="Player\PlayerInventory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerCommands\ServerCommands.cs" />
     <Compile Include="ServerConsole.cs" />

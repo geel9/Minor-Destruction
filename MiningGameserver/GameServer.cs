@@ -345,6 +345,7 @@ namespace MiningGameServer
 
                     packet.WriteByte(p.PlayerID);
                     packet.WriteByte(realUpdateMask);
+                    p.PClass.WriteState(packet);
                     if ((p.UpdateMask & (int)PlayerUpdateFlags.Player_Position) != 0)
                     {
                         packet.WriteShort((short)p.EntityPosition.X);

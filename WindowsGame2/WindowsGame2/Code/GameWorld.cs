@@ -362,6 +362,7 @@ namespace MiningGame.Code
                 }
                 if (player == null) player = new PlayerEntity(Vector2.Zero, (byte)playerID);
                 byte updateMask = p.ReadByte();
+                player.PClass.ReadState(p);
 
                 if ((updateMask & (int)PlayerUpdateFlags.Player_Position) != 0)
                 {
