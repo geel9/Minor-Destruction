@@ -29,20 +29,20 @@ namespace MiningGame.Code
 
         public short PlayerAimAngle = 0;
 
-        private bool leftPressed, rightPressed, jumpPressed, attackPressed;
+        private bool _leftPressed, _rightPressed, _jumpPressed, _attackPressed;
 
         public byte MovementFlags
         {
             get
             {
                 byte ret = 0;
-                if (leftPressed)
+                if (_leftPressed)
                     ret |= (int)PlayerMovementFlag.Left_Pressed;
-                if (rightPressed)
+                if (_rightPressed)
                     ret |= (int)PlayerMovementFlag.Right_Pressed;
-                if (jumpPressed)
+                if (_jumpPressed)
                     ret |= (int)PlayerMovementFlag.Jump_Pressed;
-                if (attackPressed)
+                if (_attackPressed)
                     ret |= (int)PlayerMovementFlag.Attack_Pressed;
                 return ret;
             }
@@ -77,14 +77,14 @@ namespace MiningGame.Code
             InputManager.BindKey(() =>
             {
                 if (InterfaceManager.blocking) return;
-                leftPressed = true;
+                _leftPressed = true;
                 SendMovementFlags();
             }, Keys.A);
 
             InputManager.BindKey(() =>
             {
                 if (InterfaceManager.blocking) return;
-                rightPressed = true;
+                _rightPressed = true;
                 SendMovementFlags();
             }, Keys.D);
 
@@ -97,26 +97,26 @@ namespace MiningGame.Code
 
             InputManager.BindKey(() =>
                                      {
-                                         leftPressed = false;
+                                         _leftPressed = false;
                                          SendMovementFlags();
                                      }, Keys.A, true, false);
 
             InputManager.BindKey(() =>
                                      {
-                                         rightPressed = false;
+                                         _rightPressed = false;
                                          SendMovementFlags();
                                      }, Keys.D, true, false);
 
             InputManager.BindKey(() =>
             {
                 if (InterfaceManager.blocking) return;
-                jumpPressed = true;
+                _jumpPressed = true;
                 SendMovementFlags();
             }, Keys.W, true);
 
             InputManager.BindKey(() =>
                                      {
-                                         jumpPressed = false;
+                                         _jumpPressed = false;
                                          SendMovementFlags();
                                      }, Keys.W, false, false);
 
@@ -139,13 +139,13 @@ namespace MiningGame.Code
             InputManager.BindMouse(() =>
             {
                 if (InterfaceManager.blocking || InputManager.GetMousePos().Y <= 50) return;
-                attackPressed = true;
+                _attackPressed = true;
                 SendMovementFlags();
             }, MouseButton.Left);
 
             InputManager.BindMouse(() =>
                                        {
-                                           attackPressed = false;
+                                           _attackPressed = false;
                                            SendMovementFlags();
                                        }, MouseButton.Left, false);
 

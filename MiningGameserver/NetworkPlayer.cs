@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Lidgren.Network;
 using MiningGameServer.ExtensionMethods;
-using MiningGameServer.ItemAttributes;
 using MiningGameServer.Packets;
 using MiningGameServer.PlayerClasses;
 using MiningGameServer.Shapes;
@@ -51,23 +50,6 @@ namespace MiningGameServer
         public List<char> PressedKeys = new List<char>();
 
         public PlayerInventory Inventory;
-
-        public List<PlayerStatBuff> ActiveBuffs = new List<PlayerStatBuff>();
-        public PlayerStatBuff EffectiveBuff
-        {
-            get
-            {
-                PlayerStatBuff ret = new PlayerStatBuff();
-                foreach (PlayerStatBuff buff in ActiveBuffs)
-                {
-                    ret.AttackSpeed += buff.AttackSpeed;
-                    ret.AttackStrength += buff.AttackStrength;
-                    ret.MoveSpeed += buff.MoveSpeed;
-                    ret.MaxHealth += buff.MaxHealth;
-                }
-                return ret;
-            }
-        }
 
         private int _jumpTimer;
         public int AttackTimer;
@@ -230,7 +212,7 @@ namespace MiningGameServer
                 }
             }
 
-            float PlayerRunSpeed = (float)(3 + EffectiveBuff.MoveSpeed);
+            float PlayerRunSpeed = (float)(3);
             if (LeftPressed)
             {
                 EntityVelocity.X = MathHelper.Clamp(EntityVelocity.X - PlayerRunSpeed, -PlayerRunSpeed, PlayerRunSpeed);

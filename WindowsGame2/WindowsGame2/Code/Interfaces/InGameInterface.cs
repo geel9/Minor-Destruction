@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using GeeUI.Views;
 using MiningGameServer;
-using MiningGameServer.ItemAttributes;
 using MiningGameServer.Packets;
 
 namespace MiningGame.Code.Interfaces
@@ -56,53 +55,7 @@ namespace MiningGame.Code.Interfaces
                     BlockPressed(i1);
                 };
 
-                b.OnMouseOver += (sender, e) =>
-                {
-                    return;
-                    /*AttributesView.Active = false;
-                    int pos = offset + i1;
-                    if (pos >= GameWorld.ThePlayer.Inventory.Count) return;
 
-                    AttributesView.Active = true;
-                    AttributesView.Position = InputManager.GetMousePosV();
-                    foreach (View v in AttributesView.Children)
-                    {
-                        AttributesView.RemoveChild(v);
-                    }
-
-                    ItemStack itemStack = GameWorld.ThePlayer.Inventory[pos];
-                    Item item = Item.GetItem(itemStack.ItemID);
-                    int yPos = 0;
-                    foreach (ItemAttribute attribute in item.GetDefaultAttributes())
-                    {
-                        TextView textview = new TextView(AttributesView, "", new Vector2(0, yPos),  AssetManager.GetFont("Console"));
-                        textview.Width = 190;
-                        textview.Height = 70;
-                        yPos += 75;
-                        textview.Text = attribute.GetDescription();
-                        switch (attribute.GetAffinity())
-                        {
-                            case AttributeAffinity.Invisible:
-                                break;
-                            case AttributeAffinity.Negative:
-                                textview.TextColor = Color.Red;
-                                break;
-                            case AttributeAffinity.Positive:
-                                textview.TextColor = Color.Green;
-                                break;
-                        }
-                    }*/
-                };
-
-                b.OnMouseOff += (sender, e) =>
-                                    {
-                                        return;
-                                         AttributesView.Active = false;
-                                         foreach (View v in AttributesView.Children)
-                                         {
-                                             AttributesView.RemoveChild(v);
-                                         }
-                                     };
                 buttons.Add(b);
                 start.X += 70;
             }

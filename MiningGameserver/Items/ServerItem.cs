@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using MiningGameServer;
-using MiningGameServer.ItemAttributes;
 using MiningGameServer.Items;
 using MiningGameServer.Managers;
 
@@ -134,11 +133,6 @@ namespace MiningGameServer.Items
         public short GetBlockID()
         {
             return _blockID;
-        }
-
-        public virtual ItemAttribute[] GetDefaultAttributes()
-        {
-            return new ItemAttribute[0];
         }
 
         private string _itemName;
