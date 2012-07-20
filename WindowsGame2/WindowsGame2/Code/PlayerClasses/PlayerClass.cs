@@ -1,19 +1,23 @@
 ﻿using System;
+using GeeUI.Managers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MiningGame.Code.Entities;
+using MiningGame.Code.Managers;
 using MiningGameServer.Packets;
 using MiningGameServer.Shapes;
+using MiningGame.ExtensionMethods;
 
 namespace MiningGame.Code.PlayerClasses
 {
     public class PlayerClass
     {
         public PlayerEntity Player;
-
+        public Animation AnimationTorso = AssetManager.GetAnimation("playertorso");
+        public Animation AnimationLegs = AssetManager.GetAnimation("playerlegs");
         public virtual ShapeAABB BoundBox
         {
             get
@@ -33,6 +37,13 @@ namespace MiningGame.Code.PlayerClasses
         public virtual void OnSpawn()
         {
             
+        }
+
+        public short GetAimingAngle(Vector2 EntityPosition)
+        {
+            Vector2 aim = InputManager.GetMousePosV() + CameraManager.cameraPosition;
+            aim -= EntityPosition;
+            return (short)Math.Atan2(aim.Y, aim.X).RToD();
         }
 
         public virtual void Update(GameTime time)

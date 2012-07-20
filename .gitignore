@@ -16,3 +16,5 @@ _ReSharper.Rating War
 TestResults
 
 *.pdb
+
+*.suo
