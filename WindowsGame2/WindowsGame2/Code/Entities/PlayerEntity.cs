@@ -56,8 +56,8 @@ namespace MiningGame.Code.Entities
             PlayerName = name;
             TorsoAnimateable = new Animateable();
             LegsAnimateable = new Animateable();
-            TorsoAnimateable.SetAnimation(AssetManager.GetAnimation("playertorso"));
-            LegsAnimateable.SetAnimation(AssetManager.GetAnimation("playerlegs"));
+            TorsoAnimateable.SetAnimation(PClass.AnimationTorso);
+            LegsAnimateable.SetAnimation(PClass.AnimationLegs);
             TorsoAnimateable.StartLooping("player_idle", "player_idle");
             LegsAnimateable.StartLooping("player_idle", "player_idle");
 
@@ -125,6 +125,7 @@ namespace MiningGame.Code.Entities
 
         public void OnAttack()
         {
+
             if (EquippedItem == null)
                 return;
             if (EquippedItem is ItemSword || EquippedItem is ItemBow)
@@ -136,9 +137,8 @@ namespace MiningGame.Code.Entities
 
         public short GetAimingAngle()
         {
-            Vector2 aim = InputManager.GetMousePosV() + CameraManager.cameraPosition;
-            aim -= EntityPosition;
-            return (short)Math.Atan2(aim.Y, aim.X).RToD();
+            // Delegation by Composition for extendability
+            return PClass.GetAimingAngle(EntityPosition);
         }
 
         public Vector2 GetBlockAimingAt()
