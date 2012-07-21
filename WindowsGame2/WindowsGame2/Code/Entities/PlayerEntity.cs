@@ -56,12 +56,15 @@ namespace MiningGame.Code.Entities
             PlayerName = name;
             TorsoAnimateable = new Animateable();
             LegsAnimateable = new Animateable();
+
+            PClass = new PlayerClassDestroyer(this);
+
             TorsoAnimateable.SetAnimation(PClass.AnimationTorso);
             LegsAnimateable.SetAnimation(PClass.AnimationLegs);
             TorsoAnimateable.StartLooping("player_idle", "player_idle");
             LegsAnimateable.StartLooping("player_idle", "player_idle");
 
-            PClass = new PlayerClassDestroyer(this);
+            
         }
 
         public override void Draw(SpriteBatch sb)

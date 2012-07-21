@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MiningGameServer.Shapes;
+using MiningGameServer.Structs;
 
 namespace MiningGameServer.Player
 {
@@ -14,6 +15,23 @@ namespace MiningGameServer.Player
             {
                 return new ShapeAABB(0, 0, 24, 48);
             }
+        }
+
+        public override void OnSpawn()
+        {
+            NetworkPlayer.Inventory.PickupItem(new ItemStack(1, 201));
+            base.OnSpawn();
+        }
+
+        public override void OnDeath()
+        {
+            NetworkPlayer.Inventory.EmptyBag();
+            base.OnDeath();
+        }
+
+        public override int GetPlayerInventorySize()
+        {
+            return 5;
         }
 
         public PlayerClassDestroyer(NetworkPlayer player)

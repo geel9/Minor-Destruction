@@ -136,8 +136,8 @@ namespace MiningGameServer.Entities
                 {
                     ShouldDestroy = true;
                     p.EntityVelocity += EntityVelocity / 5;
-                    p.PlayerHealth--;
-                    GameServer.SendMessageToAll(playerOwner.PlayerName + " hit " + p.PlayerName + ". Their new health: " + p.PlayerHealth);
+                    p.HurtPlayer(1);
+                    GameServer.SendMessageToAll(playerOwner.PlayerName + " hit " + p.PlayerName + ".");
                     break;
                 }
             }

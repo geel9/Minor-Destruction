@@ -20,7 +20,7 @@ namespace MiningGame.Code.Interfaces
         public PanelView MainView;
         public PanelView AttributesView;
 
-        public int offset = 0;
+        public int offset = 3;
         public int curSelected = 0;
 
         public InGameInterface()
@@ -90,7 +90,7 @@ namespace MiningGame.Code.Interfaces
                 if (item == null) continue;
                 Texture2D tex = AssetManager.GetTexture(item.GetAsset());
                 ((ImageView)buttons[i - offset].ButtonContentview).Texture = tex;
-                ((TextView)buttons[i].Children[1]).Text = itemStack.NumberItems > 0
+                ((TextView)buttons[i - offset].Children[1]).Text = itemStack.NumberItems > 0
                                                                ? itemStack.NumberItems.ToString()
                                                                : "";
             }

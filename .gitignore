@@ -18,3 +18,7 @@ TestResults
 *.pdb
 
 *.suo
+
+WindowsGame2/WindowsGame2/bin/x86/Debug/
+MiningGameDedicatedServer/bin/Debug/*
+MiningGameserver/bin/Debug/*

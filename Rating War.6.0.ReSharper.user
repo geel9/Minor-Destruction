@@ -20,9 +20,6 @@
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:PlayerController.cs" caret="1595" fromTop="22" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:GameWorld.cs" caret="13791" fromTop="6" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:Main.cs" caret="4670" fromTop="17" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:PlayerClass.cs" caret="334" fromTop="14" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:PlayerClasses/f:PlayerClass.cs" caret="406" fromTop="16" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:PlayerEntity.cs" caret="5187" fromTop="28" />
       <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:NetworkPlayer.cs" caret="1187" fromTop="0" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:PlayerClasses/f:PlayerClassDestroyer.cs" caret="522" fromTop="20" />
       <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:PlayerClassDestroyer.cs" caret="386" fromTop="16" />
@@ -31,6 +28,9 @@
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Items/f:Item.cs" caret="2212" fromTop="17" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:PlayerClasses/f:PlayerInventory.cs" caret="911" fromTop="31" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Managers/f:ReflectionManager.cs" caret="1028" fromTop="38" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:PlayerClass.cs" caret="716" fromTop="24" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:PlayerEntity.cs" caret="539" fromTop="0" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:PlayerClasses/f:PlayerClass.cs" caret="802" fromTop="0" />
     </RecentFiles>
     <RecentEdits>
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:PlayerEntity.cs" caret="1965" fromTop="31" />

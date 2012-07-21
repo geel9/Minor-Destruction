@@ -21,6 +21,28 @@ namespace MiningGameServer
             ServerConsole.AddConVar("break", "break", "0");
             ServerConsole.AddConVar("sv_cheats", "If 1, cheats may be used.", "1");
 
+            ServerConsole.AddConCommand("hurt", "Hurts a player", args =>
+                                                                      {
+
+                                                                          try
+                                                                          {
+                                                                              string player = args[0];
+                                                                              int damage = Convert.ToInt32(args[1]);
+
+                                                                              foreach (NetworkPlayer p in GameServer.NetworkPlayers)
+                                                                              {
+                                                                                  if (p.PlayerName.ToLower() == player)
+                                                                                  {
+                                                                                      p.HurtPlayer(damage);
+                                                                                  }
+                                                                              }
+                                                                          }
+                                                                          catch
+                                                                          {
+                                                                              ServerConsole.Log("Usage: hurt [player] [damage]");
+                                                                          }
+                                                                      });
+
             ServerConsole.AddConCommand("give", "Give a player an item", args =>
             {
                 if (args.Length < 2)

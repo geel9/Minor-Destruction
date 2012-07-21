@@ -33,6 +33,11 @@ namespace MiningGameServer.Player
             
         }
 
+        public virtual int GetPlayerInventorySize()
+        {
+            return 25;
+        }
+
         public virtual float GetPlayerWalkVelocity()
         {
             return 3;

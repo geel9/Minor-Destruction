@@ -99,7 +99,7 @@ namespace MiningGameServer
         public NetworkPlayer(byte playerID, NetConnection connection, Vector2 playerPos, string name)
         {
             NetConnection = connection;
-            //PlayerEntity = new ServerPlayerEntity(playerPos, playerID, name);
+
             UpdateMask |= 1;
             UpdateMask |= (int)PlayerUpdateFlags.Player_Position;
 
@@ -111,12 +111,13 @@ namespace MiningGameServer
             PlayerBlockCache = new BlockData[GameServer.WorldSizeX, GameServer.WorldSizeY];
             
             Inventory = new PlayerInventory(this);
-
             PClass = new PlayerClassDestroyer(this);
 
             for (int x = 0; x < GameServer.WorldSizeX; x++)
                 for (int y = 0; y < GameServer.WorldSizeY; y++)
                     PlayerBlockCache[x, y] = new BlockData();
+
+            Respawn();
         }
 
         public void UpdateCache()
@@ -177,17 +178,29 @@ namespace MiningGameServer
             }
         }
 
+        public void HurtPlayer(int damage)
+        {
+            PlayerHealth -= damage;
+            if(PlayerHealth <= 0)
+            {
+                PClass.OnDeath();
+                Respawn();
+            }
+        }
+
+        public void Respawn()
+        {
+            PlayerHealth = 5;
+            EntityPosition = new Vector2(50, 50);
+            EntityVelocity = Vector2.Zero;
+            PClass.OnSpawn();
+        }
+
         public void Update(GameTime theTime)
         {
             UpdateCache();
-
-            if (PlayerHealth <= 0)
-            {
-                PlayerHealth = 5;
-                EntityPosition = new Vector2(50, 50);
-                EntityVelocity = Vector2.Zero;
-            }
-            else if (_jumpTimer > 0) _jumpTimer--;
+            
+            if (_jumpTimer > 0) _jumpTimer--;
             if (AttackTimer > 0)
             {
                 AttackTimer--;
@@ -307,7 +320,7 @@ namespace MiningGameServer
                 if (player.BoundBox.Intersects(bound) || player.BoundBox.Contains(bound) || bound.Contains(player.BoundBox))
                 {
                     GameServer.SendMessageToAll(PlayerName + " hit " + player.PlayerName);
-                    player.PlayerHealth--;
+                    player.HurtPlayer(1);
                     player.EntityVelocity.Y = -4;
                     player.EntityVelocity.X = FacingLeft ? -5 : 5;
                 }

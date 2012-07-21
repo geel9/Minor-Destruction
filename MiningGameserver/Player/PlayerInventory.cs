@@ -24,6 +24,14 @@ namespace MiningGameServer.PlayerClasses
             SetBagSize(25);
         }
 
+        public void EmptyBag()
+        {
+            for(int i = _armorSize; i < Inventory.Length; i++)
+            {
+                RemoveItemAt(i);
+            }
+        }
+
         public void SetBagSize(int size)
         {
             Inventory = new ItemStack[_armorSize + size];
@@ -78,19 +86,53 @@ namespace MiningGameServer.PlayerClasses
                 GameServer.ServerNetworkManager.SendPacket(pack, NetworkPlayer.NetConnection);
             }
         }
+
+        public void RemoveItemsAtSlot(int slot, byte itemID, int numToRemove)
+        {
+            if (GetNumItemInInventory(itemID) == 0) return;
+            ItemStack i = Inventory[slot];
+
+            if (i.ItemID != itemID)
+            {
+                RemoveItems(itemID, numToRemove);
+                return;
+            }
+
+            ServerItem serverItem = i.Item;
+            i.NumberItems -= numToRemove;
+
+            if (i.NumberItems <= 0)
+            {
+                Packet p = new Packet1SCGameEvent(GameServer.GameEvents.Player_Inventory_Remove, (byte)slot);
+                GameServer.ServerNetworkManager.SendPacket(p, NetworkPlayer.NetConnection);
+                Inventory[slot] = new ItemStack();
+                if (i.NumberItems < 0)
+                {
+                    RemoveItems(itemID, -i.NumberItems);
+                }
+            }
+            else
+            {
+                Inventory[slot] = i;
+                Packet pack = new Packet1SCGameEvent(GameServer.GameEvents.Player_Inventory_Update, (byte)slot, (byte)i.ItemID, i.NumberItems);
+                GameServer.ServerNetworkManager.SendPacket(pack, NetworkPlayer.NetConnection);
+            }
+        }
+
         public void PickupItem(ItemStack item)
         {
             ServerItem serverItem = item.Item;
             ItemStack stack2 = new ItemStack();
 
-            int start = 3;
-            int end = Inventory.Length;
+            int start = _armorSize;
+            int end = NetworkPlayer.PClass.GetPlayerInventorySize() + _armorSize;
+            if (end > Inventory.Length) end = Inventory.Length;
 
 
             if (item.NumberItems > serverItem.GetMaxStack())
             {
-                item.NumberItems -= serverItem.GetMaxStack();
                 stack2 = new ItemStack(item.NumberItems - serverItem.GetMaxStack(), serverItem.GetItemID());
+                item.NumberItems = serverItem.GetMaxStack();
             }
 
             for (int i = start; i < end; i++)
@@ -115,12 +157,12 @@ namespace MiningGameServer.PlayerClasses
                 {
                     if (maxStack == it.NumberItems) continue;
                     int newTotal = it.NumberItems + item.NumberItems;
+                    ItemStack stackTemp = new ItemStack();
                     if(newTotal > maxStack)
                     {
-                        int newCur = newTotal - maxStack;
-                        int newNext = it.NumberItems - newCur;
-                        it.NumberItems = newCur;
-                        PickupItem(new ItemStack(newNext, item.ItemID));
+                        int newCur = maxStack - it.NumberItems;
+                        stackTemp = new ItemStack(item.NumberItems - newCur, it.ItemID);
+                        item.NumberItems = newCur;
                     }
 
                     Inventory[i] = new ItemStack(it.NumberItems + item.NumberItems, it.ItemID);
@@ -128,6 +170,9 @@ namespace MiningGameServer.PlayerClasses
                                                          (byte)Inventory[i].ItemID,
                                                          Inventory[i].NumberItems);
                     GameServer.ServerNetworkManager.SendPacket(pack, NetworkPlayer.NetConnection);
+
+                    if (stackTemp.NumberItems > 0)
+                        PickupItem(stackTemp);
                     return;
                 }
             }
