@@ -119,30 +119,61 @@ namespace MiningGameServer.PlayerClasses
             }
         }
 
-        public bool CanPickup(ItemStack item)
+        /// <summary>
+        /// Returns the amount of an ItemStack that will be left. 0 if all are picked up.
+        /// </summary>
+        /// <param name="item">The ItemStack to test against</param>
+        /// <param name="slotStart">Used for recursion.</param>
+        /// <returns></returns>
+        public int CanPickup(ItemStack item, int slotStart = -1)
         {
             ServerItem serverItem = item.Item;
-            ItemStack stack2 = new ItemStack();
+            int maxStack = serverItem.GetMaxStack();
+            int ret = item.NumberItems;
 
             int start = _armorSize;
             int end = NetworkPlayer.PClass.GetPlayerInventorySize() + _armorSize;
-            if (end > Inventory.Length) end = Inventory.Length;
+            if (end > Inventory.Length)
+                end = Inventory.Length;
 
 
             for (int i = start; i < end; i++)
             {
                 ItemStack curStack = Inventory[i];
+                int canPickup = 0;
                 if (curStack.ItemID == item.ItemID)
                 {
-                    if (curStack.NumberItems < serverItem.GetMaxStack())
-                        return true;
+                    if(curStack.NumberItems == maxStack) continue;
+
+                    int newTotal = curStack.NumberItems + item.NumberItems;
+
+                    if(newTotal > maxStack)
+                    {
+                        canPickup = maxStack - curStack.NumberItems;
+                    }
+                    else
+                    {
+                        canPickup = item.NumberItems;
+                    }
                 }
-                if (curStack.ItemID == 0) return true;
+                if (curStack.ItemID == 0)
+                {
+                    canPickup = maxStack;
+                }
+
+                ret -= canPickup;
+                item.NumberItems -= canPickup;
+                if(ret <= 0) return 0;
             }
-            return false;
+            return ret;
         }
 
-        public void PickupItem(ItemStack item)
+        /// <summary>
+        /// Picks up an item into the inventory
+        /// </summary>
+        /// <param name="item">The ItemStack to pick up</param>
+        /// <param name="overflow">If true, then the extra items that are left over (can't be picked up) are dropped.</param>
+        public void PickupItem(ItemStack item, bool overflow = false)
         {
             ServerItem serverItem = item.Item;
             ItemStack stack2 = new ItemStack();

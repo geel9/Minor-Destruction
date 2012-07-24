@@ -180,11 +180,12 @@ namespace MiningGameServer
             short endX = (short)MathHelper.Clamp(startX + 64, 0, GameServer.WorldSizeX);
             short endY = (short)MathHelper.Clamp(startY + 64, 0, GameServer.WorldSizeY);
 
-            Packet packet = new Packet();
+            
             
 
             for (short x = startX; x < endX; x++)
             {
+                Packet packet = new Packet();
                 //Generate two bitmasks where each bit determines if the block's ID/MD are updated.
                 long[] masks = GenerateRowBitMask(x);
                 long maskID = masks[0];

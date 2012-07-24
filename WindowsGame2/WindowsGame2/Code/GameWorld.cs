@@ -407,38 +407,22 @@ namespace MiningGame.Code
             switch ((GameServer.GameEvents)eventID)
             {
                 case GameServer.GameEvents.Block_Set:
-                    SetBlock(p.ReadShort(), p.ReadShort(), p.ReadShort(), false, p.ReadByte());
+                    SetBlock(p.ReadShort(), p.ReadShort(), p.ReadShort(), true, p.ReadByte());
                     break;
 
                 case GameServer.GameEvents.Block_Set_ID:
-                    SetBlock(p.ReadShort(), p.ReadShort(), p.ReadShort(), false, 0);
+                    SetBlock(p.ReadShort(), p.ReadShort(), p.ReadShort());
                     break;
 
                 case GameServer.GameEvents.Block_Set_MD:
                     short X = p.ReadShort();
                     short Y = p.ReadShort();
-                    SetBlock(X, Y, WorldBlocks[X, Y].ID, false, p.ReadByte());
-                    break;
-
-                case GameServer.GameEvents.Block_Set_Chunk:
-                    int numSending = p.ReadShort();
-                    short startX = p.ReadShort();
-                    short startY = p.ReadShort();
-
-                    for (int i = 0; i < numSending; i++)
-                    {
-                        X = (short)(p.ReadByte() + startX);
-                        Y = (short)(p.ReadByte() + startY);
-                        short Id = p.ReadShort();
-                        byte metadata = p.ReadByte();
-                        SetBlock(X, Y, Id, true, metadata);
-                    }
-
+                    SetBlockMetaData(X, Y, p.ReadByte());
                     break;
 
                 case GameServer.GameEvents.Block_Set_Line:
-                    startX = p.ReadShort();
-                    startY = p.ReadShort();
+                    short startX = p.ReadShort();
+                    short startY = p.ReadShort();
                     long maskID = p.ReadLong();
                     long maskMD = p.ReadLong();
                     bool[] IDUpdate = maskID.BitMaskToBools();
@@ -448,11 +432,11 @@ namespace MiningGame.Code
                     {
                         if (IDUpdate[i])
                         {
-                            WorldBlocks[startX, startY + i].ID = p.ReadShort();
+                            SetBlock(startX, startY + i, p.ReadShort());
                         }
                         if (MDUpdate[i])
                         {
-                            WorldBlocks[startX, startY + i].MetaData = p.ReadByte();
+                            SetBlockMetaData(startX, startY + i, p.ReadByte());
                         }
                     }
                     break;

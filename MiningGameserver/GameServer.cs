@@ -479,7 +479,6 @@ namespace MiningGameServer
             Block_Set,
             Block_Set_ID,
             Block_Set_MD,
-            Block_Set_Chunk,
             Block_Set_Line,
             Player_Chat,
             Player_KeyPress,
