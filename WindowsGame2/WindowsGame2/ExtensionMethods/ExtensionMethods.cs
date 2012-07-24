@@ -9,6 +9,20 @@ namespace MiningGame.ExtensionMethods
 {
     public static class ExtensionMethods
     {
+
+        #region Integers
+
+        public static bool[] BitMaskToBools(this long bitmask)
+        {
+            bool[] ret = new bool[64];
+            for (int i = 0; i < 64; i++)
+            {
+                ret[i] = (bitmask & ((long)1 << i)) != 0;
+            }
+            return ret;
+        }
+
+        #endregion
         #region Arrays
 
         public static string ConcatString(this IEnumerable array, string delim)

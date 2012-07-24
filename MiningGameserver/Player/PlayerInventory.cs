@@ -26,7 +26,7 @@ namespace MiningGameServer.PlayerClasses
 
         public void EmptyBag()
         {
-            for(int i = _armorSize; i < Inventory.Length; i++)
+            for (int i = _armorSize; i < Inventory.Length; i++)
             {
                 RemoveItemAt(i);
             }
@@ -119,6 +119,29 @@ namespace MiningGameServer.PlayerClasses
             }
         }
 
+        public bool CanPickup(ItemStack item)
+        {
+            ServerItem serverItem = item.Item;
+            ItemStack stack2 = new ItemStack();
+
+            int start = _armorSize;
+            int end = NetworkPlayer.PClass.GetPlayerInventorySize() + _armorSize;
+            if (end > Inventory.Length) end = Inventory.Length;
+
+
+            for (int i = start; i < end; i++)
+            {
+                ItemStack curStack = Inventory[i];
+                if (curStack.ItemID == item.ItemID)
+                {
+                    if (curStack.NumberItems < serverItem.GetMaxStack())
+                        return true;
+                }
+                if (curStack.ItemID == 0) return true;
+            }
+            return false;
+        }
+
         public void PickupItem(ItemStack item)
         {
             ServerItem serverItem = item.Item;
@@ -158,7 +181,7 @@ namespace MiningGameServer.PlayerClasses
                     if (maxStack == it.NumberItems) continue;
                     int newTotal = it.NumberItems + item.NumberItems;
                     ItemStack stackTemp = new ItemStack();
-                    if(newTotal > maxStack)
+                    if (newTotal > maxStack)
                     {
                         int newCur = maxStack - it.NumberItems;
                         stackTemp = new ItemStack(item.NumberItems - newCur, it.ItemID);

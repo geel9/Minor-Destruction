@@ -109,7 +109,7 @@ namespace MiningGameServer
             EntityVelocity.X = 3;
 
             PlayerBlockCache = new BlockData[GameServer.WorldSizeX, GameServer.WorldSizeY];
-            
+
             Inventory = new PlayerInventory(this);
             PClass = new PlayerClassDestroyer(this);
 
@@ -120,68 +120,135 @@ namespace MiningGameServer
             Respawn();
         }
 
+
+        private long[] GenerateRowBitMask(int rowX)
+        {
+            var blockPos = new Vector2((int)(EntityPosition.X / GameServer.BlockSize), (int)(EntityPosition.Y / GameServer.BlockSize));
+
+            short startY = (short)MathHelper.Clamp((int)blockPos.Y - (750 / GameServer.BlockSize), 0, GameServer.WorldSizeY);
+            short endY = (short)MathHelper.Clamp(startY + 64, 0, GameServer.WorldSizeY);
+
+            long retID = 0;
+            long retMD = 0;
+
+            for (int y = startY; y < endY; y++)
+            {
+                short cachedID = PlayerBlockCache[rowX, y].ID;
+                byte cachedMD = PlayerBlockCache[rowX, y].MetaData;
+
+                short realID = GameServer.WorldBlocks[rowX, y].ID;
+                byte realMD = GameServer.WorldBlocks[rowX, y].MetaData;
+
+                if (cachedID == realID)
+                {
+                    retID &= ~((long)1 << (y - startY));
+                }
+                else
+                {
+                    retID |= ((long)1 << (y - startY));
+                }
+                if (cachedMD == realMD)
+                {
+                    retMD &= ~((long)1 << (y - startY));
+                }
+                else
+                {
+                    retMD |= ((long)1 << (y - startY));
+                }
+            }
+            return new long[] { retID, retMD };
+        }
+
+        private int GetNumBitsSet(long bits)
+        {
+            int ret = 0;
+            for (int i = 0; i < 64; i++)
+            {
+                if ((bits & ((long)1 << i)) != 0)
+                    ret++;
+            }
+            return ret;
+        }
+
+
         public void UpdateCache()
         {
             var blockPos = new Vector2((int)(EntityPosition.X / GameServer.BlockSize), (int)(EntityPosition.Y / GameServer.BlockSize));
 
-            short startX = (short)MathHelper.Clamp((int)blockPos.X - (800 / GameServer.BlockSize) - 1, 0, GameServer.WorldSizeX);
-            short startY = (short)MathHelper.Clamp((int)blockPos.Y - (500 / GameServer.BlockSize) - 1, 0, GameServer.WorldSizeY);
-            short endX = (short)MathHelper.Clamp((int)blockPos.X + (800 / GameServer.BlockSize) + 1, 0, GameServer.WorldSizeX);
-            short endY = (short)MathHelper.Clamp((int)blockPos.Y + (500 / GameServer.BlockSize) + 1, 0, GameServer.WorldSizeY);
+            short startX = (short)MathHelper.Clamp((int)blockPos.X - (750 / GameServer.BlockSize), 0, GameServer.WorldSizeX);
+            short startY = (short)MathHelper.Clamp((int)blockPos.Y - (750 / GameServer.BlockSize), 0, GameServer.WorldSizeY);
+            short endX = (short)MathHelper.Clamp(startX + 64, 0, GameServer.WorldSizeX);
+            short endY = (short)MathHelper.Clamp(startY + 64, 0, GameServer.WorldSizeY);
 
             Packet packet = new Packet();
-            short numSending = 0;
-
-            int oneX = 0;
-            int oneY = 0;
+            
 
             for (short x = startX; x < endX; x++)
             {
-                for (short y = startY; y < endY; y++)
+                //Generate two bitmasks where each bit determines if the block's ID/MD are updated.
+                long[] masks = GenerateRowBitMask(x);
+                long maskID = masks[0];
+                long maskMD = masks[1];
+                //No updates
+                if (maskID == 0 && maskMD == 0) continue;
+
+                int numBitsID = GetNumBitsSet(maskID);
+                int numBitsMD = GetNumBitsSet(maskMD);
+                //If we're only setting one block, just ignore the bitmask and send the block itself.
+                if (numBitsID == 1 && numBitsMD == 1)
                 {
-                    short cachedID = PlayerBlockCache[x, y].ID;
-                    byte cachedMD = PlayerBlockCache[x, y].MetaData;
+                    int oneX = 0;
+                    int oneY = 0;
+                    for (int i = 0; i < 64; i++)
+                    {
+                        if ((maskID & ((long)1 << i)) == 0)
+                        {
+                            if ((maskMD & ((long)1 << i)) == 0) continue;
+                        }
 
-                    short realID = GameServer.WorldBlocks[x, y].ID;
-                    byte realMD = GameServer.WorldBlocks[x, y].MetaData;
-
-                    if (cachedID == realID && realMD == cachedMD) continue;
-
-                    PlayerBlockCache[x, y].ID = realID;
-                    PlayerBlockCache[x, y].MetaData = realMD;
-
-                    oneX = x;
-                    oneY = y;
-
-                    packet.WriteByte((byte)(x - startX));
-                    packet.WriteByte((byte)(y - startY));
-                    packet.WriteShort(realID);
-                    packet.WriteByte(realMD);
-
-                    numSending++;
+                        oneX = x;
+                        oneY = startY + i;
+                    }
+                    PlayerBlockCache[oneX, oneY] = GameServer.WorldBlocks[oneX, oneY];
+                    Packet packet2 = new Packet1SCGameEvent(GameServer.GameEvents.Block_Set, (short)oneX, (short)oneY, GameServer.WorldBlocks[oneX, oneY].ID, GameServer.WorldBlocks[oneX, oneY].MetaData);
+                    GameServer.ServerNetworkManager.SendPacket(packet2, NetConnection);
+                    continue;
                 }
-            }
-            if (numSending > 1)
-            {
-                Packet packet2 = new Packet1SCGameEvent(GameServer.GameEvents.Block_Set_Chunk);
-                packet2.WriteShort(numSending);
-                packet2.WriteShort(startX);
-                packet2.WriteShort(startY);
-                packet2.WriteBytes(packet.data.ToArray());
 
-                GameServer.ServerNetworkManager.SendPacket(packet2, NetConnection);
-            }
-            else if (numSending == 1)
-            {
-                Packet packet2 = new Packet1SCGameEvent(GameServer.GameEvents.Block_Set, (short)oneX, (short)oneY, GameServer.WorldBlocks[oneX, oneY].ID, GameServer.WorldBlocks[oneX, oneY].MetaData);
-                GameServer.ServerNetworkManager.SendPacket(packet2, NetConnection);
+
+                for (int i = 0; i < endY - startY; i++)
+                {
+                    BlockData curData = GameServer.WorldBlocks[x, startY + i];
+                    bool IDUpdate = (maskID & ((long) 1 << i)) != 0;
+                    bool MDUpdate = (maskMD & ((long) 1 << i)) != 0;
+                    if (!IDUpdate && !MDUpdate) continue;
+
+                    if (IDUpdate)
+                    {
+                        packet.WriteShort(curData.ID);
+                        PlayerBlockCache[x, startY + i].ID = curData.ID;
+                    }
+                    if(MDUpdate)
+                    {
+                        packet.WriteByte(curData.MetaData);
+                        PlayerBlockCache[x, startY + i].MetaData = curData.MetaData;
+                    }
+                }
+
+                Packet p = new Packet1SCGameEvent(GameServer.GameEvents.Block_Set_Line);
+                p.WriteShort(x);
+                p.WriteShort(startY);
+                p.WriteLong(maskID);
+                p.WriteLong(maskMD);
+                p.WriteBytes(packet.getData());
+                GameServer.ServerNetworkManager.SendPacket(p, NetConnection);
             }
         }
 
         public void HurtPlayer(int damage)
         {
             PlayerHealth -= damage;
-            if(PlayerHealth <= 0)
+            if (PlayerHealth <= 0)
             {
                 PClass.OnDeath();
                 Respawn();
@@ -199,7 +266,7 @@ namespace MiningGameServer
         public void Update(GameTime theTime)
         {
             UpdateCache();
-            
+
             if (_jumpTimer > 0) _jumpTimer--;
             if (AttackTimer > 0)
             {
@@ -474,7 +541,7 @@ namespace MiningGameServer
                 Falling = true;
         }
 
-        
+
 
         public void SendEquippedItemUpdate()
         {
@@ -486,8 +553,8 @@ namespace MiningGameServer
             Packet7SCPlayerCurItemChanged packet7 = new Packet7SCPlayerCurItemChanged(PlayerID, itemID);
             GameServer.ServerNetworkManager.SendPacket(packet7);
         }
-        
-        
+
+
 
         public void SetPlayerEquippedSlot(int slot)
         {
@@ -513,6 +580,6 @@ namespace MiningGameServer
             Inventory.RemoveItemAt(Inventory.PlayerInventorySelected);
         }
 
-        
+
     }
 }

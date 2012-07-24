@@ -57,7 +57,7 @@ namespace MiningGameServer.Entities
             double closestDist = -1;
             foreach (NetworkPlayer player in GameServer.NetworkPlayers)
             {
-
+                if (!player.Inventory.CanPickup(Stack)) continue;
                 //Dropping an item takes longer to pick up.
                 if (Dropper != null && player == Dropper && _timeAlive < 60)
                     continue;
@@ -67,12 +67,13 @@ namespace MiningGameServer.Entities
                 double dist = Math.Sqrt((dX * dX) + (dY * dY));
                 if (dist < closestDist || closestDist == -1)
                 {
+                    
                     closestDist = dist;
                     closest = player;
                 }
             }
 
-            if (closestDist < 32&& closest != null)
+            if (closestDist < 32 && closest != null)
             {
                 Pickup(closest);
                 Delete();

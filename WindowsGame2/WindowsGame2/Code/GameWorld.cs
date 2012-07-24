@@ -10,6 +10,7 @@ using MiningGame.Code.Blocks;
 using Microsoft.Xna.Framework.Graphics;
 using MiningGame.Code.Entities;
 using MiningGame.Code.Interfaces;
+using MiningGame.ExtensionMethods;
 using MiningGameServer;
 using MiningGameServer.Entities;
 using MiningGameServer.Packets;
@@ -433,6 +434,27 @@ namespace MiningGame.Code
                         SetBlock(X, Y, Id, true, metadata);
                     }
 
+                    break;
+
+                case GameServer.GameEvents.Block_Set_Line:
+                    startX = p.ReadShort();
+                    startY = p.ReadShort();
+                    long maskID = p.ReadLong();
+                    long maskMD = p.ReadLong();
+                    bool[] IDUpdate = maskID.BitMaskToBools();
+                    bool[] MDUpdate = maskMD.BitMaskToBools();
+
+                    for (int i = 0; i < 64; i++)
+                    {
+                        if (IDUpdate[i])
+                        {
+                            WorldBlocks[startX, startY + i].ID = p.ReadShort();
+                        }
+                        if (MDUpdate[i])
+                        {
+                            WorldBlocks[startX, startY + i].MetaData = p.ReadByte();
+                        }
+                    }
                     break;
 
                 case GameServer.GameEvents.Player_Chat:

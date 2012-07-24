@@ -1,15 +1,6 @@
 <Configuration>
   <RecentFiles>
     <RecentFiles>
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Packets/f:Packet0CSPlayerConnect.cs" caret="0" fromTop="0" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:CInterfaces/f:UpdatableAndDrawable.cs" caret="0" fromTop="0" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:CInterfaces/f:Updatable.cs" caret="0" fromTop="0" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:Animation.cs" caret="0" fromTop="0" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Structs/f:ItemRecipe.cs" caret="0" fromTop="0" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Lidgren/f:NetConnection.cs" caret="13304" fromTop="20" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Interfaces/f:InGameInterface.cs" caret="1897" fromTop="6" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Items/f:ItemBow.cs" caret="480" fromTop="20" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Items/f:ServerItem.cs" caret="3766" fromTop="26" />
       <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Items/f:ServerItemBow.cs" caret="333" fromTop="4" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:Animateable.cs" caret="3220" fromTop="21" />
       <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Packets/f:Packet2SCCreateProjectile.cs" caret="262" fromTop="6" />
@@ -19,50 +10,59 @@
       <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/f:GameServer.cs" caret="12806" fromTop="16" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:PlayerController.cs" caret="1595" fromTop="22" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:GameWorld.cs" caret="13791" fromTop="6" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:Main.cs" caret="4670" fromTop="17" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:NetworkPlayer.cs" caret="1187" fromTop="0" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:PlayerClasses/f:PlayerClassDestroyer.cs" caret="522" fromTop="20" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:PlayerClassDestroyer.cs" caret="386" fromTop="16" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/f:Program.cs" caret="389" fromTop="17" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:PlayerInventory.cs" caret="5038" fromTop="135" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Items/f:Item.cs" caret="2212" fromTop="17" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:PlayerClasses/f:PlayerInventory.cs" caret="911" fromTop="31" />
       <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Managers/f:ReflectionManager.cs" caret="1028" fromTop="38" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:PlayerClass.cs" caret="716" fromTop="24" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:PlayerEntity.cs" caret="539" fromTop="0" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:PlayerClasses/f:PlayerClass.cs" caret="802" fromTop="0" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:PlayerClass.cs" caret="894" fromTop="25" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Entities/f:ServerProjectileArrow.cs" caret="5000" fromTop="22" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:NetworkPlayer.cs" caret="3317" fromTop="29" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:PlayerInventory.cs" caret="827" fromTop="24" />
+      <File id="81919EC9-11BF-43CB-B762-F70CA6BC9861/f:TextFieldView.cs" caret="26237" fromTop="45" />
+      <File id="81919EC9-11BF-43CB-B762-F70CA6BC9861/f:GeeUI.cs" caret="3871" fromTop="31" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Interfaces/f:InGameInterface.cs" caret="3044" fromTop="15" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:PlayerClassDestroyer.cs" caret="686" fromTop="27" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Interfaces/f:Console.cs" caret="4389" fromTop="19" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Managers/f:ConsoleManager.cs" caret="13846" fromTop="36" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Structs/f:ItemStack.cs" caret="467" fromTop="14" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:Main.cs" caret="4691" fromTop="19" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Items/f:ServerItem.cs" caret="2548" fromTop="31" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:PlayerClasses/f:PlayerClassDestroyer.cs" caret="651" fromTop="20" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:PlayerClasses/f:PlayerInventory.cs" caret="911" fromTop="0" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:PlayerClasses/f:PlayerClass.cs" caret="498" fromTop="18" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:PlayerEntity.cs" caret="1453" fromTop="17" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:ServerCommands/f:ServerCommands.cs" caret="209" fromTop="4" />
     </RecentFiles>
     <RecentEdits>
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:PlayerEntity.cs" caret="1965" fromTop="31" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:PlayerEntity.cs" caret="1646" fromTop="24" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:PlayerClasses/f:PlayerClass.cs" caret="1405" fromTop="39" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:PlayerClasses/f:PlayerClass.cs" caret="1331" fromTop="32" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:PlayerClass.cs" caret="1090" fromTop="37" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/f:GameWorld.cs" caret="14688" fromTop="23" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/f:GameServer.cs" caret="12868" fromTop="29" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:PlayerEntity.cs" caret="3034" fromTop="18" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:PlayerClasses/f:PlayerClass.cs" caret="516" fromTop="20" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:PlayerClass.cs" caret="472" fromTop="20" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:PlayerEntity.cs" caret="523" fromTop="7" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:PlayerEntity.cs" caret="630" fromTop="15" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:PlayerEntity.cs" caret="599" fromTop="9" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:PlayerEntity.cs" caret="708" fromTop="14" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:NetworkPlayer.cs" caret="725" fromTop="19" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:NetworkPlayer.cs" caret="832" fromTop="24" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:NetworkPlayer.cs" caret="904" fromTop="26" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:PlayerClasses/f:PlayerClass.cs" caret="405" fromTop="16" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:PlayerClass.cs" caret="334" fromTop="14" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:PlayerClasses/f:PlayerClassDestroyer.cs" caret="393" fromTop="15" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:PlayerClasses/f:PlayerClassDestroyer.cs" caret="535" fromTop="22" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:PlayerClassDestroyer.cs" caret="222" fromTop="9" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:PlayerClassDestroyer.cs" caret="386" fromTop="16" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:PlayerClasses/f:PlayerClassDestroyer.cs" caret="1007" fromTop="33" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:PlayerEntity.cs" caret="5187" fromTop="28" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:PlayerInventory.cs" caret="479" fromTop="16" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:PlayerInventory.cs" caret="777" fromTop="28" />
-      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:PlayerInventory.cs" caret="2865" fromTop="20" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:PlayerClasses/f:PlayerInventory.cs" caret="471" fromTop="15" />
-      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:PlayerClasses/f:PlayerInventory.cs" caret="728" fromTop="4" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:PlayerInventory.cs" caret="3418" fromTop="29" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Items/f:ServerItem.cs" caret="3426" fromTop="29" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:PlayerInventory.cs" caret="3899" fromTop="21" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:PlayerEntity.cs" caret="1999" fromTop="27" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Entities/f:PlayerEntity.cs" caret="1648" fromTop="22" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:PlayerInventory.cs" caret="4652" fromTop="17" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:PlayerClass.cs" caret="894" fromTop="25" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:PlayerClassDestroyer.cs" caret="816" fromTop="20" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Interfaces/f:InGameInterface.cs" caret="613" fromTop="22" />
+      <File id="EC630147-D4F4-4B67-B31A-40A1BC5044D5/d:Code/d:Interfaces/f:InGameInterface.cs" caret="3185" fromTop="17" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:PlayerInventory.cs" caret="4334" fromTop="20" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:PlayerInventory.cs" caret="5670" fromTop="16" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:PlayerInventory.cs" caret="6523" fromTop="30" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:PlayerInventory.cs" caret="5878" fromTop="23" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:PlayerInventory.cs" caret="826" fromTop="24" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:PlayerClassDestroyer.cs" caret="686" fromTop="27" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:NetworkPlayer.cs" caret="6661" fromTop="22" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:NetworkPlayer.cs" caret="6535" fromTop="20" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:NetworkPlayer.cs" caret="6434" fromTop="15" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:NetworkPlayer.cs" caret="6787" fromTop="19" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:NetworkPlayer.cs" caret="11165" fromTop="13" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:NetworkPlayer.cs" caret="3588" fromTop="29" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:NetworkPlayer.cs" caret="2900" fromTop="10" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Entities/f:ServerProjectileArrow.cs" caret="4951" fromTop="20" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:NetworkPlayer.cs" caret="2505" fromTop="14" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:Player/f:NetworkPlayer.cs" caret="3317" fromTop="35" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:ServerCommands/f:ServerCommands.cs" caret="2527" fromTop="32" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:ServerCommands/f:ServerCommands.cs" caret="1086" fromTop="23" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:ServerCommands/f:ServerCommands.cs" caret="2164" fromTop="36" />
+      <File id="70DD389A-8498-49BD-BCD7-CD7D33A1A4FD/d:ServerCommands/f:ServerCommands.cs" caret="1996" fromTop="31" />
     </RecentEdits>
   </RecentFiles>
   <CompletionStatisticsManager>
@@ -78,22 +78,22 @@
       <Item value="Contains`0" priority="26" />
     </ItemStatistics>
     <ItemStatistics item="CSharpCodeCompletionContext">
-      <Item value="string" priority="1437" />
+      <Item value="string" priority="1501" />
       <Item value="System" priority="126" />
       <Item value="Windows" priority="26" />
       <Item value="Forms" priority="26" />
       <Item value="Application`0" priority="27" />
-      <Item value="public" priority="10641" />
-      <Item value="virtual" priority="895" />
+      <Item value="public" priority="10833" />
+      <Item value="virtual" priority="927" />
       <Item value="Rectangle`0" priority="127" />
-      <Item value="int" priority="8579" />
-      <Item value="return" priority="5311" />
-      <Item value="new" priority="7520" />
+      <Item value="int" priority="8675" />
+      <Item value="return" priority="5471" />
+      <Item value="new" priority="7616" />
       <Item value="Rectangle" priority="174" />
       <Item value="X" priority="709" />
       <Item value="Y" priority="514" />
       <Item value="GameWorld`0" priority="863" />
-      <Item value="void" priority="2431" />
+      <Item value="void" priority="2559" />
       <Item value="Entities" priority="31" />
       <Item value="EntityMoveable`0" priority="90" />
       <Item value="Texture2D`0" priority="223" />
@@ -104,7 +104,7 @@
       <Item value="byte" priority="2340" />
       <Item value="Packet1CSGameEvent`0" priority="223" />
       <Item value="Packet1CSGameEvent" priority="173" />
-      <Item value="GameServer`0" priority="1915" />
+      <Item value="GameServer`0" priority="1947" />
       <Item value="float" priority="1284" />
       <Item value="Vector2`0" priority="2463" />
       <Item value="aim" priority="127" />
@@ -149,7 +149,7 @@
       <Item value="strengthY" priority="31" />
       <Item value="SpriteTexture" priority="31" />
       <Item value="AssetManager`0" priority="543" />
-      <Item value="override" priority="1087" />
+      <Item value="override" priority="1183" />
       <Item value="static" priority="1759" />
       <Item value="List" priority="895" />
       <Item value="List&lt;EntityProjectile&gt;" priority="58" />
@@ -166,7 +166,7 @@
       <Item value="ProjectileArrow" priority="57" />
       <Item value="shouldDestroy" priority="159" />
       <Item value="true" priority="1344" />
-      <Item value="if" priority="7839" />
+      <Item value="if" priority="7999" />
       <Item value="Packet3SCRemoveProjectile`0" priority="63" />
       <Item value="projectileID" priority="31" />
       <Item value="EncodingInfo`0" priority="31" />
@@ -175,9 +175,9 @@
       <Item value="ProtocolFamily`0" priority="31" />
       <Item value="proj" priority="63" />
       <Item value="EntityProjectile" priority="28" />
-      <Item value="for" priority="671" />
-      <Item value="i" priority="2591" />
-      <Item value="Length" priority="595" />
+      <Item value="for" priority="703" />
+      <Item value="i" priority="2751" />
+      <Item value="Length" priority="703" />
       <Item value="GetFreeProjectileSlot`0" priority="31" />
       <Item value="nextslot" priority="128" />
       <Item value="continue" priority="863" />
@@ -228,7 +228,7 @@
       <Item value="enum" priority="188" />
       <Item value="Packet`0" priority="287" />
       <Item value="PlayerUpdating`0" priority="63" />
-      <Item value="NetworkPlayer`0" priority="991" />
+      <Item value="NetworkPlayer`0" priority="1023" />
       <Item value="NetworkPlayers" priority="127" />
       <Item value="List&lt;NetworkPlayer&gt;" priority="28" />
       <Item value="t" priority="768" />
@@ -334,7 +334,7 @@
       <Item value="BlockCollision`0" priority="31" />
       <Item value="Server" priority="31" />
       <Item value="serverContext" priority="159" />
-      <Item value="NetworkPlayer" priority="157" />
+      <Item value="NetworkPlayer" priority="253" />
       <Item value="playerOwner" priority="127" />
       <Item value="TimeHeldAttack" priority="255" />
       <Item value="OldMovementFlags" priority="31" />
@@ -372,7 +372,7 @@
       <Item value="ThePlayer" priority="95" />
       <Item value="pack" priority="31" />
       <Item value="GameEvents`0" priority="63" />
-      <Item value="ItemStack" priority="1303" />
+      <Item value="ItemStack" priority="1390" />
       <Item value="Rotation" priority="63" />
       <Item value="playerPos" priority="31" />
       <Item value="name" priority="159" />
@@ -390,11 +390,11 @@
       <Item value="Console`0" priority="223" />
       <Item value="OnConsoleOutput" priority="31" />
       <Item value="log" priority="63" />
-      <Item value="args" priority="319" />
+      <Item value="args" priority="383" />
       <Item value="port" priority="63" />
-      <Item value="try" priority="63" />
+      <Item value="try" priority="95" />
       <Item value="TheServer" priority="95" />
-      <Item value="catch" priority="63" />
+      <Item value="catch" priority="95" />
       <Item value="Exception`0" priority="31" />
       <Item value="NetException`0" priority="31" />
       <Item value="throw" priority="95" />
@@ -411,7 +411,7 @@
       <Item value="ts" priority="127" />
       <Item value="sixtyFPS" priority="63" />
       <Item value="Thread`0" priority="31" />
-      <Item value="ServerConsole`0" priority="528" />
+      <Item value="ServerConsole`0" priority="592" />
       <Item value="pl2" priority="31" />
       <Item value="command" priority="255" />
       <Item value="NotRunning" priority="16" />
@@ -560,7 +560,7 @@
       <Item value="Packet6SCPlayerAttack`0" priority="31" />
       <Item value="equippedItem" priority="31" />
       <Item value="Packet7SCPlayerCurItemChanged`0" priority="31" />
-      <Item value="itemID" priority="223" />
+      <Item value="itemID" priority="287" />
       <Item value="EquippedItem" priority="159" />
       <Item value="ItemSword`0" priority="31" />
       <Item value="TorsoAnimateable" priority="95" />
@@ -576,7 +576,7 @@
       <Item value="AttackPressed" priority="95" />
       <Item value="OldAttackPressed" priority="63" />
       <Item value="leftX" priority="31" />
-      <Item value="PlayerHealth" priority="31" />
+      <Item value="PlayerHealth" priority="95" />
       <Item value="ChatEntry`0" priority="63" />
       <Item value="HideChatEntry`0" priority="63" />
       <Item value="ChatLogField" priority="95" />
@@ -623,7 +623,7 @@
       <Item value="_itemID" priority="31" />
       <Item value="SendInventoryUpdate`0" priority="63" />
       <Item value="measure" priority="63" />
-      <Item value="ItemStack`0" priority="319" />
+      <Item value="ItemStack`0" priority="351" />
       <Item value="ItemID" priority="63" />
       <Item value="num" priority="223" />
       <Item value="NumberItems" priority="31" />
@@ -686,7 +686,7 @@
       <Item value="PlayerOfID`0" priority="31" />
       <Item value="pickerUpper" priority="31" />
       <Item value="EntityDroppedItem`0" priority="287" />
-      <Item value="it" priority="287" />
+      <Item value="it" priority="415" />
       <Item value="DroppedItemOfID`0" priority="95" />
       <Item value="EntityDroppedItem" priority="29" />
       <Item value="pos" priority="95" />
@@ -704,7 +704,7 @@
       <Item value="Dropper" priority="95" />
       <Item value="_timeAlive" priority="31" />
       <Item value="default" priority="63" />
-      <Item value="RemoveItemAt`0" priority="31" />
+      <Item value="RemoveItemAt`0" priority="63" />
       <Item value="PlayerInventorySelected" priority="159" />
       <Item value="InterfaceManager`0" priority="31" />
       <Item value="Keys`0" priority="31" />
@@ -724,7 +724,7 @@
       <Item value="RayCollisionResult" priority="28" />
       <Item value="Start" priority="289" />
       <Item value="End" priority="191" />
-      <Item value="end" priority="319" />
+      <Item value="end" priority="383" />
       <Item value="Slope" priority="353" />
       <Item value="B" priority="227" />
       <Item value="CurSlope" priority="127" />
@@ -901,7 +901,7 @@
       <Item value="GetPlayerItemStackFromInventory`0" priority="31" />
       <Item value="GetPlayerInventorySection`0" priority="95" />
       <Item value="inventory" priority="31" />
-      <Item value="RemoveItems`0" priority="31" />
+      <Item value="RemoveItems`0" priority="63" />
       <Item value="InventorySection" priority="31" />
       <Item value="section" priority="63" />
       <Item value="PlayerRefinedLength" priority="64" />
@@ -912,8 +912,8 @@
       <Item value="cur" priority="95" />
       <Item value="ServerItem" priority="28" />
       <Item value="PlayerInventory`0" priority="63" />
-      <Item value="Inventory" priority="415" />
-      <Item value="_armorSize" priority="159" />
+      <Item value="Inventory" priority="543" />
+      <Item value="_armorSize" priority="255" />
       <Item value="_bagSize" priority="159" />
       <Item value="EndOfRaw" priority="191" />
       <Item value="size" priority="63" />
@@ -922,9 +922,9 @@
       <Item value="PlayerController" priority="31" />
       <Item value="PlayerIndex`0" priority="31" />
       <Item value="sItem" priority="63" />
-      <Item value="maxStack" priority="159" />
-      <Item value="newTotal" priority="95" />
-      <Item value="newCur" priority="63" />
+      <Item value="maxStack" priority="255" />
+      <Item value="newTotal" priority="127" />
+      <Item value="newCur" priority="95" />
       <Item value="newNext" priority="31" />
       <Item value="XVel" priority="31" />
       <Item value="Packet12SCPlayerDeath`0" priority="31" />
@@ -932,7 +932,7 @@
       <Item value="PlayerClassHeavy`0" priority="63" />
       <Item value="thePlayer" priority="31" />
       <Item value="PlayerClasses" priority="31" />
-      <Item value="PClass" priority="159" />
+      <Item value="PClass" priority="255" />
       <Item value="time" priority="31" />
       <Item value="PlayerClassHeavy" priority="28" />
       <Item value="Type" priority="28" />
@@ -940,6 +940,10 @@
       <Item value="ShapeAABB" priority="57" />
       <Item value="origin" priority="63" />
       <Item value="Player" priority="31" />
+      <Item value="numToRemove" priority="31" />
+      <Item value="stackTemp" priority="95" />
+      <Item value="damage" priority="31" />
+      <Item value="Respawn`0" priority="63" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@System.Windows.Forms.Application">
       <Item value="ExecutablePath" priority="26" />
@@ -1278,7 +1282,9 @@
       <Item value="DropItem`0" priority="26" />
       <Item value="ActiveBuffs" priority="163" />
       <Item value="NetConnection" priority="26" />
-      <Item value="PClass" priority="53" />
+      <Item value="PClass" priority="80" />
+      <Item value="Inventory" priority="80" />
+      <Item value="HurtPlayer`0" priority="80" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@MiningGameServer.GameServer+GameEvents">
       <Item value="Player_Change_Name" priority="53" />
@@ -1327,7 +1333,7 @@
       <Item value="Title" priority="26" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@System.Convert">
-      <Item value="ToInt32`0" priority="80" />
+      <Item value="ToInt32`0" priority="107" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@MiningGameserver.ServerConsole">
       <Item value="Log`0" priority="188" />
@@ -1626,9 +1632,9 @@
       <Item value="ShouldRemove" priority="26" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:MiningGameServer.Structs.ItemStack">
-      <Item value="ItemID" priority="377" />
+      <Item value="ItemID" priority="431" />
       <Item value="Item" priority="162" />
-      <Item value="NumberItems" priority="297" />
+      <Item value="NumberItems" priority="405" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@System.Int16">
       <Item value="MaxValue" priority="53" />
@@ -1809,10 +1815,22 @@
     <ItemStatistics item="Qualified:MiningGameServer.Player.PlayerClass">
       <Item value="Equals`0" priority="26" />
       <Item value="WriteState`0" priority="26" />
+      <Item value="GetPlayerInventorySize`0" priority="26" />
+      <Item value="OnDeath`0" priority="53" />
+      <Item value="OnSpawn`0" priority="26" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:Microsoft.Xna.Framework.Graphics.Texture2D">
       <Item value="Width" priority="26" />
       <Item value="Height" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:MiningGameServer.PlayerClasses.PlayerInventory">
+      <Item value="PlayerInventorySelected" priority="26" />
+      <Item value="PickupItem`0" priority="26" />
+      <Item value="EmptyBag`0" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@MiningGameServer.ServerConsole">
+      <Item value="AddConCommand`0" priority="26" />
+      <Item value="Log`0" priority="26" />
     </ItemStatistics>
   </CompletionStatisticsManager>
   <NAntValidationSettings>

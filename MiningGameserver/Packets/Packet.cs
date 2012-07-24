@@ -88,6 +88,13 @@ namespace MiningGameServer.Packets
             return num;
         }
 
+        public long ReadLong()
+        {
+            long num = BitConverter.ToInt64(getData(), offset);
+            offset += 8;
+            return num;
+        }
+
         public char ReadChar()
         {
             char c = BitConverter.ToChar(getData(), offset);
@@ -141,6 +148,11 @@ namespace MiningGameServer.Packets
         }
 
         public void WriteSByte(sbyte toWrite)
+        {
+            WriteBytes(BitConverter.GetBytes(toWrite));
+        }
+
+        public void WriteLong(long toWrite)
         {
             WriteBytes(BitConverter.GetBytes(toWrite));
         }
