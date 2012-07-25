@@ -323,7 +323,8 @@ namespace MiningGame.Code
                     item = DroppedItemOfID(droppedID);
                     if (item == null || player == null) break;
                     item.MovingTowards = player;
-                    item.DroppedItemID = (short)-1;
+                    item.DroppedItemID = -1;
+                    item.Incomplete = false;
                     break;
 
                 case 10:
@@ -331,6 +332,16 @@ namespace MiningGame.Code
                     item = DroppedItemOfID(droppedID);
                     if (item != null)
                         DroppedItems.Remove(item);
+                    break;
+
+                case 12:
+                    droppedID = p.ReadShort();
+                    pickerUpper = p.ReadByte();
+                    player = PlayerOfID(pickerUpper);
+                    item = DroppedItemOfID(droppedID);
+                    if (item == null || player == null) break;
+                    item.MovingTowards = player;
+                    item.Incomplete = true;
                     break;
 
                 case 200:

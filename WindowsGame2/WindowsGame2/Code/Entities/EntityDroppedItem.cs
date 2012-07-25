@@ -21,6 +21,7 @@ namespace MiningGame.Code.Entities
         public short DroppedItemID;
 
         public bool ShouldDestroy;
+        public bool Incomplete = false;
 
         private int timeFlying = 0;
 
@@ -54,7 +55,10 @@ namespace MiningGame.Code.Entities
             {
                 if (MovingTowards == GameWorld.ThePlayer.PlayerEntity)
                     Main.SoundManager.PlaySound("collectitem");
-                ShouldDestroy = true;
+
+                ShouldDestroy = !Incomplete;
+                MovingTowards = null;
+                timeFlying = 0;
             }
             base.Update(time);
         }

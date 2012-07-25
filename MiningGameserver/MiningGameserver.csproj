@@ -135,6 +135,7 @@
     <Compile Include="Lidgren\SenderChannelBase.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Managers\ReflectionManager.cs" />
+    <Compile Include="Packets\Packet12SCItemPickedUpIncomplete.cs" />
     <Compile Include="Player\NetworkPlayer.cs" />
     <Compile Include="Packets\Packet.cs" />
     <Compile Include="Packets\Packet0CSPlayerConnect.cs" />

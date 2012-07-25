@@ -40,9 +40,26 @@ namespace MiningGameServer.Entities
 
         public void Pickup(NetworkPlayer picker)
         {
-            var packet = new Packet9SCItemPickedUp(DroppedItemID, picker.PlayerID);
-            GameServer.ServerNetworkManager.SendPacket(packet);
-            picker.Inventory.PickupItem(Stack);
+            int canPickup = picker.Inventory.CanPickup(Stack);
+            if (canPickup == 0)
+            {
+                var packet = new Packet9SCItemPickedUp(DroppedItemID, picker.PlayerID);
+                GameServer.ServerNetworkManager.SendPacket(packet);
+                picker.Inventory.PickupItem(Stack);
+                Delete();
+            }
+            else
+            {
+                if(canPickup != Stack.NumberItems)
+                {
+                    int pickingUp = Stack.NumberItems - canPickup;
+                    Stack.NumberItems = canPickup;
+
+                    var packet = new Packet12SCItemPickedUpIncomplete(DroppedItemID, picker.PlayerID);
+                    GameServer.ServerNetworkManager.SendPacket(packet);
+                    picker.Inventory.PickupItem(new ItemStack(pickingUp, Stack.ItemID));
+                }
+            }
         }
 
         public override void Update()
@@ -57,7 +74,8 @@ namespace MiningGameServer.Entities
             double closestDist = -1;
             foreach (NetworkPlayer player in GameServer.NetworkPlayers)
             {
-                if (player.Inventory.CanPickup(Stack) != 0) continue;
+                int canPickup = player.Inventory.CanPickup(Stack);
+                if (canPickup == Stack.NumberItems) continue;
                 //Dropping an item takes longer to pick up.
                 if (Dropper != null && player == Dropper && _timeAlive < 60)
                     continue;
@@ -67,7 +85,6 @@ namespace MiningGameServer.Entities
                 double dist = Math.Sqrt((dX * dX) + (dY * dY));
                 if (dist < closestDist || closestDist == -1)
                 {
-                    
                     closestDist = dist;
                     closest = player;
                 }
@@ -76,7 +93,6 @@ namespace MiningGameServer.Entities
             if (closestDist < 32 && closest != null)
             {
                 Pickup(closest);
-                Delete();
             }
 
             base.Update();
