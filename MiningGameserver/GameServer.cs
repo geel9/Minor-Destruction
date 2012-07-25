@@ -8,7 +8,6 @@ using MiningGameServer.Packets;
 using MiningGameServer;
 using MiningGameServer.Entities;
 using MiningGameServer.Items;
-using MiningGameServer.Packets;
 using MiningGameServer.Structs;
 
 namespace MiningGameServer
