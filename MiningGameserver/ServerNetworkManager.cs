@@ -27,8 +27,8 @@ namespace MiningGameServer
                 NetServer = new NetServer(np);
                 NetServer.Start();
             }
-            catch (NetException e)
-            {
+            catch (NetException e) {
+                System.Diagnostics.Debug.WriteLine(e.Message);
                 return false;
             }
             return true;

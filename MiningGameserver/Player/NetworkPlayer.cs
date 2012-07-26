@@ -13,8 +13,6 @@ using MiningGameServer;
 using MiningGameServer.Blocks;
 using MiningGameServer.Entities;
 using MiningGameServer.Items;
-using MiningGameServer.Packets;
-using MiningGameServer.Shapes;
 using ItemStack = MiningGameServer.Structs.ItemStack;
 
 namespace MiningGameServer
