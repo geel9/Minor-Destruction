@@ -9,7 +9,7 @@ namespace MiningGameServer.Blocks
     {
         public BlockRock(): base()
         {
-            this.SetBlockID(2).SetBlockName("Rock");
+            this.SetBlockID(2).SetBlockName("Rock").SetBlockMaxDamage(3);
         }
     }
 }

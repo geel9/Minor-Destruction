@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using GeeUI.Managers;
+using GeeUI.ViewLayouts;
+using Microsoft.Xna.Framework.Input;
 using MiningGame.Code.Items;
 using MiningGame.Code.Managers;
 using Microsoft.Xna.Framework;
@@ -13,27 +15,36 @@ namespace MiningGame.Code.Interfaces
 {
     class InGameInterface : Interface
     {
-        List<ButtonView> buttons = new List<ButtonView>();
-        //ProgressBar healthBar;
-        //ProgressBar manaBar;
+        List<ButtonView> _buttons = new List<ButtonView>();
+        List<ButtonView> _expandedButtons = new List<ButtonView>();
 
         public PanelView MainView;
-        public PanelView AttributesView;
+        public PanelView ExpandedView;
 
-        public int offset = 3;
-        public int curSelected = 0;
+        public int CurSelected = 0;
 
         public InGameInterface()
         {
-            MainView = new PanelView(GeeUI.GeeUI.RootView, Vector2.Zero);
-            MainView.Width = 800;
-            MainView.Height = 50;
-            MainView.Draggable = false;
+            MainView = new PanelView(GeeUI.GeeUI.RootView, Vector2.Zero) { Width = 800, Height = 50, Draggable = false };
 
-            AttributesView = new PanelView(GeeUI.GeeUI.RootView, InputManager.GetMousePosV());
-            AttributesView.Width = 200;
-            AttributesView.Height = 200;
-            AttributesView.Active = false;
+            //Create a new invisible view to limit the draggable range of the Expanded Inventory view.
+            View ContainerView = new View(GeeUI.GeeUI.RootView)
+            {
+                Width = 800,
+                Height = 450,
+                X = 0,
+                Y = 50
+            };
+            ExpandedView = new PanelView(ContainerView, new Vector2(0, 55))
+                               {
+                                   Width = 200,
+                                   Height = 200,
+                                   Active = false,
+                                   ChildrenLayout = new HorizontalViewLayout(20, true)
+                               };
+
+
+            BagSizeChange(20);
 
             Vector2 start = new Vector2(0, 0);
             start.X += 10;
@@ -56,41 +67,86 @@ namespace MiningGame.Code.Interfaces
                 };
 
 
-                buttons.Add(b);
+                _buttons.Add(b);
                 start.X += 70;
             }
 
             InputManager.BindMouse(() =>
             {
-                if (++curSelected >= 9)
-                    curSelected = 0;
-                BlockPressed(curSelected);
+                if (++CurSelected >= 9)
+                    CurSelected = 0;
+                BlockPressed(CurSelected);
             }, MouseButton.Scrollup);
             InputManager.BindMouse(() =>
             {
-                if (--curSelected < 0)
-                    curSelected = 8;
-                BlockPressed(curSelected);
+                if (--CurSelected < 0)
+                    CurSelected = 8;
+                BlockPressed(CurSelected);
             }, MouseButton.Scrolldown);
 
+            InputManager.BindKey(() =>
+            {
+                blocking = !blocking;
+                ExpandedView.Active = blocking;
+            }, Keys.C);
+        }
+
+        public void BagSizeChange(int newBagSize)
+        {
+            _expandedButtons.Clear();
+            for (int i = ExpandedView.Children.Length - 1; i >= 0; i--)
+            {
+                ExpandedView.RemoveChild(ExpandedView.Children[i]);
+            }
+            for (int i = 0; i < newBagSize - 10; i++)
+            {
+                ButtonView b = new ButtonView(ExpandedView, new ImageView(null, AssetManager.GetTexture("white")), Vector2.Zero) { Width = 25, Height = 25 };
+                new TextView(b, "10", new Vector2(0, 21), AssetManager.GetFont("Console2")) { TextColor = Color.White, Width = 25, Height = 10, TextJustification = TextJustification.Center };
+                _expandedButtons.Add(b);
+            }
         }
 
         public void RecomputeBoxes()
         {
             for (int i = 0; i < 9; i++)
             {
-                ((ImageView)buttons[i].ButtonContentview).Texture = AssetManager.GetTexture("white");
-                ((TextView)buttons[i].Children[1]).Text = "";
+                ((ImageView)_buttons[i].ButtonContentview).Texture = AssetManager.GetTexture("white");
+                ((TextView)_buttons[i].Children[1]).Text = "";
             }
 
-            for (int i = offset; i < offset + 9; i++)
+            for (int i = 3; i < 12; i++)
             {
                 ItemStack itemStack = GameWorld.ThePlayer.Inventory.Inventory[i];
                 Item item = Item.GetItem(itemStack.ItemID);
                 if (item == null) continue;
                 Texture2D tex = AssetManager.GetTexture(item.GetAsset());
-                ((ImageView)buttons[i - offset].ButtonContentview).Texture = tex;
-                ((TextView)buttons[i - offset].Children[1]).Text = itemStack.NumberItems > 0
+                ((ImageView)_buttons[i - 3].ButtonContentview).Texture = tex;
+                ((TextView)_buttons[i - 3].Children[1]).Text = itemStack.NumberItems > 0
+                                                               ? itemStack.NumberItems.ToString()
+                                                               : "";
+            }
+        }
+
+        public void RecomputeExpandedBoxes()
+        {
+            if (!blocking) return;
+
+            int bagSize = _expandedButtons.Count;
+
+            for (int i = 0; i < bagSize; i++)
+            {
+                ((ImageView)_expandedButtons[i].ButtonContentview).Texture = AssetManager.GetTexture("white");
+                ((TextView)_expandedButtons[i].Children[1]).Text = "";
+            }
+
+            for (int i = 0; i < bagSize; i++)
+            {
+                ItemStack itemStack = GameWorld.ThePlayer.Inventory.Inventory[i + 12];
+                Item item = Item.GetItem(itemStack.ItemID);
+                if (item == null) continue;
+                Texture2D tex = AssetManager.GetTexture(item.GetAsset());
+                ((ImageView)_expandedButtons[i].ButtonContentview).Texture = tex;
+                ((TextView)_expandedButtons[i].Children[1]).Text = itemStack.NumberItems > 0
                                                                ? itemStack.NumberItems.ToString()
                                                                : "";
             }
@@ -99,6 +155,7 @@ namespace MiningGame.Code.Interfaces
         public override void Update(GameTime time)
         {
             RecomputeBoxes();
+            RecomputeExpandedBoxes();
 
             //foreach (ImageButton im in buttons)
             //{
@@ -125,17 +182,17 @@ namespace MiningGame.Code.Interfaces
 
         public void BlockPressed(int i)
         {
-            int b = i + offset;
-            curSelected = b;
+            int b = i + 3;
+            CurSelected = b;
             GameWorld.ThePlayer.Inventory.PlayerInventorySelected = b;
             Packet p = new Packet1CSGameEvent(GameServer.GameEvents.Player_Inventory_Selection_Change, (byte)b);
             Main.clientNetworkManager.SendPacket(p);
 
             for (int j = 0; j < 9; j++)
             {
-                buttons[j].NinePatchNormal = GeeUI.GeeUI.NinePatchBtnDefault;
+                _buttons[j].NinePatchNormal = GeeUI.GeeUI.NinePatchBtnDefault;
             }
-            buttons[i].NinePatchNormal = GeeUI.GeeUI.NinePatchBtnClicked;
+            _buttons[i].NinePatchNormal = GeeUI.GeeUI.NinePatchBtnClicked;
         }
     }
 }

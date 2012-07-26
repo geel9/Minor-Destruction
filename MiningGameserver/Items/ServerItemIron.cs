@@ -11,10 +11,5 @@ namespace MiningGameServer.Items
         {
             SetName("Iron").SetDescription("I am iron man").SetValue(7).SetID(4).SetBlockID(3);
         }
-        public override void OnItemUsed(int x, int y, NetworkPlayer user)
-        {
-            GameServer.SetBlock(x, y, 200);
-            //throw new NotImplementedException();
-        }
     }
 }

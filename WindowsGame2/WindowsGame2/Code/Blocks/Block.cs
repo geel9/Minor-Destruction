@@ -302,6 +302,7 @@ namespace MiningGame.Code.Blocks
     {
         public short ID;
         public byte MetaData;
+        public byte Damage;
         public Block Block
         {
             get { return Block.GetBlock(ID); }

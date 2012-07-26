@@ -50,7 +50,6 @@ namespace MiningGameServer.Entities
 
             foreach (Vector2 newTile in newTiles)
             {
-
                 BlockData blockData = GameServer.GetBlockAt(newTile.X, newTile.Y);
 
                 if (blockData.ID == 0) continue;
@@ -69,7 +68,6 @@ namespace MiningGameServer.Entities
 
                 if (collide.XSmaller)
                 {
-                    bool right = (collide.X < 0);
                     if (!walkThrough)
                     {
                         EntityVelocity.X = 0;
@@ -79,30 +77,17 @@ namespace MiningGameServer.Entities
                 }
                 else
                 {
-                    bool up = (collide.Y > 0);
-
                     if (!walkThrough)
                     {
                         EntityVelocity.Y = 0;
                         EntityPosition.Y = (newEntityPosition.Y + collide.Y);
-                        ShouldDestroy = true;   
+                        ShouldDestroy = true;
                     }
                 }
 
-                if(ShouldDestroy)
+                if (ShouldDestroy)
                 {
-                    byte dropID = blockData.Block.GetItemDrop((int)newTile.X, (int)newTile.Y);
-                    int num = blockData.Block.GetItemDropNum((int)newTile.X, (int)newTile.Y);
-
-                    GameServer.SetBlock((int)newTile.X, (int)newTile.Y, 0);
-
-                    if (dropID != 0 && num > 0)
-                    {
-                        ItemStack stack = new ItemStack(num, dropID);
-                        Vector2 pos = newTile * GameServer.BlockSize;
-                        pos += new Vector2(GameServer.BlockSize / 2);
-                        GameServer.DropItem(stack, pos);
-                    }
+                    GameServer.HurtBlock((int)newTile.X, (int)newTile.Y, 1);
                     break;
                 }
             }
@@ -124,7 +109,7 @@ namespace MiningGameServer.Entities
                     break;
                 }
             }
-            if(playerOwner == null)
+            if (playerOwner == null)
             {
                 ShouldDestroy = true;
                 return;

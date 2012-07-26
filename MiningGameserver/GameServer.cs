@@ -176,6 +176,54 @@ namespace MiningGameServer
             }
         }
 
+
+        /// <summary>
+        /// "Hurts" a block. Will automatically gib if enough damage is done.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="damage"></param>
+        public static void HurtBlock(int x, int y, byte damage)
+        {
+            if (x >= WorldSizeX || y >= WorldSizeY || x < 0 || y < 0) return;
+            BlockData data = WorldBlocks[x, y];
+            int maxDamage = data.Block.GetBlockMaxDamage();
+            if (data.ID == 0 || maxDamage == 0) return;
+
+            data.Damage += damage;
+            if (data.Damage >= maxDamage)
+            {
+                DestroyBlockGib(x, y);
+                data.Damage = 0;
+            }
+        }
+
+        /// <summary>
+        /// Destroys a block. Will cause gibbing.
+        /// </summary>
+        /// <param name="x">X Co-ordinate of the block</param>
+        /// <param name="y">Y Co-ordinate of the block</param>
+        public static void DestroyBlockGib(int x, int y)
+        {
+            if (x >= WorldSizeX || y >= WorldSizeY || x < 0 || y < 0) return;
+            BlockData data = WorldBlocks[x, y];
+            int maxDamage = data.Block.GetBlockMaxDamage();
+            if (data.ID == 0 || maxDamage == 0) return;
+
+            byte dropID = data.Block.GetItemDrop(x, y);
+            int num = data.Block.GetItemDropNum(x, y);
+
+            SetBlock(x, y, 0);
+
+            if (dropID != 0 && num > 0)
+            {
+                ItemStack stack = new ItemStack(num, dropID);
+                Vector2 pos = new Vector2(x, y) * BlockSize;
+                pos += new Vector2(BlockSize / 2);
+                DropItem(stack, pos);
+            }
+        }
+
         public static void SetBlock(int x, int y, short blockID, bool notify = true, byte metaData = 0)
         {
             if (x < WorldSizeX && y < WorldSizeY && blockID >= 0)
@@ -188,9 +236,6 @@ namespace MiningGameServer
 
                 if (blockID != 0)
                     Block.GetBlock(blockID).OnBlockPlaced(x, y, notify);
-
-                //Packet1SCGameEvent pack = new Packet1SCGameEvent((byte)GameEvents.Block_Set, x, y, blockID, metaData);
-                // Main.serverNetworkManager.SendPacket(pack);
             }
         }
 

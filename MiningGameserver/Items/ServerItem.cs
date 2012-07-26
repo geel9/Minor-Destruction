@@ -5,6 +5,7 @@ using System.Reflection;
 using MiningGameServer;
 using MiningGameServer.Items;
 using MiningGameServer.Managers;
+using MiningGameServer.Player;
 
 namespace MiningGameServer.Items
 {
@@ -42,7 +43,7 @@ namespace MiningGameServer.Items
             //Replacing the manual method of adding them
             //With reflection.
             Type[] types = ReflectionManager.GetAllSubClassesOf<ServerItem>();
-            foreach(Type t in types)
+            foreach (Type t in types)
             {
                 ReflectionManager.CallConstructor(t);
             }
@@ -58,7 +59,7 @@ namespace MiningGameServer.Items
             _itemWorth = value;
             return this;
         }
-        
+
         public ServerItem SetName(string name)
         {
             _itemName = name;
@@ -70,7 +71,12 @@ namespace MiningGameServer.Items
             _maxStack = max;
             return this;
         }
-     
+
+        public ServerItem SetClassesPickup(params int[] classes)
+        {
+            _classesCanPickup = classes;
+            return this;
+        }
 
         public ServerItem SetID(byte id)
         {
@@ -120,10 +126,36 @@ namespace MiningGameServer.Items
             return _itemID;
         }
 
+        /// <summary>
+        /// Returns true if a class can pick up this item
+        /// </summary>
+        /// <param name="pClass">The PlayerClass to test against</param>
+        public bool CanPickup(PlayerClass pClass)
+        {
+            if (_classesCanPickup.Length == 0) return true;
+            for(int i = 0; i < PlayerClass.PlayerClasses.Length; i++)
+            {
+                if(pClass.GetType() == PlayerClass.PlayerClasses[i])
+                {
+                    return CanPickup(i);
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if a class (specified by index) can pick up this item
+        /// </summary>
+        /// <param name="PClassIndex">The index of the class</param>
+        public bool CanPickup(int PClassIndex)
+        {
+            return _classesCanPickup.Contains(PClassIndex);
+        }
+
         public virtual void OnItemUsed(int x, int y, NetworkPlayer user)
         {
             short block = GameServer.GetBlockAt(x, y).ID;
-            if(block == 0 && _blockID != 0)
+            if (block == 0 && _blockID != 0)
             {
                 GameServer.SetBlock(user, x, y, _blockID);
                 user.Inventory.RemoveItemsAtSlot(user.Inventory.PlayerInventorySelected, _itemID, 1);
@@ -142,5 +174,7 @@ namespace MiningGameServer.Items
         private short _blockID = 0;
         private int _maxStack = 20;
         public int InventorySection = 0;
+        //If it's 0-length then any class can pick it up
+        private int[] _classesCanPickup = new int[0];
     }
 }

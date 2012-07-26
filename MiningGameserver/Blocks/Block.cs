@@ -27,6 +27,8 @@ namespace MiningGameServer.Blocks
         private Color _blockColor;
         private bool _hideBlock;
         private bool _pistonable;
+        //Blocks should be very weak by default.
+        private byte _maxDamage = 1;
         private static Random _random = new Random();
 
         public static void GenerateBlocks()
@@ -62,11 +64,7 @@ namespace MiningGameServer.Blocks
                 AllBlocks.Add(this);
                 return this;
             }
-            else
-            {
-                //Managers.ConsoleManager.Log("Block " + GetBlockName() + " (" + GetBlockID() + ") is already in list", Color.Red);
-                return this;
-            }
+            return this;
         }
 
         public static Block GetBlock(short blockID)
@@ -74,16 +72,6 @@ namespace MiningGameServer.Blocks
             IEnumerable<Block> query = AllBlocks.Where(x => x._blockID == blockID);
             return (query.Count() > 0) ? query.First() : new Block();
         }
-
-        private void BlockPlaced(int x, int y, bool notify = true)
-        {
-        }
-
-        private void BlockRemoved(int x, int y)
-        {
-
-        }
-
 
         public Block SetBlockID(short id)
         {
@@ -137,6 +125,18 @@ namespace MiningGameServer.Blocks
         {
             SetBlockRenderSpecial(false);
             _blockColor = c;
+            return this;
+        }
+
+        public Block SetBlockMaxDamage(byte maxDamage)
+        {
+            _maxDamage = maxDamage;
+            return this;
+        }
+
+        public Block SetBlockInvincible()
+        {
+            _maxDamage = 0;
             return this;
         }
 
@@ -202,6 +202,11 @@ namespace MiningGameServer.Blocks
             return _blockWalkThrough;
         }
 
+        public byte GetBlockMaxDamage()
+        {
+            return _maxDamage;
+        }
+
         public bool GetBlockHide()
         {
             return _hideBlock;
@@ -258,6 +263,7 @@ namespace MiningGameServer.Blocks
     {
         public short ID;
         public byte MetaData;
+        public byte Damage;
         public Block Block
         {
             get
@@ -270,11 +276,12 @@ namespace MiningGameServer.Blocks
         {
             p.WriteShort(ID);
             p.WriteByte(MetaData);
+            p.WriteByte(Damage);
         }
 
         public BlockData Read(Packet p)
         {
-            return new BlockData { ID = p.ReadShort(), MetaData = p.ReadByte() };
+            return new BlockData { ID = p.ReadShort(), MetaData = p.ReadByte(), Damage = p.ReadByte()};
         }
     }
 }

@@ -125,6 +125,7 @@ namespace MiningGame.Code
         {
             if (ThePlayer.PlayerEntity == null) return;
             Vector2 playerTile = AbsoluteToTile(ThePlayer.PlayerEntity.EntityPosition);
+
             Rectangle cameraBounds = CameraManager.cameraBoundBox;
             int blockStartX = (int)MathHelper.Clamp(cameraBounds.Left / BlockSize, 0, WorldSizeX - 1);
             int blockStartY = (int)MathHelper.Clamp(cameraBounds.Top / BlockSize, 0, WorldSizeY - 1);
@@ -168,6 +169,14 @@ namespace MiningGame.Code
                             sb.Draw(renderer.Texture, drawPos - new Vector2(BlockSize / 2, BlockSize / 2), null, Color.White,
                                     renderer.Rotation, Vector2.Zero, (flag ? digMult : (BlockSize / 16f)),
                                     renderer.Effects, 0);
+
+                            if(blockID.Damage > 0)
+                            {
+                                //For now, let's set the max damage to 3.
+                                byte redOpacity = (byte)(blockID.Damage / 3f * 200);
+                                DrawManager.DrawBox(block.GetBlockBoundBox(x, y), Color.Red, sb, 0, redOpacity);
+                            }
+
                             if (renderer.Transparent)
                                 drawBackground = true;
                         }

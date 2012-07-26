@@ -6,7 +6,7 @@ namespace MiningGameServer.Blocks
     {
         public BlockDirt() : base()
         {
-           this.SetBlockID(1).SetBlockName("Dirt");
+            this.SetBlockID(1).SetBlockName("Dirt").SetBlockMaxDamage(2);
         }
         public override byte GetItemDrop(int x, int y)
         {

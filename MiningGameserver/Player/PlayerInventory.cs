@@ -183,17 +183,16 @@ namespace MiningGameServer.PlayerClasses
             if (end > Inventory.Length) end = Inventory.Length;
 
 
-            if (item.NumberItems > serverItem.GetMaxStack())
-            {
-                stack2 = new ItemStack(item.NumberItems - serverItem.GetMaxStack(), serverItem.GetItemID());
-                item.NumberItems = serverItem.GetMaxStack();
-            }
-
             for (int i = start; i < end; i++)
             {
                 ItemStack it = Inventory[i];
                 if (it.ItemID == 0)
                 {
+                    if (item.NumberItems > serverItem.GetMaxStack())
+                    {
+                        stack2 = new ItemStack(item.NumberItems - serverItem.GetMaxStack(), serverItem.GetItemID());
+                        item.NumberItems = serverItem.GetMaxStack();
+                    }
                     Inventory[i] = item;
                     Packet pack = new Packet1SCGameEvent(GameServer.GameEvents.Player_Inventory_Update, (byte)i, (byte)Inventory[i].ItemID, Inventory[i].NumberItems);
                     GameServer.ServerNetworkManager.SendPacket(pack, NetworkPlayer.NetConnection);

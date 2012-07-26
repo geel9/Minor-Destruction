@@ -50,7 +50,7 @@ namespace MiningGameServer.Entities
             }
             else
             {
-                if(canPickup != Stack.NumberItems)
+                if (canPickup != Stack.NumberItems)
                 {
                     int pickingUp = Stack.NumberItems - canPickup;
                     Stack.NumberItems = canPickup;
@@ -76,6 +76,7 @@ namespace MiningGameServer.Entities
             {
                 int canPickup = player.Inventory.CanPickup(Stack);
                 if (canPickup == Stack.NumberItems) continue;
+                if (!Stack.Item.CanPickup(player.PClass)) continue;
                 //Dropping an item takes longer to pick up.
                 if (Dropper != null && player == Dropper && _timeAlive < 60)
                     continue;

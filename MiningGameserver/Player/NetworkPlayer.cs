@@ -377,7 +377,7 @@ namespace MiningGameServer
                     ShapeAABB bound2 = new ShapeAABB(block.Block.GetBlockBoundBox((int)v.X, (int)v.Y));
                     if (bound2.Intersects(bound))
                     {
-                        GameServer.SetBlock((int)v.X, (int)v.Y, 0);
+                        GameServer.HurtBlock((int)v.X, (int)v.Y, 2);
                     }
                 }
             }

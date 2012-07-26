@@ -31,7 +31,7 @@ namespace MiningGameServer.Player
 
         public override int GetPlayerInventorySize()
         {
-            return 5;
+            return 20;
         }
 
         public PlayerClassDestroyer(NetworkPlayer player)
