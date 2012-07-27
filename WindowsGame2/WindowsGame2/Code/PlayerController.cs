@@ -4,6 +4,7 @@ using System.Linq;
 using GeeUI.Managers;
 using MiningGame.Code.CInterfaces;
 using MiningGame.Code.Items;
+using MiningGame.Code.Interfaces;
 using MiningGame.Code.Managers;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
@@ -131,10 +132,7 @@ namespace MiningGame.Code
                     Main.clientNetworkManager.SendPacket(pack);
                 }
             }, Keys.S, true);
-
-            InputManager.BindKey(() =>
-            {
-            }, Keys.S, true, false);
+            // Duplicate was present
 
             InputManager.BindMouse(() =>
             {
@@ -177,6 +175,20 @@ namespace MiningGame.Code
                     Main.clientNetworkManager.SendPacket(p);
                 }
             }, Keys.E, false);
+
+            InputManager.BindKey(() =>
+            {
+                ChatInterface.AddChat(new ChatEntry("GAME", "Pressed Q", Color.AliceBlue, true));
+                if (InterfaceManager.blocking) return;
+                Vector2 aim = PlayerEntity.GetBlockAimingAt();
+                short id = GameWorld.GetBlockAt(aim.X, aim.Y).ID;
+                if (id != 0) {
+                    Packet1CSGameEvent p = new Packet1CSGameEvent(GameServer.GameEvents.Player_Pickup_Block, (short)aim.X, (short)aim.Y);
+                    Main.clientNetworkManager.SendPacket(p);
+                    ChatInterface.AddChat(new ChatEntry("GAME", "Deleting Block", Color.AliceBlue, true));
+                }
+            }, Keys.Q, false);
+
 
             InputManager.BindMouse(() =>
             {

@@ -47,12 +47,7 @@ namespace MiningGame.Code.Interfaces
             BagSizeChange(20);
 
             Vector2 start = new Vector2(0, 0);
-            start.X += 10;
-            start.Y += 10;
-
             base.blocking = false;
-
-            start.Y += 20;
             start.Y = 10;
             start.X = 50;
 

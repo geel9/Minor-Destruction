@@ -57,28 +57,25 @@ namespace MiningGame.Code.Entities
                 if (!collide.IsIntersecting) continue;
 
 
-                if (collide.XSmaller)
-                {
+                if (collide.XSmaller){
                     bool right = (collide.X < 0);
-                    if (!walkThrough)
-                    {
+                    if (!walkThrough) {
                         EntityVelocity.X = 0;
                         EntityPosition.X = (newEntityPosition.X + collide.X);
+                        ShouldDestroy = true;
                         break;
                     }
-                }
-                else
-                {
+                } else {
                     bool up = (collide.Y > 0);
 
-                    if (!walkThrough)
-                    {
+                    if (!walkThrough){
                         EntityVelocity.Y = 0;
                         EntityPosition.Y = (newEntityPosition.Y + collide.Y);
                         ShouldDestroy = true;
                         break;
                     }
                 }
+
             }
         }
 

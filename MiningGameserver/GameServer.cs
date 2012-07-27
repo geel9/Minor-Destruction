@@ -433,6 +433,12 @@ namespace MiningGameServer
                     b.OnBlockUsed(x, y);
                     break;
 
+                case GameEvents.Player_Pickup_Block:
+                    x = p.ReadShort();
+                    y = p.ReadShort();
+                    DestroyBlockGib(x, y);
+                    break;
+
                 case GameEvents.Player_Inventory_Selection_Change:
                     player.SetPlayerEquippedSlot(p.ReadByte());
                     player.SendEquippedItemUpdate();
@@ -536,7 +542,8 @@ namespace MiningGameServer
             Player_Direction,
             Player_Animation,
             Player_Change_Name,
-            Player_Drop_Item
+            Player_Drop_Item,
+            Player_Pickup_Block
         }
     }
 }

@@ -85,8 +85,7 @@ namespace MiningGameServer.Entities
                     }
                 }
 
-                if (ShouldDestroy)
-                {
+                if (ShouldDestroy) {
                     GameServer.HurtBlock((int)newTile.X, (int)newTile.Y, 1);
                     break;
                 }

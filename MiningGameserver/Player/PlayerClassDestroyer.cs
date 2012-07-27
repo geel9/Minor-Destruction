@@ -20,6 +20,7 @@ namespace MiningGameServer.Player
         public override void OnSpawn()
         {
             NetworkPlayer.Inventory.PickupItem(new ItemStack(1, 201));
+            NetworkPlayer.Inventory.PickupItem(new ItemStack(1, 200));
             base.OnSpawn();
         }
 

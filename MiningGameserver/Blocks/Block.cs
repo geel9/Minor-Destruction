@@ -176,6 +176,10 @@ namespace MiningGameServer.Blocks
         {
 
         }
+        public virtual void OnBlockPickup(int x, int y)
+        {
+            GameServer.UnscheduleUpdate(x, y);
+        }
 
         public int OnBlockUpdate(int x, int y)
         {
