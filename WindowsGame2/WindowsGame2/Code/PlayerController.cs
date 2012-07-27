@@ -178,16 +178,25 @@ namespace MiningGame.Code
 
             InputManager.BindKey(() =>
             {
-                ChatInterface.AddChat(new ChatEntry("GAME", "Pressed Q", Color.AliceBlue, true));
                 if (InterfaceManager.blocking) return;
+                if (PlayerEntity.PClass is PlayerClassDestroyer == false)
+                    return;
+
+                PlayerClassDestroyer c = (PlayerClassDestroyer)PlayerEntity.PClass;
                 Vector2 aim = PlayerEntity.GetBlockAimingAt();
                 short id = GameWorld.GetBlockAt(aim.X, aim.Y).ID;
+
+                if(c.BlockInHand != 0)
+                {
+                    Packet1CSGameEvent p = new Packet1CSGameEvent(GameServer.GameEvents.Player_Place_Block);
+                    Main.clientNetworkManager.SendPacket(p);
+                    return;
+                }
                 if (id != 0) {
                     Packet1CSGameEvent p = new Packet1CSGameEvent(GameServer.GameEvents.Player_Pickup_Block, (short)aim.X, (short)aim.Y);
                     Main.clientNetworkManager.SendPacket(p);
-                    ChatInterface.AddChat(new ChatEntry("GAME", "Deleting Block", Color.AliceBlue, true));
                 }
-            }, Keys.Q, false);
+            }, Keys.Q);
 
 
             InputManager.BindMouse(() =>

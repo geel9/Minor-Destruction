@@ -333,9 +333,11 @@ namespace MiningGameServer
 
             EntityMovement();
 
-            PClass.Update_PostPhys(theTime);
+            bool movedSince = oldPos != EntityPosition;
 
-            if (oldPos != EntityPosition)
+            PClass.Update_PostPhys(theTime, movedSince);
+
+            if (movedSince)
             {
                 UpdateMask |= (int)PlayerUpdateFlags.Player_Update;
                 UpdateMask |= (int)PlayerUpdateFlags.Player_Position;

@@ -8,6 +8,7 @@ using MiningGameServer.Packets;
 using MiningGameServer;
 using MiningGameServer.Entities;
 using MiningGameServer.Items;
+using MiningGameServer.Player;
 using MiningGameServer.Structs;
 
 namespace MiningGameServer
@@ -271,6 +272,11 @@ namespace MiningGameServer
             return GetBlockAt((int)x, (int)y);
         }
 
+        internal static BlockData GetBlockAt(Vector2 location)
+        {
+            return GetBlockAt((int)location.X, (int)location.Y);
+        }
+
         public static bool CanWalkThrough(byte id)
         {
             return Block.GetBlock(id).GetBlockWalkThrough();
@@ -389,7 +395,7 @@ namespace MiningGameServer
 
                     packet.WriteByte(p.PlayerID);
                     packet.WriteByte(realUpdateMask);
-                    p.PClass.WriteState(packet);
+
                     if ((p.UpdateMask & (int)PlayerUpdateFlags.Player_Position) != 0)
                     {
                         packet.WriteShort((short)p.EntityPosition.X);
@@ -399,12 +405,20 @@ namespace MiningGameServer
                     {
                         packet.WriteByte(p.MovementFlags);
                     }
+
+                    if ((p.UpdateMask & (int)PlayerUpdateFlags.Player_Class_Update) != 0)
+                    {
+                        p.PClass.WriteState(packet);
+                    }
                 }
                 ServerNetworkManager.SendPacket(packet, t.NetConnection);
             }
 
             foreach (NetworkPlayer t in NetworkPlayers)
+            {
                 t.UpdateMask = 0;
+                t.PClass.ClearUpdateMask();
+            }
         }
 
         public static void HandleGameEvent(byte eventID, Packet p, NetworkPlayer player)
@@ -436,7 +450,17 @@ namespace MiningGameServer
                 case GameEvents.Player_Pickup_Block:
                     x = p.ReadShort();
                     y = p.ReadShort();
-                    DestroyBlockGib(x, y);
+                    if(player.PClass is PlayerClassDestroyer)
+                    {
+                        ((PlayerClassDestroyer)player.PClass).PickupBlock(new Vector2(x, y));
+                    }
+                    break;
+
+                case GameEvents.Player_Place_Block:
+                    if (player.PClass is PlayerClassDestroyer)
+                    {
+                        ((PlayerClassDestroyer)player.PClass).PlaceBlock();
+                    }
                     break;
 
                 case GameEvents.Player_Inventory_Selection_Change:
@@ -543,7 +567,8 @@ namespace MiningGameServer
             Player_Animation,
             Player_Change_Name,
             Player_Drop_Item,
-            Player_Pickup_Block
+            Player_Pickup_Block,
+            Player_Place_Block
         }
     }
 }

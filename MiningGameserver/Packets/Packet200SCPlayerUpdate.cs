@@ -12,6 +12,7 @@
     {
         Player_Update = 1,
         Player_Position = 2,
-        Player_Movement_Flags = 4
+        Player_Movement_Flags = 4,
+        Player_Class_Update = 8
     }
 }

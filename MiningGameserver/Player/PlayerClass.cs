@@ -48,9 +48,20 @@ namespace MiningGameServer.Player
             
         }
 
-        public virtual void Update_PostPhys(GameTime time)
+        public virtual void Update_PostPhys(GameTime time, bool movedSince = false)
         {
 
+        }
+
+        protected void MarkClassFlagsUpdate()
+        {
+            NetworkPlayer.UpdateMask |= (byte) PlayerUpdateFlags.Player_Update;
+            NetworkPlayer.UpdateMask |= (byte)PlayerUpdateFlags.Player_Class_Update;
+        }
+
+        public virtual void ClearUpdateMask()
+        {
+            
         }
 
         //This is so that each class can have as much data defining their state as necessary.

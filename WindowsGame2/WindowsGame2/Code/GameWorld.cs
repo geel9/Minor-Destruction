@@ -170,7 +170,7 @@ namespace MiningGame.Code
                                     renderer.Rotation, Vector2.Zero, (flag ? digMult : (BlockSize / 16f)),
                                     renderer.Effects, 0);
 
-                            if(blockID.Damage > 0)
+                            if (blockID.Damage > 0)
                             {
                                 //For now, let's set the max damage to 3.
                                 byte redOpacity = (byte)(blockID.Damage / 3f * 200);
@@ -383,7 +383,7 @@ namespace MiningGame.Code
                 }
                 if (player == null) player = new PlayerEntity(Vector2.Zero, (byte)playerID);
                 byte updateMask = p.ReadByte();
-                player.PClass.ReadState(p);
+
 
                 if ((updateMask & (int)PlayerUpdateFlags.Player_Position) != 0)
                 {
@@ -418,6 +418,11 @@ namespace MiningGame.Code
                         player.TorsoAnimateable.StartLooping("player_idle", "player_idle");
                         player.LegsAnimateable.StartLooping("player_idle", "player_idle");
                     }
+                }
+
+                if ((updateMask & (int)PlayerUpdateFlags.Player_Class_Update) != 0)
+                {
+                    player.PClass.ReadState(p);
                 }
             }
         }
