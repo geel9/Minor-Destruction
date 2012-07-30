@@ -143,6 +143,7 @@
     <Compile Include="Code\Entities\PlayerEntity.cs" />
     <Compile Include="Code\Entities\ProjectileArrow.cs" />
     <Compile Include="Code\GameModes\ClientGameMode.cs" />
+    <Compile Include="Code\GameModes\CPGameMode.cs" />
     <Compile Include="Code\GameModes\CTFGameMode.cs" />
     <Compile Include="Code\GameWorld.cs" />
     <Compile Include="Code\Interfaces\ChatInterface.cs" />

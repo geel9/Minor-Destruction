@@ -12,17 +12,18 @@
             short blockID = GameServer.GetBlockAt(x, y).ID;
             short blockUpID = GameServer.GetBlockAt(x, y - 1).ID;
             short blockDownID = GameServer.GetBlockAt(x, y + 1).ID;
+            byte metaData = (byte)player.PlayerTeam;
             if (blockID != 0) return;
 
             if (blockUpID != 0 && blockUpID != 11 && blockDownID == 0)
             {
-                GameServer.SetBlock(x, y, 4);
-                GameServer.SetBlock(x, y + 1, 4);
+                GameServer.SetBlock(x, y, 4, true, metaData);
+                GameServer.SetBlock(x, y + 1, 4, true, metaData);
             }
             if (blockDownID != 0 && blockDownID != 11 && blockUpID == 0)
             {
-                GameServer.SetBlock(x, y, 4);
-                GameServer.SetBlock(x, y - 1, 4);
+                GameServer.SetBlock(x, y, 4, true, metaData);
+                GameServer.SetBlock(x, y - 1, 4, true, metaData);
             }
             //throw new NotImplementedException();
         }

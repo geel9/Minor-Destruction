@@ -50,7 +50,7 @@ namespace MiningGame.Code
                     WorldBlocks[x, y] = new BlockData();
             }
 
-            GameMode = (ClientGameMode)ReflectionManager.CallConstructor(ClientGameMode.GetGameMode("MDCore"));
+            GameMode = (ClientGameMode)ReflectionManager.CallConstructor(ClientGameMode.GetGameMode("Control Points"));
         }
 
         public static List<Vector2> LineIntersections(Vector2 p1, Vector2 p2)
@@ -137,6 +137,9 @@ namespace MiningGame.Code
         public void Draw(SpriteBatch sb)
         {
             if (ThePlayer.PlayerEntity == null) return;
+
+            GameMode.Draw_PreWorld(sb);
+
             Vector2 playerTile = AbsoluteToTile(ThePlayer.PlayerEntity.EntityPosition);
 
             Rectangle cameraBounds = CameraManager.cameraBoundBox;
@@ -223,6 +226,8 @@ namespace MiningGame.Code
             {
                 projectile.Draw(sb);
             }
+
+            GameMode.Draw_PostWorld(sb);
         }
 
         public static Vector2 AbsoluteToTile(Vector2 tile)

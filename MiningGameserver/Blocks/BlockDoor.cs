@@ -26,9 +26,12 @@ namespace MiningGameServer.Blocks
         }
         public override void OnBlockUsed(int x, int y, NetworkPlayer user)
         {
-            bool above = GameServer.GetBlockAt(x, y - 1).ID == 4;
             byte metaData = GameServer.GetBlockAt(x, y).MetaData;
+            bool above = GameServer.GetBlockAt(x, y - 1).ID == 4;
             bool open = metaData.BitSet(1);
+            bool isRedTeam = metaData.BitSet(0);
+            int teamRequired = isRedTeam ? 1 : 0;
+            if (user.PlayerTeam != teamRequired) return;
             if (open)
             {
                 metaData = metaData.SetBit(1, false);

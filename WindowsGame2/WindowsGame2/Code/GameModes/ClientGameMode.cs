@@ -85,6 +85,16 @@ namespace MiningGame.Code.GameModes
             
         }
 
+        public virtual void Draw_PreWorld(SpriteBatch sb)
+        {
+
+        }
+
+        public virtual void Draw_PostWorld(SpriteBatch sb)
+        {
+
+        }
+
         public virtual void OnPlayerUpdate(PlayerEntity player)
         {
             

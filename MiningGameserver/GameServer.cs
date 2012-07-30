@@ -50,7 +50,7 @@ namespace MiningGameServer
                 }
                 GenerateWorld();
                 ServerGameMode.GenerateGameModes();
-                GameMode = (ServerGameMode)ReflectionManager.CallConstructor(ServerGameMode.GetGameMode("MDCore"));
+                GameMode = (ServerGameMode)ReflectionManager.CallConstructor(ServerGameMode.GetGameMode("Control Points"));
                 GameMode.OnGameModeChosen();
                 ServerItem.MakeItems();
                 Block.GenerateBlocks();
