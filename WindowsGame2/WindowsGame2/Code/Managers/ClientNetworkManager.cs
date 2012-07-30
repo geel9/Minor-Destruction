@@ -61,7 +61,7 @@ namespace MiningGame.Code.Managers
         public void SendPacket(Packet p, NetDeliveryMethod method = NetDeliveryMethod.ReliableOrdered)
         {
             //if (!isConnected()) return;
-            byte[] data = p.getData();
+            byte[] data = p.GetData();
             NetOutgoingMessage om = NetClient.CreateMessage();
             om.Write(data);
             NetClient.SendMessage(om, method);

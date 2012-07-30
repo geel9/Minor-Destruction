@@ -21,6 +21,8 @@ namespace MiningGameServer
     {
         public byte PlayerID = 0;
 
+        public int PlayerClass = 0;
+
         public int PlayerWidth
         {
             get { return PClass.BoundBox.Width; }
@@ -208,7 +210,8 @@ namespace MiningGameServer
                         oneX = x;
                         oneY = startY + i;
                     }
-                    PlayerBlockCache[oneX, oneY] = GameServer.WorldBlocks[oneX, oneY];
+                    PlayerBlockCache[oneX, oneY].ID = GameServer.WorldBlocks[oneX, oneY].ID;
+                    PlayerBlockCache[oneX, oneY].MetaData = GameServer.WorldBlocks[oneX, oneY].MetaData;
                     Packet packet2 = new Packet1SCGameEvent(GameServer.GameEvents.Block_Set, (short)oneX, (short)oneY, GameServer.WorldBlocks[oneX, oneY].ID, GameServer.WorldBlocks[oneX, oneY].MetaData);
                     GameServer.ServerNetworkManager.SendPacket(packet2, NetConnection);
                     continue;
@@ -239,7 +242,7 @@ namespace MiningGameServer
                 p.WriteShort(startY);
                 p.WriteLong(maskID);
                 p.WriteLong(maskMD);
-                p.WriteBytes(packet.getData());
+                p.WriteBytes(packet.GetData());
                 GameServer.ServerNetworkManager.SendPacket(p, NetConnection);
             }
         }
@@ -250,6 +253,7 @@ namespace MiningGameServer
             if (PlayerHealth <= 0)
             {
                 PClass.OnDeath();
+                GameServer.GameMode.OnPlayerDeath(this);
                 Respawn();
             }
         }
@@ -260,6 +264,7 @@ namespace MiningGameServer
             EntityPosition = new Vector2(50, 50);
             EntityVelocity = Vector2.Zero;
             PClass.OnSpawn();
+            GameServer.GameMode.OnPlayerSpawn(this);
         }
 
         public void Update(GameTime theTime)
@@ -330,12 +335,14 @@ namespace MiningGameServer
             Vector2 oldPos = new Vector2(EntityPosition.X, EntityPosition.Y);
 
             PClass.Update_PrePhys(theTime);
+            GameServer.GameMode.OnPlayerPrePhysicsUpdate(this);
 
             EntityMovement();
 
             bool movedSince = oldPos != EntityPosition;
 
             PClass.Update_PostPhys(theTime, movedSince);
+            GameServer.GameMode.OnPlayerPostPhysicsUpdate(this, movedSince);
 
             if (movedSince)
             {
@@ -385,9 +392,9 @@ namespace MiningGameServer
             foreach (NetworkPlayer player in GameServer.NetworkPlayers)
             {
                 if (player == this) continue;
+                if (player.PlayerTeam == PlayerTeam) continue;
                 if (player.BoundBox.Intersects(bound) || player.BoundBox.Contains(bound) || bound.Contains(player.BoundBox))
                 {
-                    GameServer.SendMessageToAll(PlayerName + " hit " + player.PlayerName);
                     player.HurtPlayer(1);
                     player.EntityVelocity.Y = -4;
                     player.EntityVelocity.X = FacingLeft ? -5 : 5;
@@ -423,6 +430,7 @@ namespace MiningGameServer
             foreach (NetworkPlayer p in GameServer.NetworkPlayers)
             {
                 if (p == this) continue;
+                if (p.PlayerTeam == PlayerTeam) continue;
 
                 AABBCollisionResult collide = p.BoundBox.CollideAABB(BoundBox);
                 if (!collide.IsIntersecting) continue;

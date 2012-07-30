@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GeeUI.Managers;
 using MiningGame.Code.CInterfaces;
+using MiningGame.Code.GameModes;
 using MiningGame.Code.Items;
 using MiningGame.Code.Managers;
 using Microsoft.Xna.Framework;
@@ -31,6 +32,8 @@ namespace MiningGame.Code
 
         public static BlockData[,] WorldBlocks = new BlockData[WorldSizeX, WorldSizeY];
 
+        public static ClientGameMode GameMode;
+
         public static void LoadBlocks()
         {
             Block.AllBlocks.Clear();
@@ -46,6 +49,8 @@ namespace MiningGame.Code
                 for (int y = 0; y < WorldSizeY; y++)
                     WorldBlocks[x, y] = new BlockData();
             }
+
+            GameMode = (ClientGameMode)ReflectionManager.CallConstructor(ClientGameMode.GetGameMode("MDCore"));
         }
 
         public static List<Vector2> LineIntersections(Vector2 p1, Vector2 p2)
@@ -97,6 +102,14 @@ namespace MiningGame.Code
         public static BlockData GetBlockAt(float x, float y)
         {
             return GetBlockAt((int)x, (int)y);
+        }
+
+        public static PlayerEntity GetPlayer(byte id)
+        {
+            if (id == GameWorld.ThePlayer.PlayerEntity.PlayerID)
+                return ThePlayer.PlayerEntity;
+
+            return GameWorld.OtherPlayers.Where(pl => pl.PlayerID == id).FirstOrDefault();
         }
 
         public void Update(GameTime time)
@@ -353,6 +366,11 @@ namespace MiningGame.Code
                     item.Incomplete = true;
                     break;
 
+                case 14:
+                    string eventName = p.ReadString();
+                    GameMode.OnGameModeEvent(eventName, p);
+                    break;
+
                 case 200:
                     PlayerUpdating(p);
                     break;
@@ -570,7 +588,13 @@ namespace MiningGame.Code
                             }
                         }
                     }
+                    break;
 
+                case GameServer.GameEvents.Player_Choose_Team:
+                    playerID = p.ReadByte();
+                    byte team = p.ReadByte();
+                    PlayerEntity player = GetPlayer(playerID);
+                    player.playerTeam = team;
                     break;
 
             }

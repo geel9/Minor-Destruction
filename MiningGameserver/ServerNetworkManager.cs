@@ -83,7 +83,7 @@ namespace MiningGameServer
 
         public void SendPacket(Packet p, NetConnection stream = null, NetDeliveryMethod method = NetDeliveryMethod.ReliableOrdered)
         {
-            byte[] data = p.getData();
+            byte[] data = p.GetData();
             try
             {
                 if (stream == null)

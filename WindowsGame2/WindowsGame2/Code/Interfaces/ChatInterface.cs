@@ -62,7 +62,7 @@ namespace MiningGame.Code.Interfaces
         public override void Update(GameTime time)
         {
             //MainView.Active = ChatEntryMode;
-            blocking = ChatEntryMode;
+            blocking = MainView.Active;
             if(ChatEntryMode && _shouldClearT)
             {
                 ChatEntryField.ClearText();

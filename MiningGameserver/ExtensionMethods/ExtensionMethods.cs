@@ -9,6 +9,73 @@ namespace MiningGameServer.ExtensionMethods
 {
     public static class ExtensionMethods
     {
+        public static bool BitSet(this byte toCheck, int index)
+        {
+            return ((toCheck & ((byte)1 << index)) != 0);
+        }
+
+        public static bool BitSet(this short toCheck, int index)
+        {
+            return ((toCheck & ((short)1 << index)) != 0);
+        }
+
+        public static bool BitSet(this int toCheck, int index)
+        {
+            return ((toCheck & ((int)1 << index)) != 0);
+        }
+
+        public static bool BitSet(this long toCheck, int index)
+        {
+            return ((toCheck & ((long)1 << index)) != 0);
+        }
+
+        public static byte SetBit(this byte toSet, int index, bool set = true)
+        {
+            if (set)
+            {
+                return (byte)(toSet | (1 << index));
+            }
+            else
+            {
+                return (byte) (toSet & ~(1 << index));
+            }
+        }
+
+        public static short SetBit(this short toSet, int index, bool set = true)
+        {
+            if (set)
+            {
+                return (short)(toSet | (1 << index));
+            }
+            else
+            {
+                return (short)(toSet & ~(1 << index));
+            }
+        }
+
+        public static int SetBit(this int toSet, int index, bool set = true)
+        {
+            if (set)
+            {
+                return (toSet | (1 << index));
+            }
+            else
+            {
+                return (toSet & ~(1 << index));
+            }
+        }
+
+        public static long SetBit(this long toSet, int index, bool set = true)
+        {
+            if (set)
+            {
+                return (toSet | (1 << index));
+            }
+            else
+            {
+                return (toSet & ~(1 << index));
+            }
+        }
 
         #region Arrays
 
@@ -16,7 +83,7 @@ namespace MiningGameServer.ExtensionMethods
         {
             string ret = "";
             int lastCount = 0;
-            foreach(object i in array)
+            foreach (object i in array)
             {
                 ret += i.ToString();
                 lastCount = ret.Length;
@@ -73,7 +140,7 @@ namespace MiningGameServer.ExtensionMethods
 
         public static float RToD(this float f)
         {
-            return (float) ((f*180)/Math.PI);
+            return (float)((f * 180) / Math.PI);
         }
 
         public static float DToR(this float f)
@@ -83,32 +150,32 @@ namespace MiningGameServer.ExtensionMethods
 
         public static float RToD(this double f)
         {
-            return (float) ((f * 180) / Math.PI);
+            return (float)((f * 180) / Math.PI);
         }
 
         public static float DToR(this double f)
         {
-            return (float) ((f * Math.PI) / 180);
+            return (float)((f * Math.PI) / 180);
         }
 
         public static float RToD(this int f)
         {
-            return (float) ((f * 180) / Math.PI);
+            return (float)((f * 180) / Math.PI);
         }
 
         public static float DToR(this int f)
         {
-            return (float) ((f * Math.PI) / 180);
+            return (float)((f * Math.PI) / 180);
         }
 
         public static float RToD(this short f)
         {
-            return (float) ((f * 180) / Math.PI);
+            return (float)((f * 180) / Math.PI);
         }
 
         public static float DToR(this short f)
         {
-            return (float) ((f * Math.PI) / 180);
+            return (float)((f * Math.PI) / 180);
         }
         #endregion
     }

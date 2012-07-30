@@ -116,12 +116,12 @@ namespace MiningGameServer.Entities
             foreach (NetworkPlayer p in GameServer.NetworkPlayers)
             {
                 if (p.PlayerID == PlayerOwner) continue;
+                if (p.PlayerTeam == playerOwner.PlayerTeam) continue;
                 if (p.BoundBox.Intersects(newRectTest))
                 {
                     ShouldDestroy = true;
                     p.EntityVelocity += EntityVelocity / 5;
                     p.HurtPlayer(1);
-                    GameServer.SendMessageToAll(playerOwner.PlayerName + " hit " + p.PlayerName + ".");
                     break;
                 }
             }

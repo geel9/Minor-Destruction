@@ -56,6 +56,8 @@
     <Compile Include="Entities\ServerProjectile.cs" />
     <Compile Include="Entities\ServerProjectileArrow.cs" />
     <Compile Include="ExtensionMethods\ExtensionMethods.cs" />
+    <Compile Include="GameModes\CTFGameMode.cs" />
+    <Compile Include="GameModes\ServerGameMode.cs" />
     <Compile Include="GameServer.cs" />
     <Compile Include="Interfaces\INetTransferable.cs" />
     <Compile Include="Items\ServerItem.cs" />
@@ -137,6 +139,7 @@
     <Compile Include="Managers\ReflectionManager.cs" />
     <Compile Include="Packets\Packet12SCItemPickedUpIncomplete.cs" />
     <Compile Include="Packets\Packet13SCBlockDamage.cs" />
+    <Compile Include="Packets\Packet14SCGameModeEvent.cs" />
     <Compile Include="Player\NetworkPlayer.cs" />
     <Compile Include="Packets\Packet.cs" />
     <Compile Include="Packets\Packet0CSPlayerConnect.cs" />
@@ -171,6 +174,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Blocks\BlockCoal.csO" />
+    <Compile Include="Blocks\BlockFlag.cs" />
     <None Include="Blocks\BlockGrass.csO" />
     <None Include="Blocks\BlockLadder.csO" />
   </ItemGroup>

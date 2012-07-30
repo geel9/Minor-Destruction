@@ -47,8 +47,7 @@ namespace MiningGameServer.Player
         public void PickupBlock(Vector2 location)
         {
             BlockData block = GameServer.GetBlockAt(location);
-            if (block.ID == 0) return;
-
+            if (block.ID == 0 || block.ID == 9001 || block.ID == 4) return;
             BlockPickupLocation = location;
             BlockPickupTimer = 30;
             MarkClassFlagsUpdate();

@@ -16,13 +16,13 @@
 
             if (blockUpID != 0 && blockUpID != 11 && blockDownID == 0)
             {
-                GameServer.SetBlock(x, y, 11);
-                GameServer.SetBlock(x, y + 1, 11);
+                GameServer.SetBlock(x, y, 4);
+                GameServer.SetBlock(x, y + 1, 4);
             }
             if (blockDownID != 0 && blockDownID != 11 && blockUpID == 0)
             {
-                GameServer.SetBlock(x, y, 11);
-                GameServer.SetBlock(x, y - 1, 11);
+                GameServer.SetBlock(x, y, 4);
+                GameServer.SetBlock(x, y - 1, 4);
             }
             //throw new NotImplementedException();
         }

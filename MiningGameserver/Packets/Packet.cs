@@ -11,9 +11,14 @@ namespace MiningGameServer.Packets
         public List<byte> data = new List<byte>();
         public int offset = 0;
 
-        public byte[] getData()
+        public byte[] GetData()
         {
             return data.ToArray();
+        }
+
+        public byte[] GetData(int index)
+        {
+            return data.GetRange(index, data.Count - index).ToArray();
         }
 
         public T ReadNT<T>() where T : INetTransferable<T>, new()
@@ -28,7 +33,7 @@ namespace MiningGameServer.Packets
 
         public short ReadShort()
         {
-            short num = BitConverter.ToInt16(getData(), offset);
+            short num = BitConverter.ToInt16(GetData(), offset);
             offset += 2;
             return num;
         }
@@ -69,35 +74,35 @@ namespace MiningGameServer.Packets
 
         public bool ReadBool()
         {
-            bool flag = BitConverter.ToBoolean(getData(), offset);
+            bool flag = BitConverter.ToBoolean(GetData(), offset);
             offset++;
             return flag;
         }
 
         public float ReadFloat()
         {
-            float num = BitConverter.ToSingle(getData(), offset);
+            float num = BitConverter.ToSingle(GetData(), offset);
             offset += 4;
             return num;
         }
 
         public int ReadInt()
         {
-            int num = BitConverter.ToInt32(getData(), offset);
+            int num = BitConverter.ToInt32(GetData(), offset);
             offset += 4;
             return num;
         }
 
         public long ReadLong()
         {
-            long num = BitConverter.ToInt64(getData(), offset);
+            long num = BitConverter.ToInt64(GetData(), offset);
             offset += 8;
             return num;
         }
 
         public char ReadChar()
         {
-            char c = BitConverter.ToChar(getData(), offset);
+            char c = BitConverter.ToChar(GetData(), offset);
             offset += 2;
             return c;
         }

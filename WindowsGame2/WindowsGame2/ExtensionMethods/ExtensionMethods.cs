@@ -12,6 +12,75 @@ namespace MiningGame.ExtensionMethods
 
         #region Integers
 
+        public static bool BitSet(this byte toCheck, int index)
+        {
+            return ((toCheck & ((byte)1 << index)) != 0);
+        }
+
+        public static bool BitSet(this short toCheck, int index)
+        {
+            return ((toCheck & ((short)1 << index)) != 0);
+        }
+
+        public static bool BitSet(this int toCheck, int index)
+        {
+            return ((toCheck & ((int)1 << index)) != 0);
+        }
+
+        public static bool BitSet(this long toCheck, int index)
+        {
+            return ((toCheck & ((long)1 << index)) != 0);
+        }
+
+        public static byte SetBit(this byte toSet, int index, bool set = true)
+        {
+            if (set)
+            {
+                return (byte)(toSet | ~(1 << index));
+            }
+            else
+            {
+                return (byte)(toSet & ~(1 << index));
+            }
+        }
+
+        public static short SetBit(this short toSet, int index, bool set = true)
+        {
+            if (set)
+            {
+                return (short)(toSet | ~(1 << index));
+            }
+            else
+            {
+                return (short)(toSet & ~(1 << index));
+            }
+        }
+
+        public static int SetBit(this int toSet, int index, bool set = true)
+        {
+            if (set)
+            {
+                return (toSet | (1 << index));
+            }
+            else
+            {
+                return (toSet & ~(1 << index));
+            }
+        }
+
+        public static long SetBit(this long toSet, int index, bool set = true)
+        {
+            if (set)
+            {
+                return (toSet | (1 << index));
+            }
+            else
+            {
+                return (toSet & ~(1 << index));
+            }
+        }
+
+
         public static bool[] BitMaskToBools(this long bitmask)
         {
             bool[] ret = new bool[64];

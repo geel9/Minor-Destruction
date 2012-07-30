@@ -16,6 +16,7 @@ namespace MiningGame.Code.Entities
     public class PlayerEntity : EntityMoveable
     {
         public byte PlayerID = 0;
+        public int playerTeam = 0;
 
         public int PlayerWidth
         {
@@ -122,6 +123,7 @@ namespace MiningGame.Code.Entities
             sb.DrawString(AssetManager.GetFont("Console"), PlayerName, EntityPosition - new Vector2(measure.X / 2, BoundBox.Height + 8) - CameraManager.cameraPosition, Color.White);
 
             PClass.Draw_Post(sb);
+            GameWorld.GameMode.OnPlayerPostDraw(this, sb);
 
             base.Draw(sb);
         }

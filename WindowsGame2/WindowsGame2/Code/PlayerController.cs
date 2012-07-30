@@ -228,6 +228,7 @@ namespace MiningGame.Code
                 PlayerEntity.Draw(sb);
         }
 
+
         #region interfaces
         public void addToUpdateList()
         {
@@ -272,9 +273,18 @@ namespace MiningGame.Code
             {
                 if (Main.clientNetworkManager.IsConnected())
                 {
-                    Packet1CSGameEvent packet = new Packet1CSGameEvent(GameServer.GameEvents.Player_Change_Name, l[0]);
+                    Packet1CSGameEvent packet = new Packet1CSGameEvent(GameServer.GameEvents.Player_Change_Name, l);
                     Main.clientNetworkManager.SendPacket(packet);
                 }
+            });
+
+            ConsoleManager.AddConVar("player_team", "Choose a team", "0", ls =>
+            {
+                if (Main.clientNetworkManager.IsConnected())
+                {
+                    Packet1CSGameEvent packet = new Packet1CSGameEvent(GameServer.GameEvents.Player_Choose_Team, Convert.ToByte(ls));
+                    Main.clientNetworkManager.SendPacket(packet);
+                }                                                    
             });
         }
 

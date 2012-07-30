@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.IO;
 using MiningGame.Code.Blocks;
+using MiningGame.Code.GameModes;
 using MiningGame.Code.Items;
 using MiningGame.Code.Structs;
 using MiningGame.Code.Managers;
@@ -118,6 +119,7 @@ namespace MiningGame.Code
             AssetManager.LoadAsset<Effect>("test", "Effect1", Content);
             AssetManager.LoadAsset<Effect>("WaterLevel", "WaterLevelEffect", Content);
 
+            ClientGameMode.GenerateGameModes();
             GameWorld.LoadBlocks();
             Item.MakeItems();
 

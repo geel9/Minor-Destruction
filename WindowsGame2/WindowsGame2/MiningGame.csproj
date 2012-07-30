@@ -130,6 +130,7 @@
     <Compile Include="Code\Blocks\Block.cs" />
     <Compile Include="Code\Blocks\BlockDirt.cs" />
     <Compile Include="Code\Blocks\BlockDoor.cs" />
+    <Compile Include="Code\Blocks\BlockFlag.cs" />
     <Compile Include="Code\Blocks\BlockPistonArm.cs" />
     <Compile Include="Code\Blocks\BlockPistonBase.cs" />
     <Compile Include="Code\CInterfaces\Drawable.cs" />
@@ -141,6 +142,8 @@
     <Compile Include="Code\Entities\EntityProjectile.cs" />
     <Compile Include="Code\Entities\PlayerEntity.cs" />
     <Compile Include="Code\Entities\ProjectileArrow.cs" />
+    <Compile Include="Code\GameModes\ClientGameMode.cs" />
+    <Compile Include="Code\GameModes\CTFGameMode.cs" />
     <Compile Include="Code\GameWorld.cs" />
     <Compile Include="Code\Interfaces\ChatInterface.cs" />
     <Compile Include="Code\Interfaces\AnimationEditorInterface.cs" />

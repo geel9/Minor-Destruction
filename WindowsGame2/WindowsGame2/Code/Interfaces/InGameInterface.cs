@@ -81,6 +81,7 @@ namespace MiningGame.Code.Interfaces
 
             InputManager.BindKey(() =>
             {
+                if(!blocking && InterfaceManager.blocking) return;
                 blocking = !blocking;
                 ExpandedView.Active = blocking;
             }, Keys.C);

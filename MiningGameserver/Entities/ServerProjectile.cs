@@ -147,10 +147,6 @@ namespace MiningGameServer.Entities
         public override void Update()
         {
             UpdateTicks++;
-            if(UpdateTicks == 30)
-            {
-                GameServer.SendMessageToAll("ID: " + ProjectileID + " Pos: (" + EntityPosition.X + ", " + EntityPosition.Y + ") R: " + Rotation);
-            }
             EntityMovement();
             Rotation = (float)((float)Math.Atan2(EntityPosition.Y - LastPosition.Y, EntityPosition.X - LastPosition.X) +
                                 90f.DToR());

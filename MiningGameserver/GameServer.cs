@@ -4,6 +4,8 @@ using System.Linq;
 using System.IO;
 using Microsoft.Xna.Framework;
 using MiningGameServer.Blocks;
+using MiningGameServer.GameModes;
+using MiningGameServer.Managers;
 using MiningGameServer.Packets;
 using MiningGameServer;
 using MiningGameServer.Entities;
@@ -23,6 +25,8 @@ namespace MiningGameServer
         public static ServerProjectile[] GameProjectiles = new ServerProjectile[256];
 
         public static List<ServerEntityDroppedItem> DroppedItems = new List<ServerEntityDroppedItem>();
+
+        public static ServerGameMode GameMode;
 
         public const int WorldSizeX = 500, WorldSizeY = 500;
 
@@ -45,6 +49,9 @@ namespace MiningGameServer
                         WorldBlocks[x, y] = new BlockData();
                 }
                 GenerateWorld();
+                ServerGameMode.GenerateGameModes();
+                GameMode = (ServerGameMode)ReflectionManager.CallConstructor(ServerGameMode.GetGameMode("MDCore"));
+                GameMode.OnGameModeChosen();
                 ServerItem.MakeItems();
                 Block.GenerateBlocks();
                 ServerCommands.Initialize();
@@ -318,6 +325,7 @@ namespace MiningGameServer
         public void Update(GameTime time)
         {
             ServerNetworkManager.Update();
+            GameMode.Update_PreAll(time);
 
             List<Vector3> toUnschedule = new List<Vector3>();
             Vector3[] scheduled = new Vector3[ScheduledUpdates.Count];
@@ -380,7 +388,7 @@ namespace MiningGameServer
                 {
                     int hDist = (int)Math.Abs(t.EntityPosition.X - t2.EntityPosition.X);
                     int vDist = (int)Math.Abs(t.EntityPosition.Y - t2.EntityPosition.Y);
-                    if (hDist >= 830 || vDist >= 530) continue;
+                    if ((hDist >= 830 || vDist >= 530) && false) continue;
                     if ((t2.UpdateMask & (int)PlayerUpdateFlags.Player_Update) == 0) continue;
                     playersToUpdate.Add(t2);
                 }
@@ -419,6 +427,9 @@ namespace MiningGameServer
                 t.UpdateMask = 0;
                 t.PClass.ClearUpdateMask();
             }
+
+            GameMode.Update_PostAll(time);
+
         }
 
         public static void HandleGameEvent(byte eventID, Packet p, NetworkPlayer player)
@@ -444,7 +455,7 @@ namespace MiningGameServer
                     x = p.ReadShort();
                     y = p.ReadShort();
                     Block b = GetBlockAt(x, y).Block;
-                    b.OnBlockUsed(x, y);
+                    b.OnBlockUsed(x, y, player);
                     break;
 
                 case GameEvents.Player_Pickup_Block:
@@ -486,6 +497,18 @@ namespace MiningGameServer
                         pack = new Packet1SCGameEvent(GameEvents.Player_Change_Name, (byte)player.PlayerID, newName);
                         ServerNetworkManager.SendPacket(pack);
                     }
+                    break;
+
+                case GameEvents.Player_Choose_Team:
+                    int team = p.ReadByte();
+                    if (team != 0 && team != 1) return;
+                    if (team == player.PlayerTeam) return;
+                    player.PlayerTeam = team;
+                    GameMode.OnPlayerChooseTeam(player, team);
+                    player.HurtPlayer(10000);
+
+                    Packet newP = new Packet1SCGameEvent(GameEvents.Player_Choose_Team, (byte)player.PlayerID, (byte)team);
+                    ServerNetworkManager.SendPacket(newP);
                     break;
             }
         }
@@ -568,7 +591,8 @@ namespace MiningGameServer
             Player_Change_Name,
             Player_Drop_Item,
             Player_Pickup_Block,
-            Player_Place_Block
+            Player_Place_Block,
+            Player_Choose_Team
         }
     }
 }

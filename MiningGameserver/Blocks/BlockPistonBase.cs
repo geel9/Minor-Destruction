@@ -44,7 +44,7 @@ namespace MiningGameServer.Blocks
             base.OnBlockPlaced(x, y, notify);
         }
 
-        public override void OnBlockUsed(int x, int y)
+        public override void OnBlockUsed(int x, int y, NetworkPlayer user)
         {
             byte flags = GameServer.GetBlockAt(x, y).MetaData;
 

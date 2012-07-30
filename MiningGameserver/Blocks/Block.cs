@@ -172,7 +172,7 @@ namespace MiningGameServer.Blocks
             GameServer.UnscheduleUpdate(x, y);
         }
 
-        public virtual void OnBlockUsed(int x, int y)
+        public virtual void OnBlockUsed(int x, int y, NetworkPlayer user)
         {
 
         }
