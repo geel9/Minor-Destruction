@@ -461,9 +461,9 @@ namespace MiningGameServer
                 case GameEvents.Player_Pickup_Block:
                     x = p.ReadShort();
                     y = p.ReadShort();
-                    if(player.PClass is PlayerClassDestroyer)
-                    {
-                        ((PlayerClassDestroyer)player.PClass).PickupBlock(new Vector2(x, y));
+                    if (player.PClass is PlayerClassDestroyer) {
+                        if (Math.Abs(player.EntityPosition.X / BlockSize - (float)(x)) < 2 && Math.Abs(player.EntityPosition.Y / BlockSize - (float)(y)) < 2)
+                            ((PlayerClassDestroyer)player.PClass).PickupBlock(new Vector2(x, y));
                     }
                     break;
 
@@ -479,10 +479,6 @@ namespace MiningGameServer
                     player.SendEquippedItemUpdate();
                     break;
 
-                case GameEvents.Player_Sprint_Begin:
-                   // player.SetPlayerEquippedSlot(p.ReadByte());
-                   // player.SendEquippedItemUpdate();
-                    break;
 
                 case GameEvents.Player_Chat:
                     bool teamChat = p.ReadBool();

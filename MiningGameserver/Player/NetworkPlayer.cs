@@ -291,7 +291,7 @@ namespace MiningGameServer
                     _jumpTimer = 20;
                 }
             }
-            float playerRunSpeed = (MovementFlags >> 5 > 0 ? PClass.GetPlayerSprintVelocity()  : PClass.GetPlayerWalkVelocity());
+            float playerRunSpeed = ((MovementFlags & (byte)PlayerMovementFlag.Sprinting) > 0 ? PClass.GetPlayerSprintVelocity()  : PClass.GetPlayerWalkVelocity());
             if (LeftPressed)
             {
                 EntityVelocity.X = MathHelper.Clamp(EntityVelocity.X - playerRunSpeed, -playerRunSpeed, playerRunSpeed);

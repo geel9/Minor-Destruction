@@ -44,7 +44,6 @@ namespace MiningGameServer.Player
         }
         public virtual float GetPlayerSprintVelocity()
         {
-            //GameServer.SendMessageToAll("lol sprinting");
             return 5;
         }
 
