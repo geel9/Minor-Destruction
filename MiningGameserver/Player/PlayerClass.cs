@@ -37,10 +37,15 @@ namespace MiningGameServer.Player
         {
             return 25;
         }
-
+        
         public virtual float GetPlayerWalkVelocity()
         {
             return 3;
+        }
+        public virtual float GetPlayerSprintVelocity()
+        {
+            //GameServer.SendMessageToAll("lol sprinting");
+            return 5;
         }
 
         public virtual void Update_PrePhys(GameTime time)

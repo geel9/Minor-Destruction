@@ -479,6 +479,11 @@ namespace MiningGameServer
                     player.SendEquippedItemUpdate();
                     break;
 
+                case GameEvents.Player_Sprint_Begin:
+                   // player.SetPlayerEquippedSlot(p.ReadByte());
+                   // player.SendEquippedItemUpdate();
+                    break;
+
                 case GameEvents.Player_Chat:
                     bool teamChat = p.ReadBool();
                     string chatText = p.ReadString();
@@ -592,7 +597,8 @@ namespace MiningGameServer
             Player_Drop_Item,
             Player_Pickup_Block,
             Player_Place_Block,
-            Player_Choose_Team
+            Player_Choose_Team,
+            Player_Sprint_Begin
         }
     }
 }

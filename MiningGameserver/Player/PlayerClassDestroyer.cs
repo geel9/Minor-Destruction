@@ -128,6 +128,10 @@ namespace MiningGameServer.Player
         {
             return BlockInHand == 0 ? 2.5f : 1.5f;
         }
+        public override float GetPlayerSprintVelocity()
+        {
+            return BlockInHand == 0 ? 4.5f : GetPlayerWalkVelocity();
+        }
 
         public override void WriteState(Packet p)
         {

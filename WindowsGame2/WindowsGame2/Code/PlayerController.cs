@@ -30,7 +30,7 @@ namespace MiningGame.Code
 
         public short PlayerAimAngle = 0;
 
-        private bool _leftPressed, _rightPressed, _jumpPressed, _attackPressed;
+        private bool _leftPressed, _rightPressed, _jumpPressed, _attackPressed, _sprinting;
 
         public byte MovementFlags
         {
@@ -45,6 +45,8 @@ namespace MiningGame.Code
                     ret |= (int)PlayerMovementFlag.Jump_Pressed;
                 if (_attackPressed)
                     ret |= (int)PlayerMovementFlag.Attack_Pressed;
+                if (_sprinting)
+                    ret |= (int)PlayerMovementFlag.Sprinting;
                 return ret;
             }
         }
@@ -99,6 +101,7 @@ namespace MiningGame.Code
             InputManager.BindKey(() =>
                                      {
                                          _leftPressed = false;
+
                                          SendMovementFlags();
                                      }, Keys.A, true, false);
 
@@ -163,6 +166,18 @@ namespace MiningGame.Code
                                          Packet1CSGameEvent p = new Packet1CSGameEvent(GameServer.GameEvents.Player_Drop_Item);
                                          Main.clientNetworkManager.SendPacket(p);
                                      }, Keys.F);
+
+            InputManager.BindKey(() =>
+            {
+                _sprinting = true;
+                SendMovementFlags();
+            }, Keys.LeftShift);
+
+            InputManager.BindKey(() =>
+            {
+                _sprinting = false;
+                SendMovementFlags();
+            }, Keys.LeftShift, true, false);
 
             InputManager.BindKey(() =>
             {
