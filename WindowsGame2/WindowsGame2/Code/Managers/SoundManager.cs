@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SFML.Audio;
-using SFML.Graphics;
-using SFML.Window;
 
 namespace MiningGame.Code.Managers
 {
@@ -18,7 +15,8 @@ namespace MiningGame.Code.Managers
 
         public void PlaySound(string key, bool looping = false, int offset = 0)
         {
-            Sound s = AssetManager.GetSound(key);
+            // TODO: Fix (requires SFML)
+            /*Sound s = AssetManager.GetSound(key);
             if (s != null)
             {
                 s.Loop = looping;
@@ -28,7 +26,7 @@ namespace MiningGame.Code.Managers
             else
             {
                 ConsoleManager.Log("Could not find sound " + key, Microsoft.Xna.Framework.Color.Red);
-            }
+            }*/
         }
 
     }

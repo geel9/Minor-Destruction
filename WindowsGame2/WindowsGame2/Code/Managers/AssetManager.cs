@@ -1,18 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using SFML.Audio;
-using SFML.Graphics;
-using SFML.Window;
 
 namespace MiningGame.Code.Managers
 {
@@ -20,7 +10,7 @@ namespace MiningGame.Code.Managers
     {
         public static Dictionary<string, Texture2D> Textures = new Dictionary<string, Texture2D>();
         public static Dictionary<string, SpriteFont> Fonts = new Dictionary<string, SpriteFont>();
-        public static Dictionary<string, Sound> Sounds = new Dictionary<string, Sound>();
+        //public static Dictionary<string, Sound> Sounds = new Dictionary<string, Sound>(); TODO: Fix
         public static Dictionary<string, Effect> Effects = new Dictionary<string, Effect>();
         public static Dictionary<string, Animation> Animations = new Dictionary<string, Animation>();
 
@@ -83,6 +73,8 @@ namespace MiningGame.Code.Managers
                     Effects.Add(key, e);
                 }
 
+                // TODO: Fix
+                /*
                 if (typeof(T) == typeof(Sound))
                 {
                     if (GetSound(key, false) != null) return false;
@@ -93,7 +85,7 @@ namespace MiningGame.Code.Managers
                     Sound s = new Sound(b);
                     Sounds.Add(key, s);
                     ConsoleManager.Log("Added sound " + key, Microsoft.Xna.Framework.Color.ForestGreen);
-                }
+                }*/
             }
             catch (Exception e)
             {
@@ -150,6 +142,8 @@ namespace MiningGame.Code.Managers
             return null;
         }
 
+        // TODO: Fix
+        /*
         public static Sound GetSound(string key, bool error = true)
         {
             if (Sounds.ContainsKey(key))
@@ -174,7 +168,7 @@ namespace MiningGame.Code.Managers
                 }
             }
             return null;
-        }
+        }*/
 
         public static SpriteFont GetFont(string key, bool error = true)
         {
@@ -191,11 +185,6 @@ namespace MiningGame.Code.Managers
                     return GetFont("default");
                 return null;
             }
-        }
-
-        public static void RemoveSound(string key)
-        {
-            Sounds.Remove(key);
         }
     }
 }

@@ -52,7 +52,6 @@ namespace MiningGame.Code
         public static GameServer GameServer = null;
 
         public static SoundManager SoundManager = new SoundManager();
-        public static MusicManager MusicManager = new MusicManager();
         public static PauseManager PauseManager;
         public static Color BackColor = Color.SkyBlue;
         public static bool isActive = false;
@@ -160,7 +159,7 @@ namespace MiningGame.Code
         protected override void UnloadContent()
         {
             AssetManager.Fonts.Clear();
-            AssetManager.Sounds.Clear();
+            //AssetManager.Sounds.Clear(); TODO: Fix
             AssetManager.Textures.Clear();
             AssetManager.Effects.Clear();
 
