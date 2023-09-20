@@ -26,9 +26,12 @@ namespace MiningGame.Code.Interfaces
         {
             base.initialize(10000);
             MainView = new View(GeeUI.GeeUI.RootView) { Width = 290, Height = 200, X = 10, Y = 500 - 240 };
-            ChatEntryField = new TextFieldView(MainView, new Vector2(0, 180), AssetManager.GetFont("Console")) { Width = 290, Height = 20, MultiLine = false, AutoWrap = false};
+            // TODO: Reimplement AutoWrap
+            ChatEntryField = new TextFieldView(MainView, new Vector2(0, 180), AssetManager.GetFont("Console")) { Width = 290, Height = 20, MultiLine = false/*, AutoWrap = false*/};
             ChatLogField = new TextFieldView(MainView, new Vector2(0, 95), AssetManager.GetFont("Console"))
                                {Width = 290, Height = 75, Editable = false, MultiLine = true};
+            // TODO: Reimplement OnEnterPressed
+            /*
             ChatEntryField.OnEnterPressed += (sender, e) =>
                                                  {
                                                      string text = ChatEntryField.Text;
@@ -39,7 +42,7 @@ namespace MiningGame.Code.Interfaces
                                                      Packet1CSGameEvent pack = new Packet1CSGameEvent(GameServer.GameEvents.Player_Chat, false, text);
                                                      Main.clientNetworkManager.SendPacket(pack);
 
-                                                 };
+                                                 };*/
             HideChatEntry();
         }
 
@@ -65,7 +68,8 @@ namespace MiningGame.Code.Interfaces
             blocking = MainView.Active;
             if(ChatEntryMode && _shouldClearT)
             {
-                ChatEntryField.ClearText();
+                // TODO: Reimplement ClearText()
+                //ChatEntryField.ClearText();
                 _shouldClearT = false;
             }
             base.Update(time);
@@ -75,7 +79,8 @@ namespace MiningGame.Code.Interfaces
         {
             ChatEntryMode = true;
             MainView.Active = ChatEntryField.Selected = ChatEntryField.Active = ChatLogField.Active = true;
-            ChatEntryField.ClearText();
+            // TODO: Reimplement ClearText()
+            //ChatEntryField.ClearText();
             _shouldClearT = true;
         }
 
@@ -83,7 +88,8 @@ namespace MiningGame.Code.Interfaces
         {
             ChatEntryMode = false;
             MainView.Active = ChatEntryField.Selected = ChatEntryField.Active = ChatLogField.Active = false;
-            ChatEntryField.ClearText();
+            // TODO: Reimplement ClearText()
+            //ChatEntryField.ClearText();
         }
 
         public static void AddChat(ChatEntry entry)
@@ -91,8 +97,10 @@ namespace MiningGame.Code.Interfaces
             chatEntries.Add(entry);
             ChatLogField.AppendText(entry.playerName + ": " + entry.playerChat + "\n");
             int then = ChatLogField.TextLines.Length;
+            // TODO: Protection levels
+            /*
             ChatLogField._cursorY = then - 2;
-            ChatLogField.ReEvaluateOffset();
+            ChatLogField.ReEvaluateOffset();*/
         }
 
         public static void ConsoleInit()

@@ -7,7 +7,6 @@ using GeeUI.Views;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
@@ -59,10 +58,11 @@ namespace MiningGame.Code.Entities
             _tI = new TextFieldView(p, new Vector2(0, _output.Height + 1), AssetManager.GetFont("Console"))
                      {Width = 490, Height = 20, MultiLine = false};
 
-            _tI.OnEnterPressed += new View.MouseClickEventHandler((object sender, EventArgs e) =>
+            // TODO: Fix me. I can't find any version of GeeUI where `OnEnterPressed` ever existed...
+            /*_tI.OnEnterPressed += new View.MouseClickEventHandler((object sender, EventArgs e) =>
                                                                      {
                                                                          Enter();
-                                                                     });
+                                                                     });*/
 
             UpdateConsole();
 
@@ -112,7 +112,8 @@ namespace MiningGame.Code.Entities
             if (!Shown) return;
             string inp = _tI.Text;
 
-            _tI.ClearText();
+            // TODO: Fix me
+            //_tI.ClearText();
             input = "";
             PossibleCommands = GetPossibleCommands(input);
             ConsoleManager.ConsoleInput(inp);
@@ -125,8 +126,11 @@ namespace MiningGame.Code.Entities
             if (_output == null) return;
             _output.AppendText(text + "\n");
             int then = _output.TextLines.Length;
+
+            // TODO: fix me
+            /*
             _output._cursorY = then - 1;
-            _output.ReEvaluateOffset();
+            _output.ReEvaluateOffset();*/
         }
 
         private void TrimCommands()
