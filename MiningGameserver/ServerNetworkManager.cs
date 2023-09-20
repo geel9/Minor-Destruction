@@ -73,7 +73,7 @@ namespace MiningGameServer
                         break;
                     case NetIncomingMessageType.Data:
                         NetworkPlayer p = GameServer.NetworkPlayers.Where(pl => pl.NetConnection == msg.SenderConnection).FirstOrDefault();
-                        HandlePacket(new Packet(msg.m_data), p);
+                        HandlePacket(new Packet(msg.ReadBytes(msg.LengthBytes)), p);
                         break;
                 }
                 NetServer.Recycle(msg);

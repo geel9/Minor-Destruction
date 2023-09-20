@@ -44,7 +44,7 @@ namespace MiningGame.Code.Managers
                         ConsoleManager.Log(msg.ReadString());
                         break;
                     case NetIncomingMessageType.Data:
-                        HandlePacket(new Packet(msg.m_data));
+                        HandlePacket(new Packet(msg.ReadBytes(msg.LengthBytes)));
                         break;
                     case NetIncomingMessageType.StatusChanged:
                         NetConnectionStatus status = (NetConnectionStatus)msg.ReadByte();
